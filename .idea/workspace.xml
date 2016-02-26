@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f91a51c3-1880-448b-bf26-09a83a017518" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/polyu/comp/af/AstBasic.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/polyu/comp/af/Test.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/polyu/comp/af/AstBasic.java" afterPath="$PROJECT_DIR$/src/main/java/polyu/comp/af/AstBasic.java" />
     </list>
     <ignored path="AfTool.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -134,23 +132,13 @@
       <file leaf-file-name="AstBasic.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/polyu/comp/af/AstBasic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.111111">
-              <caret line="93" column="45" selection-start-line="93" selection-start-column="45" selection-end-line="93" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.5940594">
+              <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ASTVisitor.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="253.37038">
-              <caret line="104" column="11" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
-              <folding>
-                <element signature="e#4854#4855#0" expanded="true" />
-                <element signature="e#4881#4882#0" expanded="true" />
+                <element signature="e#7364#7783#0" expanded="true" />
+                <element signature="e#7782#7783#0" expanded="true" />
+                <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -172,8 +160,8 @@
       <file leaf-file-name="ASTNode.class" pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-126.111115">
-              <caret line="430" column="21" selection-start-line="430" selection-start-column="21" selection-end-line="430" selection-end-column="21" />
+            <state vertical-scroll-proportion="-5.0">
+              <caret line="828" column="22" selection-start-line="828" selection-start-column="22" selection-end-line="828" selection-end-column="22" />
               <folding>
                 <element signature="e#16908#16909#0" expanded="true" />
                 <element signature="e#16939#16940#0" expanded="true" />
@@ -912,7 +900,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="52" y="23" width="1228" height="777" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -921,8 +909,8 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32846716" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32846716" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18802698" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14586847" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -967,6 +955,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -993,6 +984,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1019,6 +1013,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1045,6 +1042,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1071,6 +1071,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1089,6 +1092,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1107,6 +1113,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1191,17 +1200,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-126.111115">
-          <caret line="430" column="21" selection-start-line="430" selection-start-column="21" selection-end-line="430" selection-end-column="21" />
-          <folding>
-            <element signature="e#16908#16909#0" expanded="true" />
-            <element signature="e#16939#16940#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.text_3.5.300.v20130515-1451.jar!/org/eclipse/jface/text/AbstractDocument.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2252475">
@@ -1236,17 +1234,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="253.37038">
-          <caret line="104" column="11" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
-          <folding>
-            <element signature="e#4854#4855#0" expanded="true" />
-            <element signature="e#4881#4882#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/src.zip!/java/io/FileSystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.26218098">
@@ -1263,12 +1250,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.0">
+          <caret line="828" column="22" selection-start-line="828" selection-start-column="22" selection-end-line="828" selection-end-column="22" />
+          <folding>
+            <element signature="e#16908#16909#0" expanded="true" />
+            <element signature="e#16939#16940#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="104" column="11" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
+          <folding>
+            <element signature="e#4854#4855#0" expanded="true" />
+            <element signature="e#4881#4882#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/MethodInvocation.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3539604">
+          <caret line="134" column="16" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu/comp/af/AstBasic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.111111">
-          <caret line="93" column="45" selection-start-line="93" selection-start-column="45" selection-end-line="93" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.5940594">
+          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7364#7783#0" expanded="true" />
+            <element signature="e#7782#7783#0" expanded="true" />
+            <marker date="1456474809000" expanded="true" signature="972:1484" placeholder="..." />
           </folding>
         </state>
       </provider>
