@@ -26,28 +26,9 @@ public class AstBasic {
 
 
     public static void main(String arg[]) {
-
-
         String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
         CompilationUnit node = createNode(source.toCharArray());
-
-        logger.info(node.properties().toString());
-        node.accept(visitorTest()); //test visitor
-
-//        List types = node.types();
-//        TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
-//        //show class name
-//        System.out.println("className:" + typeDec.getName());
-//        //show fields
-//        FieldDeclaration fieldDec[] = typeDec.getFields();
-//        System.out.println("Fields:");
-//        for (FieldDeclaration field : fieldDec) {
-//            System.out.println("Field fragment:" + field.fragments());
-//            System.out.println("Field type:" + field.getType());
-//        }
-//        //analyze
-//        analyzeMethod(typeDec);
-
+        node.accept(visitorTest()); //Use visitor to go through the AST
     }
 
     private static String readFile(String fileName) {
@@ -79,115 +60,6 @@ public class AstBasic {
 
     }
 
-    private static Block createBlock(char[] source) {
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setKind(ASTParser.K_STATEMENTS);
-        parser.setSource(source);
-        Block block = (Block) parser.createAST(null);
-        return block;
-
-    }
-
-    /*
-       show import declarations in order
-        */
-    private static void showImport(CompilationUnit node) {
-        List importList = node.imports();
-        System.out.println("import:");
-        for (Object obj : importList) {
-            ImportDeclaration importDec = (ImportDeclaration) obj;
-            System.out.println(importDec.getName());
-        }
-
-    }
-
-    /*
-           analyze methods
-            */
-    private static void analyzeMethod(TypeDeclaration typeDec) {
-        MethodDeclaration methodDec[] = typeDec.getMethods();
-        System.out.println("Method:");
-        for (MethodDeclaration method : methodDec) {
-            //get method name
-            SimpleName methodName = method.getName();
-            System.out.println("method name:" + methodName);
-
-            //get method parameters
-            List param = method.parameters();
-            System.out.println("method parameters:" + param);
-
-            //get method return type
-            Type returnType = method.getReturnType2();
-            System.out.println("method return type:" + returnType);
-
-            //get method body
-            MethodBody(method);
-        }
-
-
-    }
-
-    private static void MethodBody(MethodDeclaration method) {
-        //get method body
-        Block body = method.getBody();
-        List statements = body.statements();   //get the statements of the method body
-        Iterator iter = statements.iterator();
-        while (iter.hasNext()) {
-            //get each statement
-            Statement stmt = (Statement) iter.next();
-            System.out.println("stmt : " + stmt);
-            statementAnalyze(stmt);
-
-        }
-        System.out.println("====================");
-    }
-
-    private static void statementAnalyze(Statement stmt) {
-        if (stmt instanceof ExpressionStatement) {
-            ExpressionStatement expressStmt = (ExpressionStatement) stmt;
-            Expression express = expressStmt.getExpression();
-            if (express instanceof Assignment) {
-                Assignment assign = (Assignment) express;
-                System.out.println("LHS:" + assign.getLeftHandSide() + "; ");
-                System.out.println("Op:" + assign.getOperator() + "; ");
-                System.out.println("RHS:" + assign.getRightHandSide());
-
-            } else if (express instanceof MethodInvocation) {
-                MethodInvocation mi = (MethodInvocation) express;
-                System.out.println("invocation name:" + mi.getName());
-                System.out.println("invocation exp:" + mi.getExpression());
-                System.out.println("invocation arg:" + mi.arguments());
-            }
-            System.out.println();
-
-        } else if (stmt instanceof IfStatement) {
-            IfStatement ifstmt = (IfStatement) stmt;
-            Expression express = ifstmt.getExpression();
-            if (express instanceof MethodInvocation) {
-                MethodInvocation mi = (MethodInvocation) express;
-                System.out.println("if-invocation name:" + mi.getName());
-                System.out.println("if-invocation exp:" + mi.getExpression());
-                System.out.println("if-invocation arg:" + mi.arguments());
-            } else if (express instanceof InfixExpression) {
-                InfixExpression wex = (InfixExpression) ifstmt.getExpression();
-                System.out.println("if-LHS:" + wex.getLeftOperand() + "; ");
-                System.out.println("if-op:" + wex.getOperator() + "; ");
-                System.out.println("if-RHS:" + wex.getRightOperand());
-            }
-            System.out.println();
-        } else if (stmt instanceof VariableDeclarationStatement) {
-            VariableDeclarationStatement var = (VariableDeclarationStatement) stmt;
-            System.out.println("Type of variable:" + var.getType());
-            System.out.println("Name of variable:" + var.fragments());
-            System.out.println();
-
-        } else if (stmt instanceof ReturnStatement) {
-            ReturnStatement rtstmt = (ReturnStatement) stmt;
-            System.out.println("return:" + rtstmt.getExpression());
-            System.out.println();
-        }
-
-    }
 
 
     private static ASTVisitor visitorTest(){
@@ -195,22 +67,94 @@ public class AstBasic {
         ASTVisitor visitor = new ASTVisitor() {
 
             @Override
-            public boolean visit(MethodInvocation mi) {
-                if (mi.getExpression() instanceof MethodInvocation) {
-                    System.out.println("mi-p: "+mi.getExpression());
-                    mi.setExpression(null);
-                    System.out.println("mi-a: "+mi.getExpression());
-                }
+            public boolean visit(ImportDeclaration node) {
+                /*
+                show import declarations in order
+                 */
+//                logger.info("ImportDeclaration: "+node.getName());
                 return true;
             }
 
+            @Override
+            public boolean visit(MethodDeclaration node) {
+                 /*
+                show method info
+                 */
+                logger.info("MethodDeclaration: "+node.getName());
+                logger.info("getReturnType2: "+node.getReturnType2());
+                logger.info("parameters: "+node.parameters());
+                logger.info("getBody.statements.size: "+node.getBody().statements().size());
+                /*
+                can also get all the method's statements and do some analysis
+                but the visitor itself will still go iterate the chile of the method node
+                no need to do that here
+                 */
 
+//                List<Object> mStatement=node.getBody().statements();
+//                Iterator<Object> iterator=mStatement.iterator();
+//                while (iterator.hasNext()){
+//                    statementAnalyze((Statement) iterator.next());
+//                }
+                return true;
+            }
 
+            @Override
+            public boolean visit(ExpressionStatement node) {
 
+                return true;
+            }
+
+            @Override
+            public boolean visit(MethodInvocation mi) {
+                if (mi.getExpression() instanceof MethodInvocation) {
+//                    logger.info("mi_old: "+mi.getExpression());
+//                    mi.setExpression(null);
+//                    logger.info("mi_new: "+mi.getExpression());
+                }
+                return true;
+            }
         };
 
         return visitor;
     }
+    private static void statementAnalyze(Statement stmt) { //just for reference
+        if (stmt instanceof ExpressionStatement) {
+            ExpressionStatement expressStmt = (ExpressionStatement) stmt;
+            Expression express = expressStmt.getExpression();
+            if (express instanceof Assignment) {
+                Assignment assign = (Assignment) express;
+                logger.info("LHS: "+assign.getLeftHandSide());
+                logger.info("OP: "+assign.getOperator());
+                logger.info("RHS: "+assign.getRightHandSide());
+            } else if (express instanceof MethodInvocation) {
+                MethodInvocation mi = (MethodInvocation) express;
+                logger.info("invocation name: "+mi.getName());
+                logger.info("invocation exp: "+mi.getExpression());
+                logger.info("invocation arg: "+mi.arguments());
+            }
+        } else if (stmt instanceof IfStatement) {
+            IfStatement ifstmt = (IfStatement) stmt;
+            Expression express = ifstmt.getExpression();
+            if (express instanceof MethodInvocation) {
+                MethodInvocation mi = (MethodInvocation) express;
+                logger.info("if-invocation name: "+mi.getName());
+                logger.info("if-invocation exp: "+mi.getExpression());
+                logger.info("if-invocation arg: "+mi.arguments());
+            } else if (express instanceof InfixExpression) {
+                InfixExpression wex = (InfixExpression) ifstmt.getExpression();
+                logger.info("if-LHS: "+wex.getLeftOperand() );
+                logger.info("if-OP: "+wex.getOperator() );
+                logger.info("if-RHS: "+wex.getRightOperand());
+            }
+        } else if (stmt instanceof VariableDeclarationStatement) {
+            VariableDeclarationStatement var = (VariableDeclarationStatement) stmt;
+            logger.info("Type of variable: "+var.getType());
+            logger.info("Name of variable: "+var.getType());
+        } else if (stmt instanceof ReturnStatement) {
+            ReturnStatement rtstmt = (ReturnStatement) stmt;
+            logger.info("return: "+rtstmt.getExpression());
+        }
 
+    }
 
 }
