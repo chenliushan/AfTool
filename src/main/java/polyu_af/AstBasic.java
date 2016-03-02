@@ -1,5 +1,7 @@
 package polyu_af;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.ast.Invocation;
@@ -20,15 +22,16 @@ import java.util.StringTokenizer;
  * Created by liushanchen on 16/2/24.
  */
 public class AstBasic {
-
+   private static Logger logger = LogManager.getLogger(AstBasic.class.getName());
 
 
     public static void main(String arg[]) {
 
-        String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu/comp/af/AstBasic.java");
+
+        String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
         CompilationUnit node = createNode(source.toCharArray());
 
-        System.out.println(node.properties().toString());
+        logger.info(node.properties().toString());
         node.accept(visitorTest()); //test visitor
 
 //        List types = node.types();
@@ -64,7 +67,6 @@ public class AstBasic {
                 }
             }
         }
-//        System.out.println("fileContent:" + fileContent);
         return fileContent;
     }
 

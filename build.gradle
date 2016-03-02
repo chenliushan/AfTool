@@ -23,5 +23,10 @@ dependencies {
     compile files('lib/org.eclipse.osgi_3.10.1.v20140909-1633.jar')
     compile files('lib/org.eclipse.text_3.5.300.v20130515-1451.jar')
 
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
+
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
+
 }
