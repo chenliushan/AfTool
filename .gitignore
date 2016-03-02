@@ -5,6 +5,7 @@
 .gradle
 out
 build
+src/main/java/polyu_af/sample
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

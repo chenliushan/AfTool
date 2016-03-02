@@ -1,4 +1,4 @@
-package polyu.comp.af;
+package polyu_af;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.dom.*;
@@ -28,22 +28,22 @@ public class AstBasic {
         String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu/comp/af/AstBasic.java");
         CompilationUnit node = createNode(source.toCharArray());
 
-//        System.out.println(node.properties().toString());
-//        node.accept(visitorTest()); //test visitor
+        System.out.println(node.properties().toString());
+        node.accept(visitorTest()); //test visitor
 
-        List types = node.types();
-        TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
-        //show class name
-        System.out.println("className:" + typeDec.getName());
-        //show fields
-        FieldDeclaration fieldDec[] = typeDec.getFields();
-        System.out.println("Fields:");
-        for (FieldDeclaration field : fieldDec) {
-            System.out.println("Field fragment:" + field.fragments());
-            System.out.println("Field type:" + field.getType());
-        }
-        //analyze
-        analyzeMethod(typeDec);
+//        List types = node.types();
+//        TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
+//        //show class name
+//        System.out.println("className:" + typeDec.getName());
+//        //show fields
+//        FieldDeclaration fieldDec[] = typeDec.getFields();
+//        System.out.println("Fields:");
+//        for (FieldDeclaration field : fieldDec) {
+//            System.out.println("Field fragment:" + field.fragments());
+//            System.out.println("Field type:" + field.getType());
+//        }
+//        //analyze
+//        analyzeMethod(typeDec);
 
     }
 
@@ -186,17 +186,12 @@ public class AstBasic {
         }
 
     }
+
+
     private static ASTVisitor visitorTest(){
 
-//        ASTVisitor visitor = new ASTVisitor() {
-//            @Override
-//            public boolean visit(MethodInvocation mi) {
-//                System.out.println(mi);
-//                return true;
-//            }
-//
-//        };
         ASTVisitor visitor = new ASTVisitor() {
+
             @Override
             public boolean visit(MethodInvocation mi) {
                 if (mi.getExpression() instanceof MethodInvocation) {
@@ -206,93 +201,14 @@ public class AstBasic {
                 }
                 return true;
             }
+
+
+
+
         };
 
         return visitor;
     }
 
-    private static void astSample() {//Not used, just for reference
-        /*
-        创建编译单元(类)
-         */
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setSource("".toCharArray());
-        CompilationUnit unit = (CompilationUnit) parser.createAST(new NullProgressMonitor());
-        unit.recordModifications();//启动对节点修改的监控。调用这个方法很重要，因为这样可以在以后通过检索节点的修改来访问源代码。
-        AST ast = unit.getAST();
-        /*
-        创建 Package
-         */
-        PackageDeclaration packageDeclaration = ast.newPackageDeclaration();
-        unit.setPackage(packageDeclaration);
-        packageDeclaration.setName(ast.newSimpleName("astexplorer"));
-        /*
-        创建 VariableDeclaration
-         */
-        VariableDeclarationFragment vdf = ast.newVariableDeclarationFragment();
-        vdf.setName(ast.newSimpleName("minimumSize"));
-        FieldDeclaration fd = ast.newFieldDeclaration(vdf);
-        fd.setModifiers(Modifier.PRIVATE);
-        fd.setType(ast.newSimpleType(ast.newSimpleName("Point")));
-        /*
-        创建方法参数
-         */
-        SingleVariableDeclaration variableDeclaration = ast.newSingleVariableDeclaration();
-        variableDeclaration.setModifiers(Modifier.NONE);
-        variableDeclaration.setType(ast.newSimpleType(ast.newSimpleName("Point")));
-        variableDeclaration.setName(ast.newSimpleName("size"));
-//        methodConstructor.parameters().add(variableDeclaration);
-        /*
-        创建 Javadoc 节点
-         */
-        Javadoc jc = ast.newJavadoc();
-        TagElement tag = ast.newTagElement();
-        TextElement te = ast.newTextElement();
-        tag.fragments().add(te);
-        te.setText("Sample SWT Composite class created using the ASTParser");
-        jc.tags().add(tag);
-        tag = ast.newTagElement();
-        tag.setTagName(TagElement.TAG_AUTHOR);
-        tag.fragments().add(ast.newSimpleName("Manoel Marques"));
-        jc.tags().add(tag);
-//        classType.setJavadoc(jc);
-        /*
-        创建语句
-         */
-        vdf.setName(ast.newSimpleName("gridLayout"));
-        VariableDeclarationStatement vds = ast.newVariableDeclarationStatement(vdf);
-        vds.setType(ast.newSimpleType(ast.newSimpleName("GridLayout")));
-        ClassInstanceCreation cc = ast.newClassInstanceCreation();
-        cc.setName(ast.newSimpleName("GridLayout"));
-        vdf.setInitializer(cc);
-//        constructorBlock.statements().add(vds);
-        /*
-         创建同一语句的另一种方法
-         */
-        Assignment a = ast.newAssignment();
-        a.setOperator(Assignment.Operator.ASSIGN);
-        VariableDeclarationExpression vde = ast.newVariableDeclarationExpression(vdf);
-        vde.setType(ast.newSimpleType(ast.newSimpleName("GridLayout")));
-        a.setLeftHandSide(vde);
 
-        cc.setName(ast.newSimpleName("GridLayout"));
-        a.setRightHandSide(cc);
-//        constructorBlock.statements().add(ast.newExpressionStatement(a));
-
-    }
-
-
-    private void addNodeTest(char[] source) {//Not used, just for reference
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setSource(source);
-        CompilationUnit targetRoot = (CompilationUnit) parser.createAST(null);
-        targetRoot.recordModifications();
-        parser.setSource("class T{}”".toCharArray());
-        CompilationUnit srcRoot = (CompilationUnit) parser.createAST(null);
-        //这是非法操作，两者的AST源不一样
-        targetRoot.types().add(srcRoot.types().get(0));
-        //这是合法操作
-        targetRoot.types().add(ASTNode.copySubtree(targetRoot.getAST(), (ASTNode) srcRoot.types().get(0)));
-        targetRoot.types().add(targetRoot.getAST().newTypeDeclaration());
-    }
 }
