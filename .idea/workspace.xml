@@ -55,20 +55,6 @@
                 <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ProjectNode" />
               </PATH_ELEMENT>
               <PATH_ELEMENT>
-                <option name="myItemId" value="Dependencies" />
-                <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-              </PATH_ELEMENT>
-            </PATH>
-            <PATH>
-              <PATH_ELEMENT>
-                <option name="myItemId" value="" />
-                <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ExternalProjectsStructure$RootNode" />
-              </PATH_ELEMENT>
-              <PATH_ELEMENT>
-                <option name="myItemId" value="AfTool" />
-                <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ProjectNode" />
-              </PATH_ELEMENT>
-              <PATH_ELEMENT>
                 <option name="myItemId" value="Tasks" />
                 <option name="myItemType" value="com.intellij.openapi.externalSystem.view.TasksNode" />
               </PATH_ELEMENT>
@@ -122,11 +108,24 @@
       <file leaf-file-name="AstBasic.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2548596">
-              <caret line="119" column="79" selection-start-line="119" selection-start-column="79" selection-end-line="119" selection-end-column="79" />
+            <state vertical-scroll-proportion="0.67839193">
+              <caret line="110" column="38" selection-start-line="110" selection-start-column="38" selection-end-line="110" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+                <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+                <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ASTVisitor.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-3.8888888">
+              <caret line="116" column="21" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -158,12 +157,25 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="AST.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/AST.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.6666666">
+              <caret line="132" column="19" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ASTNode.class" pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.481482">
-              <caret line="942" column="21" selection-start-line="942" selection-start-column="15" selection-end-line="942" selection-end-column="21" />
-              <folding />
+            <state vertical-scroll-proportion="-4.5555553">
+              <caret line="430" column="18" selection-start-line="430" selection-start-column="18" selection-end-line="430" selection-end-column="18" />
+              <folding>
+                <element signature="e#16908#16909#0" expanded="true" />
+                <element signature="e#16939#16940#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -460,6 +472,7 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/resources/log4j2.xml" />
         <option value="$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java" />
+        <option value="/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/rt.jar!/java/util/Map.class" />
         <option value="$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java" />
       </list>
     </option>
@@ -942,6 +955,9 @@
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f91a51c3-1880-448b-bf26-09a83a017518" name="Default" comment="" />
@@ -963,11 +979,11 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41643837" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32739726" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32739726" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18012924" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13974153" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13974153" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18043844" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -979,6 +995,14 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -994,20 +1018,15 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1034,6 +1053,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1060,6 +1082,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1086,6 +1111,9 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1112,6 +1140,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1130,6 +1161,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1148,6 +1182,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1217,14 +1254,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/AST.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="341" column="15" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/src.zip!/java/io/FileSystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.26218098">
@@ -1285,18 +1314,6 @@
         <state vertical-scroll-proportion="-6.875">
           <caret line="11" column="66" selection-start-line="11" selection-start-column="66" selection-end-line="11" selection-end-column="66" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="451" column="33" selection-start-line="451" selection-start-column="33" selection-end-line="451" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#17566#0" expanded="true" />
-            <element signature="e#11594#11595#0" expanded="true" />
-            <element signature="e#11621#11622#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1375,14 +1392,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.481482">
-          <caret line="942" column="21" selection-start-line="942" selection-start-column="15" selection-end-line="942" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1419,12 +1428,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTNode.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.5555553">
+          <caret line="430" column="18" selection-start-line="430" selection-start-column="18" selection-end-line="430" selection-end-column="18" />
+          <folding>
+            <element signature="e#16908#16909#0" expanded="true" />
+            <element signature="e#16939#16940#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/AST.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.6666666">
+          <caret line="132" column="19" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/ASTVisitor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8888888">
+          <caret line="116" column="21" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/rt.jar!/java/util/Map.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2548596">
-          <caret line="119" column="79" selection-start-line="119" selection-start-column="79" selection-end-line="119" selection-end-column="79" />
+        <state vertical-scroll-proportion="0.67839193">
+          <caret line="110" column="38" selection-start-line="110" selection-start-column="38" selection-end-line="110" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readFile#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#createNode#0;class#AstBasic#0" expanded="false" />
+            <element signature="method#preVisit#0;class#1888:6102" expanded="false" />
           </folding>
         </state>
       </provider>
