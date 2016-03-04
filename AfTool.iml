@@ -108,5 +108,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.5" level="project" />
   </component>
 </module>
