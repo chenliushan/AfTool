@@ -1,12 +1,16 @@
 package polyu_af.domain;
 
 /**
- * Created by zjzhang27 on 4/3/16.
+ * Created by liushanchen on 4/3/16.
  */
 public class InputPL {
     int startPosition;
-    int length;
+    int length=1000;
 
+    /*
+    if cannot get the precise length, just use a big integer,
+    the nodeFinder.getCoveredNode can also find the node.
+     */
     public int getStartPosition() {
         return startPosition;
     }
