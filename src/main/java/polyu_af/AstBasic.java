@@ -57,14 +57,24 @@ public class AstBasic {
         The NodeFinder class can be used to find a specific node inside a tree
         For a given selection range, finds the covered node and the covering node.
          */
-            if (input != null) {
-                NodeFinder nodeFinder = new NodeFinder(root, input.getStartPosition(), input.getLength());
+            if (input != null && (input.getStartPosition() > -1 || input.getLine() > -1)) {
+                NodeFinder nodeFinder = null;
+                if (input.getStartPosition() == -1) {
+                    CompilationUnit cuRoot = (CompilationUnit) root;
+                    int position = cuRoot.getPosition(input.getLine(), input.getColumn());
+                    logger.info("position:  " + position);
+                    nodeFinder = new NodeFinder(root, position, input.getLength());
+                } else {
+                    nodeFinder = new NodeFinder(root, input.getStartPosition(), input.getLength());
+
+                }
                 ASTNode nodeScope = nodeFinder.getCoveringNode();
                 ASTNode targetNode = nodeFinder.getCoveredNode();
                 logger.info("nodeFinder.getCoveringNode(): " + nodeScope);
                 logger.info("nodeFinder.getCoveredNode(): " + targetNode);
                 return targetNode;
             }
+
 
         }
 
@@ -104,6 +114,10 @@ public class AstBasic {
 
     private static ASTVisitor visitorTest() {
 
+         /*
+            Do the specific process when visit some nodes that are specific type
+            by overriding the visit() function with specific node arg.
+         */
 
         ASTVisitor visitor = new ASTVisitor() {
             /*
@@ -115,45 +129,41 @@ public class AstBasic {
             postVisit()
              */
 
-            /*
-            Do the specific process when visit some nodes that are specific type
-            by overriding the visit() function with specific node arg.
-             */
 
-            @Override
-            public boolean preVisit2(ASTNode node) {
-                /*
+            /*
                 The same as the preVisit method, but
                 Returns:true if visit(node) should be called, and false otherwise.
-                 */
+             */
+            @Override
+            public boolean preVisit2(ASTNode node) {
+
                 return super.preVisit2(node);
             }
 
-            @Override
-            public void preVisit(ASTNode node) {
-                /*
+            /*
                  Visits the given node to perform some arbitrary operation.
                  This method is invoked prior to the appropriate type-specific visit method.
                  The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
-                 */
+             */
+            @Override
+            public void preVisit(ASTNode node) {
+
                 super.preVisit(node);
             }
 
-            @Override
-            public void postVisit(ASTNode node) {
-                /*
+            /*
                 Visits the given node to perform some arbitrary operation.
                 This method is invoked after the appropriate type-specific endVisit method.
                 The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
-                 */
+             */
+            @Override
+            public void postVisit(ASTNode node) {
+
                 CompilationUnit root = (CompilationUnit) node.getRoot();
                 int line = root.getLineNumber(node.getStartPosition());
                 int column = root.getColumnNumber(node.getStartPosition());
-                logger.info("line: " + line + "; column: " + column + "   {\"startPosition\":\" " + node.getStartPosition() + "\",\"length\": \"" + node.getLength() + "\"}");
-//                logger.info("post_getNodeType: " + node.getNodeType());// post_getNodeType: 42
-//                logger.info("post_getAST: " + node.getAST());//post_getAST: org.eclipse.jdt.core.dom.AST@38d8f54a
-//                logger.info("post_getLocationInParent: " + node.getLocationInParent());//post_getLocationInParent: ChildListProperty[org.eclipse.jdt.core.dom.CompilationUnit,types]
-//                logger.info("post_getParent: " + node.getParent());//show the parent code
+                logger.info("{\"line\":\" " + line + "\", \"column\": \"" + column + "\",\"startPosition\":\" " + node.getStartPosition() + "\",\"length\": \"" + node.getLength() + "\"}");
+
                 super.postVisit(node);
             }
         };

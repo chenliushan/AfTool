@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f91a51c3-1880-448b-bf26-09a83a017518" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/input/AfToolInput" afterPath="$PROJECT_DIR$/input/AfToolInput" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java" afterPath="$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java" afterPath="$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java" />
     </list>
     <ignored path="AfTool.iws" />
@@ -105,16 +107,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AstBasic.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AstBasic.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="151" column="41" selection-start-line="151" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.59923667">
+              <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-                <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-                <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -124,27 +123,26 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="25" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-              <folding />
+              <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+              <folding>
+                <element signature="e#340#341#0" expanded="true" />
+                <element signature="e#369#370#0" expanded="true" />
+                <element signature="e#410#411#0" expanded="true" />
+                <element signature="e#446#447#0" expanded="true" />
+                <element signature="e#474#475#0" expanded="true" />
+                <element signature="e#501#502#0" expanded="true" />
+                <element signature="e#538#539#0" expanded="true" />
+                <element signature="e#570#571#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AfToolInput" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AfToolInput" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/input/AfToolInput">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="38" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="textLineAndPosition" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/textLineAndPosition">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="351" column="110" selection-start-line="351" selection-start-column="70" selection-end-line="351" selection-end-column="110" />
+              <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="0" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -166,11 +164,20 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="48" column="40" selection-start-line="48" selection-start-column="40" selection-end-line="48" selection-end-column="40" />
+              <caret line="350" column="115" selection-start-line="350" selection-start-column="115" selection-end-line="350" selection-end-column="115" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#preVisit#0;class#11992:17094" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="textLineAndPosition" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/textLineAndPosition">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="351" column="110" selection-start-line="351" selection-start-column="70" selection-end-line="351" selection-end-column="110" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -346,7 +353,7 @@
     <option name="modificationStamps">
       <map>
         <entry key="$PROJECT_DIR$/../../../eclipse_workspace/gs-serving-web-content/complete" value="1426333486000" />
-        <entry key="$PROJECT_DIR$" value="2913179906000" />
+        <entry key="$PROJECT_DIR$" value="2913599081000" />
         <entry key="$PROJECT_DIR$/../apis/apis-example-client-app" value="2887363233000" />
         <entry key="$PROJECT_DIR$/../gs-rest-service/complete" value="1443322298000" />
         <entry key="$PROJECT_DIR$/../../../test_workspace/RecSystem" value="2886033738000" />
@@ -366,6 +373,7 @@
                           <list>
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.5/e7fd981408caba8a0c0fb276413562468d260160/log4j-api-2.5.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.5/7ed845de1dfe070d43511fab321784e6c4118398/log4j-core-2.5.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.5/686c608d1805b6d4d425ec4459e88164ffc85870/gson-2.5.jar" />
                             <option value="$MODULE_DIR$/lib/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar" />
                             <option value="$MODULE_DIR$/lib/org.eclipse.core.jobs_3.6.0.v20140424-0053.jar" />
                             <option value="$MODULE_DIR$/lib/org.eclipse.core.resources_3.9.1.v20140825-1431.jar" />
@@ -466,10 +474,11 @@
         <option value="$PROJECT_DIR$/log4j2.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/resources/log4j2.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java" />
         <option value="/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/rt.jar!/java/util/Map.class" />
-        <option value="$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java" />
         <option value="$PROJECT_DIR$/input/AfToolInput" />
+        <option value="$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java" />
+        <option value="$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java" />
       </list>
     </option>
   </component>
@@ -514,7 +523,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -659,10 +668,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AfTool" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AfTool" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="input" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -713,24 +736,6 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="AfTool" />
       <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="AfTool [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="jar" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
       <method />
     </configuration>
     <configuration default="false" name="AfTool [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -789,6 +794,24 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="AfTool" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="AfTool [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -965,18 +988,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Application.AstBasic" />
-      <item index="1" class="java.lang.String" itemvalue="Gradle.AfTool [jar]" />
-      <item index="2" class="java.lang.String" itemvalue="Gradle.AfTool [clean]" />
-      <item index="3" class="java.lang.String" itemvalue="Application.AstBasic (1)" />
-      <item index="4" class="java.lang.String" itemvalue="Application.AstBasicSample" />
+      <item index="1" class="java.lang.String" itemvalue="Gradle.AfTool [clean]" />
+      <item index="2" class="java.lang.String" itemvalue="Application.AstBasic (1)" />
+      <item index="3" class="java.lang.String" itemvalue="Application.AstBasicSample" />
+      <item index="4" class="java.lang.String" itemvalue="Gradle.AfTool [build]" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Application.AstBasic (1)" />
-        <item index="1" class="java.lang.String" itemvalue="Application.AstBasicSample" />
-        <item index="2" class="java.lang.String" itemvalue="Application.AstBasic" />
-        <item index="3" class="java.lang.String" itemvalue="Gradle.AfTool [clean]" />
-        <item index="4" class="java.lang.String" itemvalue="Gradle.AfTool [jar]" />
+        <item index="1" class="java.lang.String" itemvalue="Gradle.AfTool [build]" />
+        <item index="2" class="java.lang.String" itemvalue="Application.AstBasicSample" />
+        <item index="3" class="java.lang.String" itemvalue="Application.AstBasic" />
+        <item index="4" class="java.lang.String" itemvalue="Gradle.AfTool [clean]" />
       </list>
     </recent_temporary>
   </component>
@@ -1004,12 +1027,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46438357" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5890411" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24383561" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2849315" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18012924" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13974153" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18043844" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18012924" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -1075,9 +1098,6 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1104,9 +1124,6 @@
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1133,9 +1150,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1154,9 +1168,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1175,9 +1186,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1413,15 +1421,48 @@
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar!/org/eclipse/jdt/core/dom/NodeFinder.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="68" column="11" selection-start-line="68" selection-start-column="11" selection-end-line="68" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.22222222">
+          <caret line="21" column="46" selection-start-line="21" selection-start-column="42" selection-end-line="21" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+          <caret line="25" column="80" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/textLineAndPosition">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="351" column="110" selection-start-line="351" selection-start-column="70" selection-end-line="351" selection-end-column="110" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+          <folding>
+            <element signature="e#340#341#0" expanded="true" />
+            <element signature="e#369#370#0" expanded="true" />
+            <element signature="e#410#411#0" expanded="true" />
+            <element signature="e#446#447#0" expanded="true" />
+            <element signature="e#474#475#0" expanded="true" />
+            <element signature="e#501#502#0" expanded="true" />
+            <element signature="e#538#539#0" expanded="true" />
+            <element signature="e#570#571#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/input/AfToolInput">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="0" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1439,48 +1480,20 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/AstBasicSample.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="48" column="40" selection-start-line="48" selection-start-column="40" selection-end-line="48" selection-end-column="40" />
+          <caret line="350" column="115" selection-start-line="350" selection-start-column="115" selection-end-line="350" selection-end-column="115" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit#0;class#11992:17094" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/domain/InputPL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="25" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/sample/textLineAndPosition">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="351" column="110" selection-start-line="351" selection-start-column="70" selection-end-line="351" selection-end-column="110" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/polyu_af/AstBasic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="151" column="41" selection-start-line="151" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.59923667">
+          <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#preVisit2#0;class#3645:6167" expanded="false" />
-            <element signature="method#preVisit#0;class#3645:6167" expanded="false" />
-            <marker date="1457074544000" expanded="true" signature="1223:2473" placeholder="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/input/AfToolInput">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="38" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
