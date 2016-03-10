@@ -29,13 +29,6 @@ public class AstBasic {
          */
         root.accept(visitorTest());
         /*
-        int	getPosition(int line, int column)
-        Given a line number and column number, returns the corresponding position in the original source string.
-         */
-//        int position = root.getPosition(31, 7);
-//        logger.info("position:  " + position);
-
-        /*
         Read the inputs and find the node
          */
         findTheNodePL(root);
@@ -45,28 +38,36 @@ public class AstBasic {
     private static ASTNode findTheNodePL(ASTNode root) {
         /*
         Find the node acrroding to its startPosition and length
-        the input sample is:{“ startPosision”：“（int）”，“length”：“(int)”}
-         */
+        the input sample is:{“ startPosition”：“（int）”，“length”：“(int)”}
+        or {"line":" 163", "column": "40","length": "24"}
+        or {"line":" 47", "length": "100"}
+        or {"line":" 47"}
+        or {"startPosition":" 25"}
+        the last two input will get the whole line
+        */
         String source = readFile(System.getProperty("user.dir") + "/input/AfToolInput");
         if (source.trim() != "" && source != null) {
             logger.info("source:" + source);
             Gson gson = new Gson();
             InputPL input = gson.fromJson(source, InputPL.class);
-            logger.info("input:" + input.toString());
-         /*
-        The NodeFinder class can be used to find a specific node inside a tree
-        For a given selection range, finds the covered node and the covering node.
-         */
+            logger.info("InputPL:" + input.toString());
+            /*
+            The NodeFinder class can be used to find a specific node inside a tree
+            For a given selection range, finds the covered node and the covering node.
+            */
             if (input != null && (input.getStartPosition() > -1 || input.getLine() > -1)) {
                 NodeFinder nodeFinder = null;
                 if (input.getStartPosition() == -1) {
+                    /*
+                    int	getPosition(int line, int column)
+                    Given a line number and column number, returns the corresponding position in the original source string.
+                    */
                     CompilationUnit cuRoot = (CompilationUnit) root;
                     int position = cuRoot.getPosition(input.getLine(), input.getColumn());
                     logger.info("position:  " + position);
                     nodeFinder = new NodeFinder(root, position, input.getLength());
                 } else {
                     nodeFinder = new NodeFinder(root, input.getStartPosition(), input.getLength());
-
                 }
                 ASTNode nodeScope = nodeFinder.getCoveringNode();
                 ASTNode targetNode = nodeFinder.getCoveredNode();
@@ -74,10 +75,7 @@ public class AstBasic {
                 logger.info("nodeFinder.getCoveredNode(): " + targetNode);
                 return targetNode;
             }
-
-
         }
-
         return null;
     }
 
@@ -115,8 +113,8 @@ public class AstBasic {
     private static ASTVisitor visitorTest() {
 
          /*
-            Do the specific process when visit some nodes that are specific type
-            by overriding the visit() function with specific node arg.
+         Do the specific process when visit some nodes that are specific type
+         by overriding the visit() function with specific node arg.
          */
 
         ASTVisitor visitor = new ASTVisitor() {
@@ -127,49 +125,44 @@ public class AstBasic {
             visit()
             endVisit()
             postVisit()
-             */
+            */
 
 
             /*
-                The same as the preVisit method, but
-                Returns:true if visit(node) should be called, and false otherwise.
-             */
+            The same as the preVisit method, but
+            Returns:true if visit(node) should be called, and false otherwise.
+            */
             @Override
             public boolean preVisit2(ASTNode node) {
 
                 return super.preVisit2(node);
             }
-
             /*
-                 Visits the given node to perform some arbitrary operation.
-                 This method is invoked prior to the appropriate type-specific visit method.
-                 The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
+            Visits the given node to perform some arbitrary operation.
+            This method is invoked prior to the appropriate type-specific visit method.
+            The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
              */
             @Override
             public void preVisit(ASTNode node) {
 
                 super.preVisit(node);
             }
-
             /*
-                Visits the given node to perform some arbitrary operation.
-                This method is invoked after the appropriate type-specific endVisit method.
-                The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
+            Visits the given node to perform some arbitrary operation.
+            This method is invoked after the appropriate type-specific endVisit method.
+            The default implementation of this method does nothing. Subclasses may reimplement this method as needed.
              */
             @Override
             public void postVisit(ASTNode node) {
-
-                CompilationUnit root = (CompilationUnit) node.getRoot();
-                int line = root.getLineNumber(node.getStartPosition());
-                int column = root.getColumnNumber(node.getStartPosition());
-                logger.info("{\"line\":\" " + line + "\", \"column\": \"" + column + "\",\"startPosition\":\" " + node.getStartPosition() + "\",\"length\": \"" + node.getLength() + "\"}");
-
+//                CompilationUnit root = (CompilationUnit) node.getRoot();
+//                int line = root.getLineNumber(node.getStartPosition());
+//                int column = root.getColumnNumber(node.getStartPosition());
+//                logger.info("{\"line\":\" " + line + "\", \"column\": \"" + column + "\",\"startPosition\":\" " + node.getStartPosition() + "\",\"length\": \"" + node.getLength() + "\"}");
                 super.postVisit(node);
             }
         };
         return visitor;
     }
-
     private static IField getFieldToPostProcess(String par, IType type) {
         String[] candidates = par.trim().split(" ");
         for (String candidate : candidates) {

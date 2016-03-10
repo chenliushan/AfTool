@@ -7,7 +7,7 @@ public class InputPL {
     int line=-1;
     int column=0;
     int startPosition=-1;
-    int length=1000;
+    int length=500;
 
     /*
     if cannot get the precise length, just use a big integer,
