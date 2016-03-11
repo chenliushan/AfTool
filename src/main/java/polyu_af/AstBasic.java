@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/2/24.
@@ -25,15 +24,14 @@ public class AstBasic {
         String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
         CompilationUnit root = createNode(source.toCharArray());
         /*
-        Use visitor to go through the AST
-         */
-        root.accept(visitorTest());
-        /*
         Read the inputs and find the node
+        and use visitor to go through the node's AST
          */
-        findTheNodePL(root);
+        findTheNodePL(root).accept(visitorTest());
 
     }
+
+
 
     private static ASTNode findTheNodePL(ASTNode root) {
         /*
@@ -69,16 +67,27 @@ public class AstBasic {
                 } else {
                     nodeFinder = new NodeFinder(root, input.getStartPosition(), input.getLength());
                 }
-                ASTNode nodeScope = nodeFinder.getCoveringNode();
+                /*
+                Returns the innermost node that fully contains the selection.
+                A node also contains the zero-length selection on either end.
+                If more than one node covers the selection,
+                the returned node is the last covering node found in a preorder traversal of the AST.
+                This implies that for a zero-length selection between two adjacent sibling nodes, the node on the right is returned.
+                 */
+//                ASTNode nodeScope = nodeFinder.getCoveringNode();
+                /*
+                If the AST contains nodes whose range is equal to the selection,
+                returns the innermost of those nodes. Otherwise, returns the first node in a preorder traversal of the AST,
+                where the complete node range is covered by the selection.
+                */
                 ASTNode targetNode = nodeFinder.getCoveredNode();
-                logger.info("nodeFinder.getCoveringNode(): " + nodeScope);
+//                logger.info("nodeFinder.getCoveringNode(): " + nodeScope);
                 logger.info("nodeFinder.getCoveredNode(): " + targetNode);
                 return targetNode;
             }
         }
         return null;
     }
-
 
     private static String readFile(String fileName) {
         String fileContent = "";
@@ -109,7 +118,6 @@ public class AstBasic {
 
     }
 
-
     private static ASTVisitor visitorTest() {
 
          /*
@@ -137,6 +145,7 @@ public class AstBasic {
 
                 return super.preVisit2(node);
             }
+
             /*
             Visits the given node to perform some arbitrary operation.
             This method is invoked prior to the appropriate type-specific visit method.
@@ -147,6 +156,7 @@ public class AstBasic {
 
                 super.preVisit(node);
             }
+
             /*
             Visits the given node to perform some arbitrary operation.
             This method is invoked after the appropriate type-specific endVisit method.
@@ -154,25 +164,22 @@ public class AstBasic {
              */
             @Override
             public void postVisit(ASTNode node) {
-//                CompilationUnit root = (CompilationUnit) node.getRoot();
-//                int line = root.getLineNumber(node.getStartPosition());
-//                int column = root.getColumnNumber(node.getStartPosition());
-//                logger.info("{\"line\":\" " + line + "\", \"column\": \"" + column + "\",\"startPosition\":\" " + node.getStartPosition() + "\",\"length\": \"" + node.getLength() + "\"}");
+               /*
+                node.getNodeType()
+                Returns an integer value identifying the type of this concrete AST node.
+                The values are small positive integers, suitable for use in switch statements.
+
+                ASTNode.nodeClassForType()
+                Returns the node class for the corresponding node type.
+                 */
+                logger.info("node: " + node.toString());
+                logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
                 super.postVisit(node);
             }
         };
         return visitor;
     }
-    private static IField getFieldToPostProcess(String par, IType type) {
-        String[] candidates = par.trim().split(" ");
-        for (String candidate : candidates) {
-            IField field = type.getField(candidate);
-            if (field != null && field.exists()) {
-                return field;
-            }
-        }
-        return null;
-    }
+
 
 
 }
