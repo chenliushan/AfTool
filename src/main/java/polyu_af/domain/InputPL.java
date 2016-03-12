@@ -7,7 +7,7 @@ public class InputPL {
     int line=-1;
     int column=0;
     int startPosition=-1;
-    int length=500;
+    int length=500;//表示选中的范围,实际上是将选中范围放得很大,然后利用getCoveredNode返回第一个选中的节点,也就取得选中范围内的第一行.
 
     /*
     if cannot get the precise length, just use a big integer,

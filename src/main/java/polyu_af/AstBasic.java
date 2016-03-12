@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by liushanchen on 16/2/24.
@@ -27,8 +28,22 @@ public class AstBasic {
         Read the inputs and find the node
         and use visitor to go through the node's AST
          */
-        findTheNodePL(root).accept(visitorTest());
+//        root.accept(visitorTest());
+//       for(Object item:root.types()){
+//           logger.info("getName"+item.getClass().getName());
+//       }
+//       findTheNodePL(root).accept(visitorTest());
 
+//        List<Object> types=root.types();
+//        for(Object item:types){
+//            logger.info("item: "+item.toString());
+//        }
+        ASTNode expNode=findTheNodePL(root);
+        if(expNode!=null){
+            expNode.accept(visitorTest());
+        }else {
+            logger.warn("The expression node is NULL!");
+        }
     }
 
 
@@ -174,8 +189,36 @@ public class AstBasic {
                  */
                 logger.info("node: " + node.toString());
                 logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
+                logger.info("============== " );
+
+                /*
+                try ASTNode
+                findDeclaration(IBinding binding, ASTNode root)
+                findVariableDeclaration(IVariableBinding binding, ASTNode root)
+                getContainingList(ASTNode node)
+
+                or
+                TypeAnalyzer extends ASTVisitor
+                */
+
+//                CompilationUnit nodeUnit= (CompilationUnit)node ;
+//                List<Object> types=nodeUnit.types();
+//                for(Object item:types){
+//                    logger.info("item: "+item.toString());
+//                }
+
                 super.postVisit(node);
             }
+
+//            @Override
+//            public boolean visit(SimpleName node) {
+////                CompilationUnit nodeUnit=(CompilationUnit)node;
+//                logger.info("getIdentifier: " + node.getIdentifier());
+//
+//                logger.info("isDeclaration: " + node.isDeclaration());
+//                logger.info("toString: " + node.toString());
+//                return super.visit(node);
+//            }
         };
         return visitor;
     }
