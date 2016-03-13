@@ -3,7 +3,13 @@ package polyu_af;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.domain.InputPL;
 
@@ -22,30 +28,48 @@ public class AstBasic {
 
     public static void main(String arg[]) {
 
-        String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
-        CompilationUnit root = createNode(source.toCharArray());
+//        String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
+//        String[] classpathEntries=new String[]{"build/classes/main",
+//                "lib/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar",
+//                "lib/org.eclipse.core.jobs_3.6.0.v20140424-0053.jar",
+//                "lib/org.eclipse.core.resources_3.9.1.v20140825-1431.jar",
+//                "lib/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar",
+//                "lib/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar",
+//                "lib/org.eclipse.equinox.preferences_3.5.200.v20140224-1527.jar",
+//                "lib/org.eclipse.jdt_3.10.1.v20150204-1700.jar",
+//                "lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar",
+//                "lib/org.eclipse.osgi_3.10.1.v20140909-1633.jar",
+//                "lib/org.eclipse.text_3.5.300.v20130515-1451.jar"
+//        };
+//        String[] sourcepathEntries=new String[]{"src/main/java"};
+//        String[] encodings=new String[]{"UTF-8"};
+
+        String source = readFile("/Users/liushanchen/IdeaProjects/AfTest" + "/src/main/java/polyu_af/MyList1.java");
+        String[] classpathEntries = new String[]{"/Users/liushanchen/IdeaProjects/AfTest/build/classes/main",
+                "/Users/liushanchen/IdeaProjects/AfTest/lib/cofoja.asm-1.2-20140817.jar"};
+        String[] sourcepathEntries = new String[]{"/Users/liushanchen/IdeaProjects/AfTest/src/main/java"};
+        String[] encodings = new String[]{"UTF-8"};
+
+
+        CompilationUnit root = createNode(source.toCharArray(), classpathEntries, sourcepathEntries, encodings);
+
         /*
         Read the inputs and find the node
         and use visitor to go through the node's AST
          */
 //        root.accept(visitorTest());
-//       for(Object item:root.types()){
-//           logger.info("getName"+item.getClass().getName());
-//       }
-//       findTheNodePL(root).accept(visitorTest());
 
-//        List<Object> types=root.types();
-//        for(Object item:types){
-//            logger.info("item: "+item.toString());
-//        }
-        ASTNode expNode=findTheNodePL(root);
-        if(expNode!=null){
+        ASTNode expNode = findTheNodePL(root);
+        if (expNode != null) {
             expNode.accept(visitorTest());
-        }else {
+        } else {
             logger.warn("The expression node is NULL!");
         }
-    }
 
+//        logger.info("findDeclaringNode: "+root.findDeclaringNode("root"));
+
+
+    }
 
 
     private static ASTNode findTheNodePL(ASTNode root) {
@@ -124,10 +148,23 @@ public class AstBasic {
         return fileContent;
     }
 
-    private static CompilationUnit createNode(char[] source) {
+    private static CompilationUnit createNode(char[] source, String[] classpathEntries, String[] sourcepathEntries, String[] encodings) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setResolveBindings(true);
+        parser.setEnvironment(classpathEntries, sourcepathEntries, encodings, true);
+        parser.setUnitName("AfTool");
         parser.setSource(source);
+        CompilationUnit node = (CompilationUnit) parser.createAST(null);
+        return node;
+
+    }
+
+    private static CompilationUnit createNode(ICompilationUnit unit) {
+        ASTParser parser = ASTParser.newParser(AST.JLS8);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setResolveBindings(true);
+        parser.setSource(unit);
         CompilationUnit node = (CompilationUnit) parser.createAST(null);
         return node;
 
@@ -187,42 +224,62 @@ public class AstBasic {
                 ASTNode.nodeClassForType()
                 Returns the node class for the corresponding node type.
                  */
-                logger.info("node: " + node.toString());
-                logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
-                logger.info("============== " );
+//                logger.info("node: " + node.toString());
+//                logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
+//                logger.info("============== ");
 
                 /*
                 try ASTNode
                 findDeclaration(IBinding binding, ASTNode root)
                 findVariableDeclaration(IVariableBinding binding, ASTNode root)
                 getContainingList(ASTNode node)
-
                 or
                 TypeAnalyzer extends ASTVisitor
                 */
 
-//                CompilationUnit nodeUnit= (CompilationUnit)node ;
-//                List<Object> types=nodeUnit.types();
-//                for(Object item:types){
-//                    logger.info("item: "+item.toString());
-//                }
-
                 super.postVisit(node);
             }
 
-//            @Override
-//            public boolean visit(SimpleName node) {
-////                CompilationUnit nodeUnit=(CompilationUnit)node;
-//                logger.info("getIdentifier: " + node.getIdentifier());
-//
-//                logger.info("isDeclaration: " + node.isDeclaration());
-//                logger.info("toString: " + node.toString());
-//                return super.visit(node);
-//            }
+            @Override
+            public boolean visit(SimpleName node) {
+                logger.info("getIdentifier: " + node.getIdentifier());
+                IBinding binding = node.resolveBinding();
+                if (binding != null) {
+//                    logger.info("binding: " + binding);
+                    logger.info("getName: " + binding.getName());
+                    logger.info("getKey: " + binding.getKey());
+                    logger.info("getKind: " + binding.getKind());
+//                    if (binding.getKind() == IBinding.TYPE) {
+//                        logger.info("TYPE: "+binding);
+//                    }
+                }
+                if (node.resolveTypeBinding() != null) {
+                    logger.info("getQualifiedName: " + node.resolveTypeBinding().getQualifiedName());
+                }
+                logger.info("==========================");
+                return super.visit(node);
+            }
+
+            @Override
+            public boolean visit(SingleMemberAnnotation node) {
+                IAnnotationBinding annotationBinding = node.resolveAnnotationBinding();
+                if (annotationBinding != null) {
+                    logger.info("annotationBinding: "+annotationBinding);
+                    logger.info("getAllMemberValuePairs: ");
+                    IMemberValuePairBinding[] allValue=annotationBinding.getAllMemberValuePairs();
+                    for (IMemberValuePairBinding item:allValue){
+                        Object[] s= (Object []) item.getValue();//get the content of [Ljava.lang.Object;@29d89d5d
+                        logger.info("item: "+item.getName()+"; value: "+s[0]);
+                    }
+//                    logger.info("annotationBinding.getJavaElement: " + annotationBinding.getJavaElement());
+                    logger.info("++++++++++++++++++++++++++");
+                }
+                return super.visit(node);
+            }
         };
+
         return visitor;
     }
-
 
 
 }
