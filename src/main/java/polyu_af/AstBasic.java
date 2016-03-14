@@ -3,13 +3,7 @@ package polyu_af;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.domain.InputPL;
 
@@ -17,17 +11,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by liushanchen on 16/2/24.
  */
 public class AstBasic {
     private static Logger logger = LogManager.getLogger(AstBasic.class.getName());
-
-
     public static void main(String arg[]) {
-
 //        String source = readFile(System.getProperty("user.dir") + "/src/main/java/polyu_af/AstBasic.java");
 //        String[] classpathEntries=new String[]{"build/classes/main",
 //                "lib/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar",
@@ -50,7 +40,6 @@ public class AstBasic {
         String[] sourcepathEntries = new String[]{"/Users/liushanchen/IdeaProjects/AfTest/src/main/java"};
         String[] encodings = new String[]{"UTF-8"};
 
-
         CompilationUnit root = createNode(source.toCharArray(), classpathEntries, sourcepathEntries, encodings);
 
         /*
@@ -65,9 +54,6 @@ public class AstBasic {
         } else {
             logger.warn("The expression node is NULL!");
         }
-
-//        logger.info("findDeclaringNode: "+root.findDeclaringNode("root"));
-
 
     }
 
@@ -228,14 +214,6 @@ public class AstBasic {
 //                logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
 //                logger.info("============== ");
 
-                /*
-                try ASTNode
-                findDeclaration(IBinding binding, ASTNode root)
-                findVariableDeclaration(IVariableBinding binding, ASTNode root)
-                getContainingList(ASTNode node)
-                or
-                TypeAnalyzer extends ASTVisitor
-                */
 
                 super.postVisit(node);
             }
@@ -268,16 +246,16 @@ public class AstBasic {
                     logger.info("getAllMemberValuePairs: ");
                     IMemberValuePairBinding[] allValue=annotationBinding.getAllMemberValuePairs();
                     for (IMemberValuePairBinding item:allValue){
-                        Object[] s= (Object []) item.getValue();//get the content of [Ljava.lang.Object;@29d89d5d
-                        logger.info("item: "+item.getName()+"; value: "+s[0]);
+                        Object[] os= (Object []) item.getValue();//get the content of [Ljava.lang.Object;@29d89d5d
+                        for(Object o:os){
+                            logger.info("item: "+item.getName()+"; value: "+o);
+                        }
                     }
-//                    logger.info("annotationBinding.getJavaElement: " + annotationBinding.getJavaElement());
                     logger.info("++++++++++++++++++++++++++");
                 }
                 return super.visit(node);
             }
         };
-
         return visitor;
     }
 
