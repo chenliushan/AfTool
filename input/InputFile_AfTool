@@ -1,0 +1,18 @@
+{"classpathEntries":["/Users/liushanchen/IdeaProjects/build/classes/main",
+                                     "lib/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar",
+                                     "lib/org.eclipse.core.jobs_3.6.0.v20140424-0053.jar",
+                                     "lib/org.eclipse.core.resources_3.9.1.v20140825-1431.jar",
+                                     "lib/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar",
+                                     "lib/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar",
+                                     "lib/org.eclipse.equinox.preferences_3.5.200.v20140224-1527.jar",
+                                     "lib/org.eclipse.jdt_3.10.1.v20150204-1700.jar",
+                                     "lib/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar",
+                                     "lib/org.eclipse.osgi_3.10.1.v20140909-1633.jar",
+                                     "lib/org.eclipse.text_3.5.300.v20130515-1451.jar"],
+"sourcepathEntries":["/Users/liushanchen/IdeaProjects/AfTool/src/main/java"],
+"encodings":["UTF-8"],
+"faultFileList":[{"sourceName":"polyu_af/MyList1.java",
+                    "faults":[{"line":68,"expression":"exp","expValue":true},
+                                {"line":70,"expression":"exp1","expValue":true}]
+                 }]
+}

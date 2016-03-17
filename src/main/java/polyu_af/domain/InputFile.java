@@ -50,7 +50,7 @@ public class InputFile {
     public char[] getSource(String sourceName) {
         if (sourcepathEntries != null && sourceName != null) {
             String path = sourcepathEntries[0];
-            if (path.endsWith("/")) {
+            if (path.endsWith("/")||sourceName.startsWith("/")) {
                 path += sourceName;
             } else {
                 path = path + "/" + sourceName;

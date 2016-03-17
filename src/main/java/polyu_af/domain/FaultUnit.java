@@ -29,7 +29,14 @@ public class FaultUnit {
     private String expression;
     private boolean expValue;
 
+    public FaultUnit() {
+    }
 
+    public FaultUnit(int line,  String expression,boolean expValue) {
+        this.line = line;
+        this.expValue = expValue;
+        this.expression = expression;
+    }
 
     public int getColumn() {
         return column;
