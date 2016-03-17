@@ -5,12 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.domain.InputPL;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import polyu_af.domain.FaultUnit;
+import polyu_af.utils.MyUtils;
 
 /**
  * Created by liushanchen on 16/2/24.
@@ -32,9 +28,9 @@ public class AstBasic {
 //                "lib/org.eclipse.text_3.5.300.v20130515-1451.jar"
 //        };
 //        String[] sourcepathEntries=new String[]{"src/main/java"};
-//        String[] encodings=new String[]{"UTF-8"};
+//        String[] encodings=new String[]{"UTF-8"};g
 
-        String source = readFile("/Users/liushanchen/IdeaProjects/AfTest" + "/src/main/java/polyu_af/MyList1.java");
+        String source = MyUtils.readFile("/Users/liushanchen/IdeaProjects/AfTest" + "/src/main/java/polyu_af/MyList1.java");
         String[] classpathEntries = new String[]{"/Users/liushanchen/IdeaProjects/AfTest/build/classes/main",
                 "/Users/liushanchen/IdeaProjects/AfTest/lib/cofoja.asm-1.2-20140817.jar"};
         String[] sourcepathEntries = new String[]{"/Users/liushanchen/IdeaProjects/AfTest/src/main/java"};
@@ -48,12 +44,12 @@ public class AstBasic {
          */
 //        root.accept(visitorTest());
 
-        ASTNode expNode = findTheNodePL(root);
-        if (expNode != null) {
-            expNode.accept(visitorTest());
-        } else {
-            logger.warn("The expression node is NULL!");
-        }
+//        ASTNode expNode = findTheNodePL(root);
+//        if (expNode != null) {
+//            expNode.accept(visitorTest());
+//        } else {
+//            logger.warn("The expression node is NULL!");
+//        }
 
     }
 
@@ -61,19 +57,13 @@ public class AstBasic {
     private static ASTNode findTheNodePL(ASTNode root) {
         /*
         Find the node acrroding to its startPosition and length
-        the input sample is:{“ startPosition”：“（int）”，“length”：“(int)”}
-        or {"line":" 163", "column": "40","length": "24"}
-        or {"line":" 47", "length": "100"}
-        or {"line":" 47"}
-        or {"startPosition":" 25"}
-        the last two input will get the whole line
         */
-        String source = readFile(System.getProperty("user.dir") + "/input/AfToolInput");
+        String source = MyUtils.readFile(System.getProperty("user.dir") + "/input/AfToolInput");
         if (source.trim() != "" && source != null) {
             logger.info("source:" + source);
             Gson gson = new Gson();
-            InputPL input = gson.fromJson(source, InputPL.class);
-            logger.info("InputPL:" + input.toString());
+            FaultUnit input = gson.fromJson(source, FaultUnit.class);
+            logger.info("FaultUnit:" + input.toString());
             /*
             The NodeFinder class can be used to find a specific node inside a tree
             For a given selection range, finds the covered node and the covering node.
@@ -114,25 +104,7 @@ public class AstBasic {
         return null;
     }
 
-    private static String readFile(String fileName) {
-        String fileContent = "";
-        File file = new File(fileName);
-        if (file.exists()) {
-            if (file.isFile()) {
-                try {
-                    BufferedReader input = new BufferedReader(new FileReader(file));
-                    StringBuffer buffer = new StringBuffer();
-                    String text;
-                    while ((text = input.readLine()) != null)
-                        buffer.append(text + "\n");
-                    fileContent = buffer.toString();
-                } catch (IOException ioException) {
-                    logger.error("readFile: " + ioException.getStackTrace().toString());
-                }
-            }
-        }
-        return fileContent;
-    }
+
 
     private static CompilationUnit createNode(char[] source, String[] classpathEntries, String[] sourcepathEntries, String[] encodings) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
