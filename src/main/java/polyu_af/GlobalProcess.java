@@ -22,7 +22,7 @@ public class GlobalProcess {
         /*
         read input file
          */
-        InputFile inputFile = MyUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest");
+        InputFile inputFile = MyUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
         FaultFile faultFile = null;
         List<FaultUnit> faultUnitList = null;
         if (inputFile != null && inputFile.getFaultFileList() != null){
@@ -48,7 +48,6 @@ public class GlobalProcess {
                 }
             }
         }
-
     }
 
 }

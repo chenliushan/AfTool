@@ -10,10 +10,19 @@ import java.util.List;
  */
 public class InputFile {
 
+    private String projectDir = null;
     private String[] classpathEntries = null;
     private String[] sourcepathEntries = null;
     private String[] encodings = new String[]{"UTF-8"};
     private List<FaultFile> faultFileList = null;
+
+    public String getProjectDir() {
+        return projectDir;
+    }
+
+    public void setProjectDir(String projectDir) {
+        this.projectDir = projectDir;
+    }
 
     public String[] getClasspathEntries() {
         return classpathEntries;
@@ -65,6 +74,7 @@ public class InputFile {
     public String toString() {
         return "InputFile{" +
                 "classpathEntries=" + Arrays.toString(classpathEntries) +
+                ", projectDir='" + projectDir + '\'' +
                 ", sourcepathEntries=" + Arrays.toString(sourcepathEntries) +
                 ", encodings=" + Arrays.toString(encodings) +
                 ", faultFileList=" + faultFileList +

@@ -52,6 +52,9 @@ public class AstUtils {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
+        /*
+        the sourcepathEntries can only have one path
+         */
         parser.setEnvironment(classpathEntries, sourcepathEntries, encodings, true);
         parser.setUnitName("AfTool");
         parser.setSource(source);
