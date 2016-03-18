@@ -22,8 +22,8 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/3/17.
  */
-public class MyUtils {
-    private static Logger logger = LogManager.getLogger(MyUtils.class.getName());
+public class ReadFileUtils {
+    private static Logger logger = LogManager.getLogger(ReadFileUtils.class.getName());
 
     public static String readFile(String fileName) {
         String fileContent = "";
@@ -49,7 +49,7 @@ public class MyUtils {
     read the input file and create inputFile object
      */
     public static InputFile getInput(String inputPath) {
-        String input = MyUtils.readFile(inputPath);
+        String input = ReadFileUtils.readFile(inputPath);
         if (input.trim() != "" && input != null) {
             logger.info("input:" + input);
             Gson gson = new Gson();

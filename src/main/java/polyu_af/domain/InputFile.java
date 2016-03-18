@@ -1,6 +1,6 @@
 package polyu_af.domain;
 
-import polyu_af.utils.MyUtils;
+import polyu_af.utils.ReadFileUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +64,7 @@ public class InputFile {
             } else {
                 path = path + "/" + sourceName;
             }
-            return MyUtils.readFile(path).toCharArray();
+            return ReadFileUtils.readFile(path).toCharArray();
         }
         return null;
 

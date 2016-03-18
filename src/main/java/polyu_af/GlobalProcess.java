@@ -8,7 +8,7 @@ import polyu_af.domain.FaultFile;
 import polyu_af.domain.FaultUnit;
 import polyu_af.domain.InputFile;
 import polyu_af.utils.AstUtils;
-import polyu_af.utils.MyUtils;
+import polyu_af.utils.ReadFileUtils;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class GlobalProcess {
         /*
         read input file
          */
-        InputFile inputFile = MyUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+        InputFile inputFile = ReadFileUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
         FaultFile faultFile = null;
         List<FaultUnit> faultUnitList = null;
         if (inputFile != null && inputFile.getFaultFileList() != null){
