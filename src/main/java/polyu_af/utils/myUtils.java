@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import polyu_af.domain.FaultFile;
 import polyu_af.domain.FaultUnit;
@@ -107,8 +106,7 @@ public class MyUtils {
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(iFile);
                 doc.getDocumentElement().normalize();
-                logger.info("Root element :"
-                        + doc.getDocumentElement().getNodeName());
+//                logger.info("Root element :" + doc.getDocumentElement().getNodeName());
                 NodeList nList = doc.getDocumentElement().getElementsByTagName("classpathentry");
                 for (int temp = 0; temp < nList.getLength(); temp++) {
                     Element eElement = (Element) nList.item(temp);

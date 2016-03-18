@@ -30,7 +30,7 @@ public class GlobalProcess {
         }
 
         /*
-        create faultFileAST -root
+        create faultFileAST --root
          */
         char[] faultFileSource = inputFile.getSource(faultFile.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource, inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(), inputFile.getEncodings());
