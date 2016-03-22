@@ -28,12 +28,12 @@ public class GlobalProcess {
         if (inputFile != null && inputFile.getFaultFileList() != null){
             faultFile = inputFile.getFaultFileList().get(0);
         }
-
         /*
         create faultFileAST --root
          */
         char[] faultFileSource = inputFile.getSource(faultFile.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource, inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(), inputFile.getEncodings());
+
 
         if (faultFile != null){
             faultUnitList = faultFile.getFaults();
@@ -45,6 +45,7 @@ public class GlobalProcess {
                  */
                     ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
                     faultNode.accept(AstUtils.resolveType);
+
                 }
             }
         }

@@ -1,7 +1,7 @@
 {"projectDir":"/Users/liushanchen/IdeaProjects/AfTest",
 "encodings":["UTF-8"],
 "faultFileList":[{"sourceName":"polyu_af/MyList1.java",
-                    "faults":[{"line":68,"expression":"exp","expValue":true},
+                    "faults":[{"line":25,"expression":"i==0","expValue":true},
                                 {"line":70,"expression":"exp1","expValue":true}]
                  }]
 }

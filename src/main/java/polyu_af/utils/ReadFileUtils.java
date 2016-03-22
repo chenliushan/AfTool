@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import polyu_af.domain.FaultFile;
 import polyu_af.domain.FaultUnit;
@@ -52,19 +51,21 @@ public class ReadFileUtils {
     public static InputFile getInput(String inputPath) {
         String input = ReadFileUtils.readFile(inputPath);
         if (input.trim() != "" && input != null) {
-            logger.info("input:" + input);
+//            logger.info("input:" + input);
             Gson gson = new Gson();
             InputFile inputFile = gson.fromJson(input, InputFile.class);
-            logger.info("InputFile:" + inputFile.toString());
             if (inputFile.getProjectDir() != null) {
-                if (inputFile.getSourcepathEntries() == null) {
+                if (inputFile.getSourcepathEntries() == null && inputFile.getClasspathEntries() == null) {
                     inputFile = readClasspathI(inputFile, inputFile.getProjectDir());
                 }
-                if (inputFile.getSourcepathEntries() == null) {
+                if (inputFile.getSourcepathEntries() == null && inputFile.getClasspathEntries() == null) {
                     inputFile = readClasspathE(inputFile, inputFile.getProjectDir());
                 }
             }
             logger.info("InputFile:" + inputFile.toString());
+            if (inputFile.getSourcepathEntries() == null && inputFile.getClasspathEntries() == null) {
+                return null;
+            }
             return inputFile;
         }
         return null;
