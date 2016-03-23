@@ -20,7 +20,10 @@ import java.util.List;
  */
 public class AstUtils {
     private static Logger logger = LogManager.getLogger(AstUtils.class.getName());
-    public static ASTVisitor resolveType = new ASTVisitor() {
+    /**
+     * see the resolve declaration type of the simpleName node
+     */
+    public static ASTVisitor resolveTypeVisitor = new ASTVisitor() {
         @Override
         public boolean visit(SimpleName node) {
             logger.info("getIdentifier: " + node.getIdentifier());
@@ -56,6 +59,18 @@ public class AstUtils {
             return super.visit(node);
         }
     };
+    /**
+     * print the node's ASTtype
+     */
+    public static ASTVisitor seeTypeVisitor = new ASTVisitor() {
+        @Override
+        public void postVisit(ASTNode node) {
+            logger.info("node: " + node.toString());
+            logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
+            logger.info("============== ");
+            super.postVisit(node);
+        }
+    };
 
 
 
@@ -72,19 +87,17 @@ public class AstUtils {
         CompilationUnit node = (CompilationUnit) parser.createAST(null);
         return node;
     }
-    public static CompilationUnit createResolvedAST_(ITypeRoot source, String[] classpathEntries, String[] sourcepathEntries, String[] encodings, String UnitName) {
+
+
+    public static Expression createExpAST(String exp) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setKind(ASTParser.K_EXPRESSION);
         parser.setResolveBindings(true);
-        /*
-        the sourcepathEntries can only have one path
-         */
-        parser.setEnvironment(classpathEntries, sourcepathEntries, encodings, true);
-        parser.setUnitName(UnitName);
-        parser.setSource(source);
-        CompilationUnit node = (CompilationUnit) parser.createAST(null);
-        return node;
+        parser.setSource(exp.toCharArray());
+        Expression expAst = (Expression) parser.createAST(null);
+        return expAst;
     }
+
 
     /*
     Find the target node in the root that the FaultUnit Point to.
@@ -105,7 +118,13 @@ public class AstUtils {
         return null;
     }
 
-
+    /**
+     * fail when do "rewriter.rewriteAST(); "
+     *
+     * @param source
+     * @param exp
+     * @param root
+     */
     public static void parseExpressionsListRewrite(String source, String exp, CompilationUnit root) {
         AST rootAst = root.getAST();
         root.recordModifications();
@@ -122,14 +141,14 @@ public class AstUtils {
         InfixExpression expExp = (InfixExpression) ASTNode.copySubtree(rootAst, expAst);
         InfixExpression rootExp = rootAst.newInfixExpression();
 //        logger.info("l: "+expExp.getLeftOperand());
-        logger.info("getRoot: "+rootExp.getRoot());
+        logger.info("getRoot: " + rootExp.getRoot());
         rootExp.setLeftOperand((Expression) ASTNode.copySubtree(rootExp.getAST(), expExp.getLeftOperand()));
         rootExp.setOperator(expExp.getOperator());
         rootExp.setRightOperand((Expression) ASTNode.copySubtree(rootExp.getAST(), expExp.getRightOperand()));
 
 
         listRewrite.insertFirst(rootExp, null);
-        logger.info("getRoot: "+rootExp.getRoot());
+        logger.info("getRoot: " + rootExp.getRoot());
         try {
             TextEdit edits = rewriter.rewriteAST();
             /**
@@ -149,16 +168,19 @@ public class AstUtils {
         }
     }
 
-    public static void parseExpRecordModifications(final CompilationUnit root, final String exp,String source) {
-          ASTVisitor modify = new ASTVisitor() {
+    /**
+     * Modify the ast and apply the changes to the document
+     * @param root
+     * @param exp
+     * @param source
+     * the root and the source should come from the same .java file
+     */
+    public static void parseExpRecordModifications(final CompilationUnit root, final String exp, String source) {
+        ASTVisitor modify = new ASTVisitor() {
             @Override
             public boolean visit(ExpressionStatement node) {
-                ASTParser parser = ASTParser.newParser(AST.JLS8);
-                parser.setKind(ASTParser.K_EXPRESSION);
-                parser.setResolveBindings(true);
-                parser.setSource(exp.toCharArray());
-                Expression expAst =(Expression) parser.createAST(null);
-                Expression cp =(Expression) ASTNode.copySubtree(root.getAST(), expAst);
+                Expression expAst = createExpAST(exp);
+                Expression cp = (Expression) ASTNode.copySubtree(root.getAST(), expAst);
                 node.setExpression(cp);
                 return super.visit(node);
             }
@@ -167,15 +189,16 @@ public class AstUtils {
         root.recordModifications();
         root.accept(modify);
         Document document = new Document(source);
-        logger.info("document: "+document.get());
-        TextEdit edits = root.rewrite(document,null);
+        logger.info("document: " + document.get());
+        TextEdit edits = root.rewrite(document, null);
         try {
             edits.apply(document);
-            logger.info("document: "+document.get());
-            logger.info("root: "+root);
+            logger.info("document: " + document.get());
+            logger.info("root: " + root);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+        root.accept(resolveTypeVisitor);
 
     }
 }

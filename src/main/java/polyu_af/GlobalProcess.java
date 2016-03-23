@@ -5,10 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jface.text.Document;
 import polyu_af.domain.FaultFile;
 import polyu_af.domain.FaultUnit;
 import polyu_af.domain.InputFile;
+import polyu_af.process.ResolveExp;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.ReadFileUtils;
 
@@ -44,15 +47,15 @@ public class GlobalProcess {
             faultUnitList = faultFile.getFaults();
             if (faultUnitList != null) {
                 for (FaultUnit fu : faultUnitList) {
-                    /**
-                     *  find fault nodes in root
-                     *  visit the node's children and resolve their type
-                     */
+                    //find fault node in root
                     ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
-                    if (!fu.getExpression().equals("exp")) {
-//                        AstUtils.parseExpressionsListRewrite(faultFileSource.toString(), fu.getExpression(), root);
-                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
-                    }
+                    //resolve the input exp in the fault node
+                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
+                    resolveExp.resolveExp();
+                    //testing modify the expression
+//                    if (!fu.getExpression().equals("exp")) {
+//                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
+//                    }
                 }
             }
         }
