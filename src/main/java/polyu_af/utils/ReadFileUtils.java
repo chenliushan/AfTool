@@ -45,8 +45,10 @@ public class ReadFileUtils {
         return fileContent;
     }
 
-    /*
-    read the input file and create inputFile object
+    /**
+     * read the input file and create inputFile object
+     * @param inputPath the input file's path
+     * @return
      */
     public static InputFile getInput(String inputPath) {
         String input = ReadFileUtils.readFile(inputPath);
@@ -60,10 +62,14 @@ public class ReadFileUtils {
                 }
                 if (inputFile.getSourcepathEntries() == null && inputFile.getClasspathEntries() == null) {
                     inputFile = readClasspathE(inputFile, inputFile.getProjectDir());
+                    //sometimes the <component> <output> will miss and will turn to default path "out". this problem not solve yet
                 }
             }
             logger.info("InputFile:" + inputFile.toString());
             if (inputFile.getSourcepathEntries() == null && inputFile.getClasspathEntries() == null) {
+                logger.error("Did not get the desire environment.");
+                logger.error("SourcepathEntries: " + inputFile.getSourcepathEntries());
+                logger.error("ClasspathEntries: " + inputFile.getClasspathEntries());
                 return null;
             }
             return inputFile;
@@ -99,8 +105,11 @@ public class ReadFileUtils {
         logger.info("inputFile:   " + gson.toJson(inputFile));
     }
 
-    /*
-    get classpathEntries & sourcepathEntries from eclipse's .classpath file
+    /**
+     * get classpathEntries & sourcepathEntries from eclipse's .classpath file
+     * @param inputFile
+     * @param path the project path
+     * @return
      */
     public static InputFile readClasspathE(InputFile inputFile, String path) {
         List<String> classpathEntries = new ArrayList<String>();
@@ -138,8 +147,13 @@ public class ReadFileUtils {
         return inputFile;
     }
 
-    /*
-    get classpathEntries & sourcepathEntries from Idea's .iml file
+
+
+    /**
+     * get classpathEntries & sourcepathEntries from Idea's .iml file
+     * @param inputFile the whole inputFile obj
+     * @param path the project path
+     * @return
      */
     public static InputFile readClasspathI(InputFile inputFile, String path) {
         List<String> classpathEntries = new ArrayList<String>();

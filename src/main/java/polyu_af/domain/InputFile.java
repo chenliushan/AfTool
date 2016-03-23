@@ -56,7 +56,8 @@ public class InputFile {
         this.faultFileList = faultFileList;
     }
 
-    public char[] getSource(String sourceName) {
+
+    public String getSource(String sourceName) {
         if (sourcepathEntries != null && sourceName != null) {
             String path = sourcepathEntries[0];
             if (path.endsWith("/")||sourceName.startsWith("/")) {
@@ -64,7 +65,7 @@ public class InputFile {
             } else {
                 path = path + "/" + sourceName;
             }
-            return ReadFileUtils.readFile(path).toCharArray();
+            return ReadFileUtils.readFile(path);
         }
         return null;
 

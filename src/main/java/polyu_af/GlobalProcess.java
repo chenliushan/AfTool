@@ -2,8 +2,10 @@ package polyu_af;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.text.Document;
 import polyu_af.domain.FaultFile;
 import polyu_af.domain.FaultUnit;
 import polyu_af.domain.InputFile;
@@ -25,30 +27,34 @@ public class GlobalProcess {
         InputFile inputFile = ReadFileUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
         FaultFile faultFile = null;
         List<FaultUnit> faultUnitList = null;
-        if (inputFile != null && inputFile.getFaultFileList() != null){
+        if (inputFile != null && inputFile.getFaultFileList() != null) {
             faultFile = inputFile.getFaultFileList().get(0);
+        } else {
+            return;
         }
         /*
         create faultFileAST --root
          */
-        char[] faultFileSource = inputFile.getSource(faultFile.getSourceName());
-        CompilationUnit root = AstUtils.createResolvedAST(faultFileSource, inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(), inputFile.getEncodings());
+        String faultFileSource_ = inputFile.getSource(faultFile.getSourceName());
+        CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
+                inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(),
+                inputFile.getEncodings(), faultFile.getSourceName());
 
-
-        if (faultFile != null){
+        if (faultFile != null) {
             faultUnitList = faultFile.getFaults();
             if (faultUnitList != null) {
                 for (FaultUnit fu : faultUnitList) {
-                /*
-                find fault nodes in root
-                visit the node's children and resolve their type
-                 */
+                    /**
+                     *  find fault nodes in root
+                     *  visit the node's children and resolve their type
+                     */
                     ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
-                    faultNode.accept(AstUtils.resolveType);
-
+                    if (!fu.getExpression().equals("exp")) {
+//                        AstUtils.parseExpressionsListRewrite(faultFileSource.toString(), fu.getExpression(), root);
+                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
+                    }
                 }
             }
         }
     }
-
 }
