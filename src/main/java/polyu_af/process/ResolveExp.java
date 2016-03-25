@@ -16,15 +16,6 @@ public class ResolveExp {
     private ASTNode faultNode;
     private FaultUnit faultUnit;
 
-    private ASTVisitor inputResolveVisitor = new ASTVisitor() {
-        @Override
-        public boolean visit(SimpleName node) {
-
-
-            return super.visit(node);
-        }
-    };
-
     public ResolveExp(ASTNode faultNode, FaultUnit faultUnit, CompilationUnit root) {
         this.faultNode = faultNode;
         this.faultUnit = faultUnit;
@@ -35,7 +26,8 @@ public class ResolveExp {
         if (!faultUnit.getExpression().equals("exp")) {
             Expression expAst = AstUtils.createExpAST(faultUnit.getExpression());
             /**
-             * Can write a switch block here to cast the expression to different type
+             * Since there are limit kinds of input exp, (infix expression, method invocation...)
+             * we can write a switch block here to cast the expression for different kind
              * and do different operation;
              * here is one of the possible operations: when the input exp is infixExpression.
              * 1.get the leftOperand of the infixExpression

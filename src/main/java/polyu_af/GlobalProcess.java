@@ -24,9 +24,7 @@ public class GlobalProcess {
     private static Logger logger = LogManager.getLogger(GlobalProcess.class.getName());
 
     public static void main(String arg[]) {
-        /*
-        read input file
-         */
+        //read input file
         InputFile inputFile = ReadFileUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
         FaultFile faultFile = null;
         List<FaultUnit> faultUnitList = null;
@@ -35,9 +33,7 @@ public class GlobalProcess {
         } else {
             return;
         }
-        /*
-        create faultFileAST --root
-         */
+        //create faultFileAST --root
         String faultFileSource_ = inputFile.getSource(faultFile.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
                 inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(),
