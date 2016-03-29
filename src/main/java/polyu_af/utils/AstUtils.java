@@ -11,6 +11,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
+import polyu_af.models.VariableScope;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -56,6 +57,53 @@ public class AstUtils {
             return super.visit(node);
         }
     };
+
+    /**
+     * find all declarations inside one ASTnode
+     */
+    public static ASTVisitor findDeclaration = new ASTVisitor() {
+
+        @Override
+        public boolean visit(VariableDeclarationFragment node) {
+            logger.info("VariableDeclarationFragment: " + node.getName().resolveTypeBinding().getName() + " " + node.getName() + ":::" + find((CompilationUnit) node.getRoot(), node));
+            return super.visit(node);
+        }
+
+        /**
+         * get variable declaration in the method parameters
+         * @param node
+         * @return
+         */
+        @Override
+        public boolean visit(SingleVariableDeclaration node) {
+            logger.info("SingleVariableDeclaration: " + node.toString() + ":::" + find((CompilationUnit) node.getRoot(), node));
+
+            return super.visit(node);
+        }
+    };
+
+    /**
+     * 1.	找到变量node直接属于的block/type/method node
+     * 2.	变量node的起始位置到block的结束位置为作用域（不完善，在内部类中不能使用费静态的field 变量。）
+     *
+     * @param root
+     * @param node
+     * @return
+     */
+    private static VariableScope find(CompilationUnit root, ASTNode node) {
+        int start = -1, end = -1;
+        ASTNode parent = node.getParent();
+        VariableScope scope = null;
+        if (parent instanceof TypeDeclaration) {
+            scope = new VariableScope(root.getLineNumber(node.getStartPosition()), root.getLineNumber(parent.getStartPosition() + parent.getLength()));
+        } else if (parent instanceof Block) {
+            scope = new VariableScope(root.getLineNumber(node.getStartPosition()), root.getLineNumber(parent.getStartPosition() + parent.getLength()));
+        } else {
+            return find(root, parent);
+        }
+        return scope;
+    }
+
     /**
      * print the node's ASTtype
      */
@@ -70,14 +118,18 @@ public class AstUtils {
     };
 
 
-
+    /**
+     * @param source
+     * @param classpathEntries
+     * @param sourcepathEntries can only have one path
+     * @param encodings
+     * @param UnitName
+     * @return
+     */
     public static CompilationUnit createResolvedAST(String source, String[] classpathEntries, String[] sourcepathEntries, String[] encodings, String UnitName) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
-        /*
-        the sourcepathEntries can only have one path
-         */
         parser.setEnvironment(classpathEntries, sourcepathEntries, encodings, true);
         parser.setUnitName(UnitName);
         parser.setSource(source.toCharArray());
@@ -95,10 +147,13 @@ public class AstUtils {
         return expAst;
     }
 
-
-    /*
-    Find the target node in the root that the FaultUnit Point to.
-    The root and the faultUnit should comes from the same FaultFile.(not checked yet.)
+    /**
+     * Find the target node in the root that the FaultUnit Point to.
+     * The root and the faultUnit should comes from the same FaultFile.(not checked yet.)
+     *
+     * @param root
+     * @param fu
+     * @return
      */
     public static ASTNode findNodeInRoot(ASTNode root, FaultUnit fu) {
         if (root != null && fu != null && (fu.getStartPosition() > -1 || fu.getLine() > -1)) {
@@ -167,10 +222,10 @@ public class AstUtils {
 
     /**
      * Modify the ast and apply the changes to the document
+     *
      * @param root
      * @param exp
-     * @param source
-     * the root and the source should come from the same .java file
+     * @param source the root and the source should come from the same .java file
      */
     public static void parseExpRecordModifications(final CompilationUnit root, final String exp, String source) {
         ASTVisitor modify = new ASTVisitor() {
@@ -197,6 +252,22 @@ public class AstUtils {
         }
         root.accept(resolveTypeVisitor);
 
+    }
+
+    public static void expressionScope(final CompilationUnit root) {
+        ASTVisitor test = new ASTVisitor() {
+            @Override
+            public void postVisit(ASTNode node) {
+
+                logger.info("start line: " + root.getLineNumber(node.getStartPosition()));
+                logger.info("end line: " + root.getLineNumber(node.getStartPosition() + node.getLength()));
+                logger.info("node: " + node.toString());
+                logger.info("getParent: " + ASTNode.nodeClassForType(node.getParent().getNodeType()));
+                logger.info("============== ");
+                super.postVisit(node);
+            }
+        };
+        root.accept(test);
     }
 }
 

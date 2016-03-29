@@ -35,21 +35,23 @@ public class GlobalProcess {
                 inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(),
                 inputFile.getEncodings(), faultFile.getSourceName());
 
-        if (faultFile != null) {
-            faultUnitList = faultFile.getFaults();
-            if (faultUnitList != null) {
-                for (FaultUnit fu : faultUnitList) {
-                    //find fault node in root
-                    ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
-                    //resolve the input exp in the fault node
-                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
-                    resolveExp.resolveExp();
-                    //testing modify the expression
-//                    if (!fu.getExpression().equals("exp")) {
-//                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
-//                    }
-                }
-            }
-        }
+        root.accept(AstUtils.findDeclaration);
+//        logger.info("${logger}"+${logger});
+//        if (faultFile != null) {
+//            faultUnitList = faultFile.getFaults();
+//            if (faultUnitList != null) {
+//                for (FaultUnit fu : faultUnitList) {
+//                    //find fault node in root
+//                    ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
+//                    //resolve the input exp in the fault node
+//                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
+//                    resolveExp.resolveExp();
+//                    //testing modify the expression
+////                    if (!fu.getExpression().equals("exp")) {
+////                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
+////                    }
+//                }
+//            }
+//        }
     }
 }
