@@ -3,7 +3,7 @@ package polyu_af.process;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.domain.FaultUnit;
+import polyu_af.models.FaultUnit;
 import polyu_af.utils.AstUtils;
 
 /**

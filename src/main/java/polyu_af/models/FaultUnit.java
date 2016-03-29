@@ -1,4 +1,4 @@
-package polyu_af.domain;
+package polyu_af.models;
 
 /**
  * Created by liushanchen on 4/3/16.

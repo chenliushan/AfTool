@@ -2,15 +2,11 @@ package polyu_af;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jface.text.Document;
-import polyu_af.domain.FaultFile;
-import polyu_af.domain.FaultUnit;
-import polyu_af.domain.InputFile;
+import polyu_af.models.FaultFile;
+import polyu_af.models.FaultUnit;
+import polyu_af.models.InputFile;
 import polyu_af.process.ResolveExp;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.ReadFileUtils;

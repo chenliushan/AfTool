@@ -1,4 +1,4 @@
-package polyu_af.domain;
+package polyu_af.models;
 
 import polyu_af.utils.ReadFileUtils;
 

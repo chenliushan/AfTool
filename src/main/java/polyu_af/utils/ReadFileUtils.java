@@ -6,9 +6,9 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import polyu_af.domain.FaultFile;
-import polyu_af.domain.FaultUnit;
-import polyu_af.domain.InputFile;
+import polyu_af.models.FaultFile;
+import polyu_af.models.FaultUnit;
+import polyu_af.models.InputFile;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
