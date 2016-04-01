@@ -3,12 +3,16 @@ package polyu_af.utils;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import polyu_af.models.FaultFile;
 import polyu_af.models.FaultUnit;
 import polyu_af.models.InputFile;
+import polyu_af.models.MyExpression;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,7 +21,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -217,5 +223,45 @@ public class ReadFileUtils {
             subPath = path + subPath;
         }
         return subPath;
+    }
+//    public static void printMap(Map<Object,Object> map){
+//        Iterator<Map.Entry<Object,Object>> entries = map.entrySet().iterator();
+//        while (entries.hasNext()) {
+//            Map.Entry<Object,Object> entry = entries.next();
+//            Object node=entry.getValue();
+//            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
+//
+//        }
+//    }
+
+    public static void printAccessibleVariables(Map<Integer, List<MyExpression>> accessibleVariables) {
+        Iterator<Map.Entry<Integer,List<MyExpression>>> entries = accessibleVariables.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Integer,List<MyExpression>> entry = entries.next();
+            Object node=entry.getValue();
+            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
+
+        }
+    }
+
+    public static void printPos2TypeDecl(Map<Integer, TypeDeclaration> pos2TypeDecl) {
+        Iterator<Map.Entry<Integer,TypeDeclaration>> entries = pos2TypeDecl.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Integer,TypeDeclaration> entry = entries.next();
+            Object node=entry.getValue();
+            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
+
+        }
+    }
+
+
+    public static void printPos2ArgMap(Map<Integer, Expression> pos2ArgMap) {
+        Iterator<Map.Entry<Integer,Expression>> entries = pos2ArgMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Integer,Expression> entry = entries.next();
+            Object node=entry.getValue();
+            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
+
+        }
     }
 }

@@ -2,12 +2,11 @@ package polyu_af;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.models.FaultFile;
 import polyu_af.models.FaultUnit;
 import polyu_af.models.InputFile;
-import polyu_af.process.ResolveExp;
+import polyu_af.process.AccessibleVariables;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.ReadFileUtils;
 
@@ -35,7 +34,14 @@ public class GlobalProcess {
                 inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(),
                 inputFile.getEncodings(), faultFile.getSourceName());
 
-        root.accept(AstUtils.findDeclaration);
+//        root.accept(AstUtils.findDeclaration);
+        AccessibleVariables accessibleVariables=new AccessibleVariables(root);
+        root.accept(accessibleVariables);
+        ReadFileUtils.printAccessibleVariables(accessibleVariables.getAccessibleVariables());
+//        ReadFileUtils.printPos2ArgMap(accessibleVariables.getPos2ArgMap());
+//        ReadFileUtils.printPos2TypeDecl(accessibleVariables.getPos2TypeDecl());
+
+//        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
 //        if (faultFile != null) {
 //            faultUnitList = faultFile.getFaults();

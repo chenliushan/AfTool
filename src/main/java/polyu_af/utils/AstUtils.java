@@ -13,11 +13,15 @@ import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
 import polyu_af.models.VariableScope;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by liushanchen on 16/3/17.
  */
 public class AstUtils {
     private static Logger logger = LogManager.getLogger(AstUtils.class.getName());
+    public static Map<String, ASTNode> astForm;
     /**
      * see the resolve declaration type of the simpleName node
      */
@@ -28,16 +32,37 @@ public class AstUtils {
             logger.info("getNodeType: " + ASTNode.nodeClassForType(node.getNodeType()));
             IBinding binding = node.resolveBinding();
             if (binding != null) {
-                logger.info("getName: " + binding.getName());
-                logger.info("getKey: " + binding.getKey());
-                logger.info("getKind: " + binding.getKind());
+                logger.info("binding.getName: " + binding.getName());
+                logger.info("binding.getKey: " + binding.getKey());
+                logger.info("binding.getKind: " + binding.getKind());
             }
-            if (node.resolveTypeBinding() != null) {
-                logger.info("getQualifiedName: " + node.resolveTypeBinding().getQualifiedName());
+            ITypeBinding typeBinding = node.resolveTypeBinding();
+            if (typeBinding != null) {
+                logger.info("typeBinding.getQualifiedName: " + typeBinding.getQualifiedName());
+                logger.info("typeBinding.getTypeDeclaration: " + typeBinding.getTypeDeclaration());
+                logger.info("typeBinding.getDeclaringClass: " + typeBinding.getDeclaringClass());
+                logger.info("typeBinding.getDeclaringMethod: " + typeBinding.getDeclaringMethod());
+                logger.info("typeBinding.getComponentType: " + typeBinding.getComponentType());
+                logger.info("typeBinding.isGenericType: " + typeBinding.isGenericType());
             }
             logger.info("==========================");
             return super.visit(node);
         }
+
+        @Override
+        public boolean visit(TypeDeclaration node) {
+            super.endVisit(node);
+            IBinding binding = node.resolveBinding();
+            if (binding != null) {
+                logger.info("binding.getName: " + binding.getName());
+                logger.info("binding.getKey: " + binding.getKey());
+                logger.info("binding.getKind: " + binding.getKind());
+                logger.info("binding.getJavaElement: " + binding.getJavaElement());
+                logger.info("binding.toString: " + binding.toString());
+            }
+            return super.visit(node);
+        }
+
 
         @Override
         public boolean visit(SingleMemberAnnotation node) {
@@ -59,13 +84,16 @@ public class AstUtils {
     };
 
     /**
-     * find all declarations inside one ASTnode
+     * findScope all declarations inside one ASTnode
      */
     public static ASTVisitor findDeclaration = new ASTVisitor() {
 
         @Override
         public boolean visit(VariableDeclarationFragment node) {
-            logger.info("VariableDeclarationFragment: " + node.getName().resolveTypeBinding().getName() + " " + node.getName() + ":::" + find((CompilationUnit) node.getRoot(), node));
+            VariableScope scope = findScope((CompilationUnit) node.getRoot(), node);
+            String variableType = node.getName().resolveTypeBinding().getName();
+            logger.info("VariableDeclarationFragment: " + variableType + " " + node.getName() + ":::" + scope.toString());
+            storeAst(variableType + " " + node.getName() + ":::" + scope.toString(), node);
             return super.visit(node);
         }
 
@@ -76,13 +104,17 @@ public class AstUtils {
          */
         @Override
         public boolean visit(SingleVariableDeclaration node) {
-            logger.info("SingleVariableDeclaration: " + node.toString() + ":::" + find((CompilationUnit) node.getRoot(), node));
+            VariableScope scope = findScope((CompilationUnit) node.getRoot(), node);
+            logger.info("SingleVariableDeclaration: " + node.toString() + ":::" + scope.toString());
+            storeAst(node.toString() + ":::" + scope.toString(), node);
 
             return super.visit(node);
         }
     };
 
+
     /**
+     * 确定变量的scope
      * 1.	找到变量node直接属于的block/type/method node
      * 2.	变量node的起始位置到block的结束位置为作用域（不完善，在内部类中不能使用费静态的field 变量。）
      *
@@ -90,7 +122,7 @@ public class AstUtils {
      * @param node
      * @return
      */
-    private static VariableScope find(CompilationUnit root, ASTNode node) {
+    private static VariableScope findScope(CompilationUnit root, ASTNode node) {
         int start = -1, end = -1;
         ASTNode parent = node.getParent();
         VariableScope scope = null;
@@ -99,9 +131,18 @@ public class AstUtils {
         } else if (parent instanceof Block) {
             scope = new VariableScope(root.getLineNumber(node.getStartPosition()), root.getLineNumber(parent.getStartPosition() + parent.getLength()));
         } else {
-            return find(root, parent);
+            return findScope(root, parent);
         }
         return scope;
+    }
+
+
+    private static void storeAst(String key, ASTNode node) {
+        if (astForm == null) {
+            astForm = new HashMap<String, ASTNode>();
+        } else {
+            astForm.put(key, node);
+        }
     }
 
     /**
