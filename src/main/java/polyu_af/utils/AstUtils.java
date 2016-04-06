@@ -11,7 +11,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
-import polyu_af.models.VariableScope;
+import polyu_af.sample.VariableScope;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -295,21 +295,7 @@ public class AstUtils {
 
     }
 
-    public static void expressionScope(final CompilationUnit root) {
-        ASTVisitor test = new ASTVisitor() {
-            @Override
-            public void postVisit(ASTNode node) {
 
-                logger.info("start line: " + root.getLineNumber(node.getStartPosition()));
-                logger.info("end line: " + root.getLineNumber(node.getStartPosition() + node.getLength()));
-                logger.info("node: " + node.toString());
-                logger.info("getParent: " + ASTNode.nodeClassForType(node.getParent().getNodeType()));
-                logger.info("============== ");
-                super.postVisit(node);
-            }
-        };
-        root.accept(test);
-    }
 }
 
 
