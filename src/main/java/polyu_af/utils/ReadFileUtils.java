@@ -224,44 +224,5 @@ public class ReadFileUtils {
         }
         return subPath;
     }
-//    public static void printMap(Map<Object,Object> map){
-//        Iterator<Map.Entry<Object,Object>> entries = map.entrySet().iterator();
-//        while (entries.hasNext()) {
-//            Map.Entry<Object,Object> entry = entries.next();
-//            Object node=entry.getValue();
-//            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
-//
-//        }
-//    }
 
-    public static void printAccessibleVariables(Map<Integer, List<MyExpression>> accessibleVariables) {
-        Iterator<Map.Entry<Integer,List<MyExpression>>> entries = accessibleVariables.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<Integer,List<MyExpression>> entry = entries.next();
-            Object node=entry.getValue();
-            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
-
-        }
-    }
-
-    public static void printPos2TypeDecl(Map<Integer, TypeDeclaration> pos2TypeDecl) {
-        Iterator<Map.Entry<Integer,TypeDeclaration>> entries = pos2TypeDecl.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<Integer,TypeDeclaration> entry = entries.next();
-            Object node=entry.getValue();
-            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
-
-        }
-    }
-
-
-    public static void printPos2ArgMap(Map<Integer, Expression> pos2ArgMap) {
-        Iterator<Map.Entry<Integer,Expression>> entries = pos2ArgMap.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<Integer,Expression> entry = entries.next();
-            Object node=entry.getValue();
-            logger.info("Key = " + entry.getKey() + ", Value = " + node.toString() );
-
-        }
-    }
 }

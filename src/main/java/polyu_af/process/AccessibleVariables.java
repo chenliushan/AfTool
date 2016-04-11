@@ -56,8 +56,11 @@ public class AccessibleVariables extends ASTVisitor {
     private Stack<List<MyExpression>> currentAccessible = new Stack<List<MyExpression>>();
     /**
      * map between each position and its corresponding actual parameter (or argument).
+     * private Map<Integer, Expression> pos2arg = new HashMap<Integer, Expression>();
+     * public final Map<Integer, Expression> getPos2ArgMap() {
+     *return pos2arg;
+     *}
      */
-    private Map<Integer, Expression> pos2arg = new HashMap<Integer, Expression>();
     /**
      * track the current enclosing type.
      */
@@ -69,9 +72,6 @@ public class AccessibleVariables extends ASTVisitor {
 
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
 
-    public final Map<Integer, Expression> getPos2ArgMap() {
-        return pos2arg;
-    }
 
     public final Map<Integer, List<MyExpression>> getAccessibleVariables() {
         return accessibleVariables;
@@ -92,6 +92,7 @@ public class AccessibleVariables extends ASTVisitor {
     public final void endVisit(final TypeDeclaration node) {
         typeDecl.pop();
         currentField.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
@@ -114,6 +115,7 @@ public class AccessibleVariables extends ASTVisitor {
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
@@ -130,12 +132,14 @@ public class AccessibleVariables extends ASTVisitor {
             }
         }
         currentAccessible.push(formalParameters);
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
     @Override
     public void endVisit(ForStatement node) {
         currentAccessible.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
@@ -144,29 +148,31 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
     @Override
     public void endVisit(Block node) {
         currentAccessible.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
 
     @Override
     public boolean visit(SwitchStatement node) {
-
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
     @Override
     public void endVisit(SwitchStatement node) {
-
         currentAccessible.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
@@ -176,78 +182,102 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
     @Override
     public final void endVisit(final MethodDeclaration node) {
         currentAccessible.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
     @Override
     public final boolean visit(final Initializer node) {
         currentAccessible.push(new ArrayList<MyExpression>());
+        outPut(node.getStartPosition());
         return super.visit(node);
     }
 
     @Override
     public final void endVisit(final Initializer node) {
         currentAccessible.pop();
+        outPut(node.getStartPosition()+node.getLength());
         super.endVisit(node);
     }
 
 
     @Override
     public final boolean visit(final VariableDeclarationStatement node) {
+
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
             MyExpression myExpression = new MyExpression(vdf, vdf.resolveBinding().getType().getName(), vdf.getName().toString());
             currentAccessible.peek().add(myExpression);
+            outPut(node.getStartPosition());
         }
         return super.visit(node);
     }
 
 
-    @Override
-    public final boolean visit(final ClassInstanceCreation node) {
-        for (Object o : node.arguments()) {
-            int position = root.getLineNumber(((Expression) o).getStartPosition());
-            Expression argExpr = (Expression) o;
-            pos2arg.put(position, argExpr);
-            pos2typeDecl.put(position, typeDecl.peek());
-            if (currentAccessible.isEmpty()) {
-                accessibleVariables.put(position, new ArrayList<MyExpression>());
-            } else {
-                accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
-            }
-            if (!currentField.isEmpty()) {
-                accessibleVariables.get(position).addAll(currentField.peek());
-            }
+//    @Override
+//    public final boolean visit(final ClassInstanceCreation node) {
+//        for (Object o : node.arguments()) {
+//            int position = root.getLineNumber(((Expression) o).getStartPosition());
+//            Expression argExpr = (Expression) o;
+//            //pos2arg.put(position, argExpr);
+//            pos2typeDecl.put(position, typeDecl.peek());
+//            if (currentAccessible.isEmpty()) {
+//                accessibleVariables.put(position, new ArrayList<MyExpression>());
+//            } else {
+//                accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
+//            }
+//            if (!currentField.isEmpty()) {
+//                accessibleVariables.get(position).addAll(currentField.peek());
+//            }
+//        }
+//
+//        return super.visit(node);
+//    }
+//
+//    @Override
+//    public final boolean visit(final MethodInvocation node) {
+//
+//        for (Object o : node.arguments()) {
+//            int position = root.getLineNumber(((Expression) o).getStartPosition());
+//            Expression argExpr = (Expression) o;
+//            //pos2arg.put(position, argExpr);
+//            pos2typeDecl.put(position, typeDecl.peek());
+//            if (currentAccessible.isEmpty()) {
+//                accessibleVariables.put(position, new ArrayList<MyExpression>());
+//            } else {
+//                accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
+//            }
+//            if (!currentField.isEmpty()) {
+//                accessibleVariables.get(position).addAll(currentField.peek());
+//            }
+//        }
+//
+//        return super.visit(node);
+//    }
+
+    private void outPut(int position) {
+        /**
+         * 也许是因为key相同了所以会覆盖
+         */
+        position = root.getLineNumber(position);
+//        if(accessibleVariables.containsKey(position)){
+//            logger.info("key crash xxxxxxxxxxxxxxxxxx "+position);
+//        }
+//        pos2typeDecl.put(position, typeDecl.peek());
+        if (currentAccessible.isEmpty()) {
+            accessibleVariables.put(position, new ArrayList<MyExpression>());
+        } else {
+            accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
         }
-
-        return super.visit(node);
-    }
-
-    @Override
-    public final boolean visit(final MethodInvocation node) {
-
-        for (Object o : node.arguments()) {
-            int position = root.getLineNumber(((Expression) o).getStartPosition());
-            Expression argExpr = (Expression) o;
-            pos2arg.put(position, argExpr);
-            pos2typeDecl.put(position, typeDecl.peek());
-            if (currentAccessible.isEmpty()) {
-                accessibleVariables.put(position, new ArrayList<MyExpression>());
-            } else {
-                accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
-            }
-            if (!currentField.isEmpty()) {
-                accessibleVariables.get(position).addAll(currentField.peek());
-            }
+        if (!currentField.isEmpty()) {
+            accessibleVariables.get(position).addAll(currentField.peek());
         }
-
-        return super.visit(node);
     }
-
 }

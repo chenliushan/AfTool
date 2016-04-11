@@ -8,6 +8,7 @@ import polyu_af.models.FaultUnit;
 import polyu_af.models.InputFile;
 import polyu_af.process.AccessibleVariables;
 import polyu_af.utils.AstUtils;
+import polyu_af.utils.CommonUtils;
 import polyu_af.utils.ReadFileUtils;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class GlobalProcess {
 //        root.accept(AstUtils.findDeclaration);
         AccessibleVariables accessibleVariables=new AccessibleVariables(root);
         root.accept(accessibleVariables);
-        ReadFileUtils.printAccessibleVariables(accessibleVariables.getAccessibleVariables());
+        CommonUtils.printMap(accessibleVariables.getAccessibleVariables());
 //        ReadFileUtils.printPos2ArgMap(accessibleVariables.getPos2ArgMap());
 //        ReadFileUtils.printPos2TypeDecl(accessibleVariables.getPos2TypeDecl());
 
