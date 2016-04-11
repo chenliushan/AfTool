@@ -34,6 +34,12 @@ import java.util.*;
  * c)	result Map:
  * i.	put – currentField.peek() & currentAccessible.peek().
  */
+
+/**
+ * use getAccessibleVariables to get the access variable for every line of the class
+ * one line's accessible variables is equivalent with the biggest line smaller than it.
+ *
+ */
 public class AccessibleVariables extends ASTVisitor {
 
     private static Logger logger = LogManager.getLogger(AccessibleVariables.class.getName());
