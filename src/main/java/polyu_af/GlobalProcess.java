@@ -3,15 +3,15 @@ package polyu_af;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import polyu_af.models.FaultFile;
-import polyu_af.models.FaultUnit;
-import polyu_af.models.InputFile;
+import polyu_af.models.*;
 import polyu_af.process.AccessibleVariables;
+import polyu_af.process.BuildIntegerExp;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.CommonUtils;
 import polyu_af.utils.ReadFileUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -21,44 +21,56 @@ public class GlobalProcess {
 
     public static void main(String arg[]) {
         //read input file
-        InputFile inputFile = ReadFileUtils.getInput(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
-        FaultFile faultFile = null;
+        GetConfiguration getConfiguration=new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+        TargetProgram targetProgram = getConfiguration.getTargetProgram();
+        FaultClass faultClass = null;
         List<FaultUnit> faultUnitList = null;
-        if (inputFile != null && inputFile.getFaultFileList() != null) {
-            faultFile = inputFile.getFaultFileList().get(0);
+        if (targetProgram != null && targetProgram.getFaultClassList() != null) {
+            faultClass = targetProgram.getFaultClassList().get(0);
         } else {
             return;
         }
         //create faultFileAST --root
-        String faultFileSource_ = inputFile.getSource(faultFile.getSourceName());
+        String faultFileSource_ = targetProgram.getSource(faultClass.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
-                inputFile.getClasspathEntries(), inputFile.getSourcepathEntries(),
-                inputFile.getEncodings(), faultFile.getSourceName());
+                targetProgram.getClasspathEntries(), targetProgram.getSourcepathEntries(),
+                targetProgram.getEncodings(), faultClass.getSourceName());
 
 //        root.accept(AstUtils.findDeclaration);
+        //get accessible variables
         AccessibleVariables accessibleVariables=new AccessibleVariables(root);
         root.accept(accessibleVariables);
-        CommonUtils.printMap(accessibleVariables.getAccessibleVariables());
-//        ReadFileUtils.printPos2ArgMap(accessibleVariables.getPos2ArgMap());
-//        ReadFileUtils.printPos2TypeDecl(accessibleVariables.getPos2TypeDecl());
+        Map<Integer, List<MyExpression>> accessibleVar=accessibleVariables.getAccessibleVariables();
+        CommonUtils.printMap(accessibleVar);
+
+        //build expression with accessible variables
+        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
+        buildIntegerExp.buildingExps();
+
+        Runtime runtime=Runtime.getRuntime();
+        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
 
 //        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
-//        if (faultFile != null) {
-//            faultUnitList = faultFile.getFaults();
-//            if (faultUnitList != null) {
-//                for (FaultUnit fu : faultUnitList) {
-//                    //find fault node in root
+
+        if (faultClass != null) {
+            faultUnitList = faultClass.getFaults();
+            if (faultUnitList != null) {
+                for (FaultUnit fu : faultUnitList) {
+                    //find fault node in root
 //                    ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
-//                    //resolve the input exp in the fault node
+                    //resolve the input exp in the fault node
 //                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
 //                    resolveExp.resolveExp();
-//                    //testing modify the expression
-////                    if (!fu.getExpression().equals("exp")) {
-////                        AstUtils.parseExpRecordModifications(root, fu.getExpression(), faultFileSource_);
-////                    }
-//                }
-//            }
-//        }
+                    //testing modify the expression
+                    if (!fu.getExpression().equals("exp")) {
+                       getConfiguration.saveNewFaultClass(
+                               AstUtils.parseExpRecordModifications(
+                                       root, fu.getExpression(), faultFileSource_));
+
+                    }
+                }
+            }
+        }
     }
 }

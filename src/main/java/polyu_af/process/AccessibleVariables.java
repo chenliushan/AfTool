@@ -106,7 +106,7 @@ public class AccessibleVariables extends ASTVisitor {
     public final boolean visit(final FieldDeclaration node) {
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.resolveBinding().getType().getName(), vdf.getName().getIdentifier());
+            MyExpression myExpression = new MyExpression(vdf, vdf.getName().getIdentifier());
             currentField.peek().add(myExpression);
         }
         return super.visit(node);
@@ -117,7 +117,7 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-            MyExpression myExpression = new MyExpression(svd, svd.getType().toString(), svd.getName().toString());
+            MyExpression myExpression = new MyExpression(svd,  svd.getName().toString());
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
@@ -133,7 +133,8 @@ public class AccessibleVariables extends ASTVisitor {
             VariableDeclarationExpression svd = (VariableDeclarationExpression) o;
             for (Object o2 : svd.fragments()) {
                 VariableDeclarationFragment f = (VariableDeclarationFragment) o2;
-                MyExpression myExpression = new MyExpression(svd, f.resolveBinding().getType().getName().toString(), f.getName().toString());
+//                MyExpression myExpression = new MyExpression(svd, f.resolveBinding().getType().getName().toString(), f.getName().toString());
+                MyExpression myExpression = new MyExpression(svd, f.getName().toString());
                 formalParameters.add(myExpression);
             }
         }
@@ -219,7 +220,7 @@ public class AccessibleVariables extends ASTVisitor {
 
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.resolveBinding().getType().getName(), vdf.getName().toString());
+            MyExpression myExpression = new MyExpression(vdf, vdf.getName().toString());
             currentAccessible.peek().add(myExpression);
             outPut(node.getStartPosition());
         }
@@ -253,10 +254,6 @@ public class AccessibleVariables extends ASTVisitor {
          * 因为key相同了所以会覆盖
          */
         position = root.getLineNumber(position);
-//        if(accessibleVariables.containsKey(position)){
-//            logger.info("key crash xxxxxxxxxxxxxxxxxx "+position);
-//        }
-//        pos2typeDecl.put(position, typeDecl.peek());
         if (currentAccessible.isEmpty()) {
             accessibleVariables.put(position, new ArrayList<MyExpression>());
         } else {

@@ -9,7 +9,7 @@ import java.util.List;
 /*
 the faulted file name and the faults information
  */
-public class FaultFile {
+public class FaultClass {
 
     private  String sourceName=null;//specify the package and the class name
     private List<FaultUnit> faults=null;
@@ -32,7 +32,7 @@ public class FaultFile {
 
     @Override
     public String toString() {
-        return "FaultFile{" +
+        return "FaultClass{" +
                 "faults=" + faults +
                 ", sourceName='" + sourceName + '\'' +
                 '}';

@@ -13,6 +13,10 @@ import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
 import polyu_af.deprecated.VariableScope;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +43,11 @@ public class AstUtils {
             ITypeBinding typeBinding = node.resolveTypeBinding();
             if (typeBinding != null) {
                 logger.info("typeBinding.getQualifiedName: " + typeBinding.getQualifiedName());
-                logger.info("typeBinding.getTypeDeclaration: " + typeBinding.getTypeDeclaration());
-                logger.info("typeBinding.getDeclaringClass: " + typeBinding.getDeclaringClass());
-                logger.info("typeBinding.getDeclaringMethod: " + typeBinding.getDeclaringMethod());
-                logger.info("typeBinding.getComponentType: " + typeBinding.getComponentType());
-                logger.info("typeBinding.isGenericType: " + typeBinding.isGenericType());
+//                logger.info("typeBinding.getTypeDeclaration: " + typeBinding.getTypeDeclaration());
+//                logger.info("typeBinding.getDeclaringClass: " + typeBinding.getDeclaringClass());
+//                logger.info("typeBinding.getDeclaringMethod: " + typeBinding.getDeclaringMethod());
+//                logger.info("typeBinding.getComponentType: " + typeBinding.getComponentType());
+//                logger.info("typeBinding.isGenericType: " + typeBinding.isGenericType());
             }
             logger.info("==========================");
             return super.visit(node);
@@ -58,7 +62,7 @@ public class AstUtils {
                 logger.info("binding.getKey: " + binding.getKey());
                 logger.info("binding.getKind: " + binding.getKind());
                 logger.info("binding.getJavaElement: " + binding.getJavaElement());
-                logger.info("binding.toString: " + binding.toString());
+//                logger.info("binding.toString: " + binding.toString());
             }
             return super.visit(node);
         }
@@ -87,7 +91,7 @@ public class AstUtils {
     /**
      * print the node's ASTtype
      */
-    public static ASTVisitor seeTypeVisitor = new ASTVisitor() {
+    public static ASTVisitor astTypeVisitor = new ASTVisitor() {
         @Override
         public void postVisit(ASTNode node) {
             logger.info("node: " + node.toString());
@@ -129,7 +133,7 @@ public class AstUtils {
 
     /**
      * Find the target node in the root that the FaultUnit Point to.
-     * The root and the faultUnit should comes from the same FaultFile.(not checked yet.)
+     * The root and the faultUnit should comes from the same FaultClass.(not checked yet.)
      *
      * @param root
      * @param fu
@@ -151,7 +155,6 @@ public class AstUtils {
     }
 
 
-
     /**
      * Modify the ast and apply the changes to the document
      *
@@ -159,7 +162,7 @@ public class AstUtils {
      * @param exp
      * @param source the root and the source should come from the same .java file
      */
-    public static void parseExpRecordModifications(final CompilationUnit root, final String exp, String source) {
+    public static String parseExpRecordModifications(final CompilationUnit root, final String exp, String source) {
         ASTVisitor modify = new ASTVisitor() {
             @Override
             public boolean visit(ExpressionStatement node) {
@@ -179,11 +182,12 @@ public class AstUtils {
             edits.apply(document);
             logger.info("document: " + document.get());
             logger.info("root: " + root);
+
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-        root.accept(resolveTypeVisitor);
-
+//        root.accept(resolveTypeVisitor);
+        return document.get();
     }
 
 

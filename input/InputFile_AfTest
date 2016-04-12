@@ -2,7 +2,7 @@
                         "/Users/liushanchen/IdeaProjects/AfTest/lib/cofoja.asm-1.2-20140817.jar"],
 "sourcepathEntries":["/Users/liushanchen/IdeaProjects/AfTest/src/main/java"],
 "encodings":["UTF-8"],
-"faultFileList":[{"sourceName":"polyu_af/MyList1.java",
+"faultClassList":[{"sourceName":"polyu_af/MyList1.java",
                     "faults":[{"line":68,"expression":"exp","expValue":true},
                                 {"line":70,"expression":"exp1","expValue":true}]
                  }]

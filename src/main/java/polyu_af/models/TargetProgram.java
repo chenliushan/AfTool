@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/3/17.
  */
-public class InputFile {
+public class TargetProgram {
 
     private String projectDir = null;
     private String[] classpathEntries = null;
     private String[] sourcepathEntries = null;
     private String[] encodings = new String[]{"UTF-8"};
-    private List<FaultFile> faultFileList = null;
+    private List<FaultClass> faultClassList = null;
 
     public String getProjectDir() {
         return projectDir;
@@ -48,12 +48,12 @@ public class InputFile {
         this.sourcepathEntries = sourcepathEntries;
     }
 
-    public List<FaultFile> getFaultFileList() {
-        return faultFileList;
+    public List<FaultClass> getFaultClassList() {
+        return faultClassList;
     }
 
-    public void setFaultFileList(List<FaultFile> faultFileList) {
-        this.faultFileList = faultFileList;
+    public void setFaultClassList(List<FaultClass> faultClassList) {
+        this.faultClassList = faultClassList;
     }
 
 
@@ -73,12 +73,12 @@ public class InputFile {
 
     @Override
     public String toString() {
-        return "InputFile{" +
+        return "TargetProgram{" +
                 "classpathEntries=" + Arrays.toString(classpathEntries) +
                 ", projectDir='" + projectDir + '\'' +
                 ", sourcepathEntries=" + Arrays.toString(sourcepathEntries) +
                 ", encodings=" + Arrays.toString(encodings) +
-                ", faultFileList=" + faultFileList +
+                ", faultClassList=" + faultClassList +
                 '}';
     }
 }
