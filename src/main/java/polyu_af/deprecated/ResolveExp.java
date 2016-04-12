@@ -1,4 +1,4 @@
-package polyu_af.process;
+package polyu_af.deprecated;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +8,9 @@ import polyu_af.utils.AstUtils;
 
 /**
  * Created by liushanchen on 16/3/23.
+ *
+ * discard
+ * it is replaced by the AccessibleVariables
  */
 public class ResolveExp {
     private static Logger logger = LogManager.getLogger(ResolveExp.class.getName());

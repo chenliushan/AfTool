@@ -9,9 +9,7 @@ import java.util.*;
 
 /**
  * Created by liushanchen on 16/4/1.
- */
-
-/**
+ * <p>
  * 1.	借助stack结构记录当前访问到的accessible 变量；两个stack，一个记录currentField variables； 另一个记录currentAccessible variables 既local variables。
  * a)	currentField stack：
  * i.	push – visit TypeDeclaration
@@ -33,6 +31,7 @@ import java.util.*;
  * c)	visit break – pop & push(copy)
  * c)	result Map:
  * i.	put – currentField.peek() & currentAccessible.peek().
+ * </p>
  */
 
 /**
@@ -69,12 +68,16 @@ public class AccessibleVariables extends ASTVisitor {
      */
     /**
      * track the current enclosing type.
+     * private Stack<List<MyExpression>> currentForA = new Stack<List<MyExpression>>();
      */
-    private Stack<List<MyExpression>> currentForA = new Stack<List<MyExpression>>();
+
     /**
      * map between each position and its corresponding type declaration.
+     * private Map<Integer, TypeDeclaration> pos2typeDecl = new HashMap<Integer, TypeDeclaration>();
+     * public final Map<Integer, TypeDeclaration> getPos2TypeDecl() {
+     * return pos2typeDecl;
+     * }
      */
-    private Map<Integer, TypeDeclaration> pos2typeDecl = new HashMap<Integer, TypeDeclaration>();
 
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
 
@@ -83,9 +86,6 @@ public class AccessibleVariables extends ASTVisitor {
         return accessibleVariables;
     }
 
-    public final Map<Integer, TypeDeclaration> getPos2TypeDecl() {
-        return pos2typeDecl;
-    }
 
     @Override
     public final boolean visit(final TypeDeclaration node) {
@@ -98,7 +98,7 @@ public class AccessibleVariables extends ASTVisitor {
     public final void endVisit(final TypeDeclaration node) {
         typeDecl.pop();
         currentField.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -145,7 +145,7 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public void endVisit(ForStatement node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -161,7 +161,7 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public void endVisit(Block node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -178,7 +178,7 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public void endVisit(SwitchStatement node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -195,7 +195,7 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public final void endVisit(final MethodDeclaration node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -209,7 +209,7 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public final void endVisit(final Initializer node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition()+node.getLength());
+        outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
@@ -226,26 +226,6 @@ public class AccessibleVariables extends ASTVisitor {
         return super.visit(node);
     }
 
-
-//    @Override
-//    public final boolean visit(final ClassInstanceCreation node) {
-//        for (Object o : node.arguments()) {
-//            int position = root.getLineNumber(((Expression) o).getStartPosition());
-//            Expression argExpr = (Expression) o;
-//            //pos2arg.put(position, argExpr);
-//            pos2typeDecl.put(position, typeDecl.peek());
-//            if (currentAccessible.isEmpty()) {
-//                accessibleVariables.put(position, new ArrayList<MyExpression>());
-//            } else {
-//                accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
-//            }
-//            if (!currentField.isEmpty()) {
-//                accessibleVariables.get(position).addAll(currentField.peek());
-//            }
-//        }
-//
-//        return super.visit(node);
-//    }
 //
 //    @Override
 //    public final boolean visit(final MethodInvocation node) {
@@ -270,7 +250,7 @@ public class AccessibleVariables extends ASTVisitor {
 
     private void outPut(int position) {
         /**
-         * 也许是因为key相同了所以会覆盖
+         * 因为key相同了所以会覆盖
          */
         position = root.getLineNumber(position);
 //        if(accessibleVariables.containsKey(position)){
