@@ -5,10 +5,10 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.models.*;
 import polyu_af.process.AccessibleVariables;
-import polyu_af.process.BuildIntegerExp;
+import polyu_af.process.build_exp.BuildBooleanExp;
+import polyu_af.process.build_exp.BuildIntegerExp;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.CommonUtils;
-import polyu_af.utils.ReadFileUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -46,9 +46,12 @@ public class GlobalProcess {
         //build expression with accessible variables
         BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
         buildIntegerExp.buildingExps();
-
-        Runtime runtime=Runtime.getRuntime();
-        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
+        CommonUtils.printExpList(buildIntegerExp.getBuildExp());
+        BuildBooleanExp buildBooleanExp=new BuildBooleanExp(accessibleVar.get(148));
+        buildBooleanExp.buildingExps();
+        CommonUtils.printExpList(buildBooleanExp.getBuildExp());
+//        Runtime runtime=Runtime.getRuntime();
+//        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
 
 //        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});

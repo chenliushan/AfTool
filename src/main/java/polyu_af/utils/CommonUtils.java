@@ -49,6 +49,11 @@ public class CommonUtils {
 
         }
     }
+    public static void printExpList(List<MyExpression> list) {
+       for(MyExpression exp:list){
+           logger.info("exp:"+exp.getText());
+       }
+    }
 
     public static void printPos2TypeDecl(Map<Integer, TypeDeclaration> pos2TypeDecl) {
         Iterator<Map.Entry<Integer, TypeDeclaration>> entries = pos2TypeDecl.entrySet().iterator();

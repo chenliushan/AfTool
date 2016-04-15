@@ -8,13 +8,6 @@ import org.eclipse.jdt.core.dom.*;
 public class MyExpression {
     private ASTNode astNode = null;
     private String text = null;
-//    private  String resolveType=null;
-
-//    public MyExpression(ASTNode astNode, String resolveType, String text) {
-//        this.astNode = astNode;
-//        this.resolveType = resolveType;
-//        this.text = text;
-//    }
 
     public MyExpression(ASTNode astNode, String text) {
         this.astNode = astNode;
@@ -28,13 +21,6 @@ public class MyExpression {
     public void setAstNode(ASTNode astNode) {
         this.astNode = astNode;
     }
-
-//    public String getResolveType() {
-//        return resolveType;
-//    }
-//    public void setResolveType(String resolveType) {
-//        this.resolveType = resolveType;
-//    }
 
     public String getText() {
         return text;
@@ -61,7 +47,6 @@ public class MyExpression {
         return "\nMyExpression{" +
                 "astNode=" + astNode +
                 ", text='" + text + '\'' +
-//                ", resolveType='" + resolveType + '\'' +
                 '}';
     }
 }
