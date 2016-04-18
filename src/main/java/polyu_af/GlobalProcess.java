@@ -44,12 +44,14 @@ public class GlobalProcess {
         CommonUtils.printMap(accessibleVar);
 
         //build expression with accessible variables
-        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
-        buildIntegerExp.buildingExps();
-        CommonUtils.printExpList(buildIntegerExp.getBuildExp());
-        BuildBooleanExp buildBooleanExp=new BuildBooleanExp(accessibleVar.get(148));
-        buildBooleanExp.buildingExps();
-        CommonUtils.printExpList(buildBooleanExp.getBuildExp());
+//        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
+//        buildIntegerExp.buildingExps();
+//        CommonUtils.printExpList(buildIntegerExp.getBuildExp());
+//        BuildBooleanExp buildBooleanExp=new BuildBooleanExp(accessibleVar.get(148));
+//        buildBooleanExp.buildingExps();
+//        CommonUtils.printExpList(buildBooleanExp.getBuildExp());
+
+
 //        Runtime runtime=Runtime.getRuntime();
 //        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
 
@@ -66,12 +68,12 @@ public class GlobalProcess {
 //                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
 //                    resolveExp.resolveExp();
                     //testing modify the expression
-                    if (!fu.getExpression().equals("exp")) {
-                       getConfiguration.saveNewFaultClass(
-                               AstUtils.parseExpRecordModifications(
-                                       root, fu.getExpression(), faultFileSource_));
-
-                    }
+//                    if (!fu.getExpression().equals("exp")) {
+//                       getConfiguration.saveNewFaultClass(
+//                               AstUtils.parseExpRecordModifications(
+//                                       root, fu.getExpression(), faultFileSource_));
+//
+//                    }
                 }
             }
         }

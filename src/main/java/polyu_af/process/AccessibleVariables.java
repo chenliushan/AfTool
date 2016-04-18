@@ -7,6 +7,8 @@ import polyu_af.models.MyExpression;
 
 import java.util.*;
 
+import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.STATIC_KEYWORD;
+
 /**
  * Created by liushanchen on 16/4/1.
  * <p>
@@ -37,7 +39,6 @@ import java.util.*;
 /**
  * use getAccessibleVariables to get the access variable for every line of the class
  * one line's accessible variables is equivalent with the biggest line smaller than it.
- *
  */
 public class AccessibleVariables extends ASTVisitor {
 
@@ -54,6 +55,8 @@ public class AccessibleVariables extends ASTVisitor {
      * each stack element stores the accessible fields in the current scope.
      */
     private Stack<List<MyExpression>> currentField = new Stack<List<MyExpression>>();
+    private Stack<List<MyExpression>> currentStaticField = new Stack<List<MyExpression>>();
+    private boolean isStaticBlock = false;
     /**
      * each stack element stores the accessible formal parameters and local variables
      * in the current scope.
@@ -86,45 +89,84 @@ public class AccessibleVariables extends ASTVisitor {
         return accessibleVariables;
     }
 
-
+    /**
+     * 进入一个 类 或者 内部类
+     * @param node
+     * @return
+     */
     @Override
     public final boolean visit(final TypeDeclaration node) {
         typeDecl.push(node);
-        currentField.push(new ArrayList<MyExpression>());
+        if (Modifier.isStatic(node.getModifiers())) {
+            currentField.push(new ArrayList<MyExpression>());
+        }else{
+            if(currentField.isEmpty()){
+                currentField.push(new ArrayList<MyExpression>());
+            }else{
+                currentField.push(new ArrayList<MyExpression>(currentField.peek()));
+            }
+        }
+        if(currentStaticField.isEmpty()){
+            currentStaticField.push(new ArrayList<MyExpression>());
+        }else{
+            currentStaticField.push(new ArrayList<MyExpression>(currentStaticField.peek()));
+        }
+//        currentField.push(new ArrayList<MyExpression>());
         return super.visit(node);
     }
 
     @Override
     public final void endVisit(final TypeDeclaration node) {
         typeDecl.pop();
+        currentStaticField.pop();
         currentField.pop();
+//        currentField.pop();
         outPut(node.getStartPosition() + node.getLength());
         super.endVisit(node);
     }
 
+    /**
+     * 进入一个 field 变量
+     * @param node
+     * @return
+     */
     @Override
     public final boolean visit(final FieldDeclaration node) {
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
             MyExpression myExpression = new MyExpression(vdf, vdf.getName().getIdentifier());
-            currentField.peek().add(myExpression);
+            if (Modifier.isStatic(node.getModifiers())) {
+                currentStaticField.peek().add(myExpression);
+            } else {
+                currentField.peek().add(myExpression);
+            }
+//            currentField.peek().add(myExpression);
         }
         return super.visit(node);
     }
 
     @Override
     public final boolean visit(final MethodDeclaration node) {
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+        if (Modifier.isStatic(node.getModifiers())) {
+            isStaticBlock=true;
+        }
+            List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-            MyExpression myExpression = new MyExpression(svd,  svd.getName().toString());
+            MyExpression myExpression = new MyExpression(svd, svd.getName().toString());
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
         outPut(node.getStartPosition());
         return super.visit(node);
     }
-
+    @Override
+    public final void endVisit(final MethodDeclaration node) {
+        isStaticBlock=false;
+        currentAccessible.pop();
+        outPut(node.getStartPosition() + node.getLength());
+        super.endVisit(node);
+    }
     @Override
     public boolean visit(ForStatement node) {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
@@ -193,12 +235,7 @@ public class AccessibleVariables extends ASTVisitor {
         return super.visit(node);
     }
 
-    @Override
-    public final void endVisit(final MethodDeclaration node) {
-        currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
-        super.endVisit(node);
-    }
+
 
     @Override
     public final boolean visit(final Initializer node) {
@@ -259,8 +296,16 @@ public class AccessibleVariables extends ASTVisitor {
         } else {
             accessibleVariables.put(position, new ArrayList<MyExpression>(currentAccessible.peek()));
         }
-        if (!currentField.isEmpty()) {
-            accessibleVariables.get(position).addAll(currentField.peek());
+        if (!isStaticBlock) {
+            if (!currentField.isEmpty()) {
+                accessibleVariables.get(position).addAll(currentField.peek());
+            }
         }
+        if (!currentStaticField.isEmpty()) {
+            accessibleVariables.get(position).addAll(currentStaticField.peek());
+        }
+//        if (!currentField.isEmpty()) {
+//            accessibleVariables.get(position).addAll(currentField.peek());
+//        }
     }
 }
