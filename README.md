@@ -7,4 +7,4 @@ but may still valuable for future reference. It will be delete as soon as the to
 complete function:
 read configuration file;
 extraction AST tree;
-obtain the accessible variables of a specific position;
+obtain the accessible variables of a specific position;# Test4Javassist
