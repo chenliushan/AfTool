@@ -37,7 +37,7 @@ public class GlobalProcess {
         //create faultFileAST --root
         String faultFileSource_ = targetProgram.getSource(targetClass.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
-                targetProgram.getClasspathEntries(), new String[]{targetProgram.getSourcepath()},
+                targetProgram.getClasspathEntries(), new String[]{targetProgram.getSourcePath()},
                 targetProgram.getEncodings(), targetClass.getSourceName());
 
         //get accessible variables
@@ -47,8 +47,8 @@ public class GlobalProcess {
         logger.info("accessVar4MethodList: \n"+ accessVar4MethodList.toString());
         logger.info("accessVar4MethodList-size:"+ accessVar4MethodList.size());
 
-        FixRuntime fixRuntime=new FixRuntime(targetProgram.getOutputPath(),targetProgram.getClasspathEntries(),targetProgram.getSourcepath());
-        fixRuntime.process(accessVar4MethodList,targetClass.getSourceName(),null);
+        FixRuntime fixRuntime=new FixRuntime(targetProgram);
+        fixRuntime.process(accessVar4MethodList,targetClass.getSourceName());
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));

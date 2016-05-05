@@ -1,4 +1,5 @@
 {"projectDir":"/Users/liushanchen/IdeaProjects/Test4Javassist",
+"programEntry":"attempt.Test",
 "encodings":["UTF-8"],
 "targetClassList":[{"sourceName":"attempt/Test.java",
                     "faults":[{"line":25,"expression":"i==0","expValue":true},

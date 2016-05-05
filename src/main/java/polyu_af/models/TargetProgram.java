@@ -12,8 +12,10 @@ public class TargetProgram {
 
     private String projectDir = null;
     private String[] classpathEntries = null;
-    private String sourcepath = null;
+    private String sourcePath = null;
     private String outputPath = null;
+    private String programEntry=null;
+    private String[] runningArg=null;
     private String[] encodings = new String[]{"UTF-8"};
     private List<TargetClass> targetClassList = null;
 
@@ -58,21 +60,37 @@ public class TargetProgram {
         this.outputPath = outputPath;
     }
 
-    public String getSourcepath() {
-        return sourcepath;
+    public String getSourcePath() {
+        return sourcePath;
     }
 
-    public void setSourcepath(String sourcepath) {
-        this.sourcepath = sourcepath;
+    public void setSourcePath(String sourcePath) {
+        this.sourcePath = sourcePath;
     }
 
     public String getSource(String sourceName) {
-        if (sourcepath != null && sourceName != null) {
-            String path = sourcepath;
+        if (sourcePath != null && sourceName != null) {
+            String path = sourcePath;
             return ReadFileUtils.readFile(ReadFileUtils.joinDir(path,sourceName));
         }
         return null;
 
+    }
+
+    public String getProgramEntry() {
+        return programEntry;
+    }
+
+    public void setProgramEntry(String programEntry) {
+        this.programEntry = programEntry;
+    }
+
+    public String[] getRunningArg() {
+        return runningArg;
+    }
+
+    public void setRunningArg(String[] runningArg) {
+        this.runningArg = runningArg;
     }
 
     @Override
@@ -80,8 +98,10 @@ public class TargetProgram {
         return "TargetProgram{" +
                 "classpathEntries=" + Arrays.toString(classpathEntries) +
                 ", projectDir='" + projectDir + '\'' +
-                ", sourcepath='" + sourcepath + '\'' +
+                ", sourcePath='" + sourcePath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
+                ", programEntry='" + programEntry + '\'' +
+                ", runningArg=" + Arrays.toString(runningArg) +
                 ", encodings=" + Arrays.toString(encodings) +
                 ", targetClassList=" + targetClassList +
                 '}';

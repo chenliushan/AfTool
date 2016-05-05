@@ -45,13 +45,13 @@ public class GetConfiguration {
                 int idx = className.lastIndexOf("/");
                 String subPath = className.substring(0, idx);
                 String name = className.substring(idx + 1);
-                Path p = Paths.get(targetProgram.getSourcepath(), subPath + "_af");
+                Path p = Paths.get(targetProgram.getSourcePath(), subPath + "_af");
                 if (Files.exists(p)) {
 
                 } else {
                     Files.createDirectory(p);
                 }
-                Files.write(Paths.get(targetProgram.getSourcepath(), subPath + "_af", name), source.getBytes());
+                Files.write(Paths.get(targetProgram.getSourcePath(), subPath + "_af", name), source.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,17 +71,17 @@ public class GetConfiguration {
             Gson gson = new Gson();
             targetProgram = gson.fromJson(input, TargetProgram.class);
             if (targetProgram.getProjectDir() != null) {
-                if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
+                if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
                     readClasspathI(targetProgram.getProjectDir());
                 }
-                if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
+                if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
                     readClasspathE(targetProgram.getProjectDir());
                     //sometimes the <component> <output> will miss and will turn to default path "out". this problem not solve yet
                 }
             }
             logger.info("TargetProgram:" + targetProgram.toString());
-            if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
-                logger.error("SourcepathEntries: " + targetProgram.getSourcepath());
+            if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
+                logger.error("SourcepathEntries: " + targetProgram.getSourcePath());
                 logger.error("ClasspathEntries: " + targetProgram.getClasspathEntries());
                 throw new NotFoundException("Did not get the desire environment.");
             }
@@ -128,7 +128,7 @@ public class GetConfiguration {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
         if (sourcepath!=null) {
-            targetProgram.setSourcepath(sourcepath);
+            targetProgram.setSourcePath(sourcepath);
         }
     }
 
@@ -200,7 +200,7 @@ public class GetConfiguration {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
         if (sourcepathE!=null) {
-            targetProgram.setSourcepath(sourcepathE);
+            targetProgram.setSourcePath(sourcepathE);
         }
 
     }

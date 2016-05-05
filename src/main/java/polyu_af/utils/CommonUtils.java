@@ -12,7 +12,7 @@ import java.util.*;
  * Created by liushanchen on 16/4/11.
  */
 public class CommonUtils {
-    private static Logger logger = LogManager.getLogger(CommonUtils.class.getName());
+    private static Logger logger = LogManager.getLogger();
 
     public static Map<Integer, List<MyExpression>> printMap(Map<Integer, List<MyExpression>> map) {
         Map<Integer, List<MyExpression>> treeMap = new TreeMap<Integer, List<MyExpression>>(map);

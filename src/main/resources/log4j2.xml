@@ -22,7 +22,8 @@
 <!-- levels: ALL,TRACE, DEBUG, INFO, WARN, ERROR ,FATAL,OFF-->
     <Loggers>
         <Logger name="log4j2.className" level="trace" additivity="false">
-            <AppenderRef ref="Console"/>
+            <!--<AppenderRef ref="Console"/>-->
+            <AppenderRef ref="File"/>
         </Logger>
         <Root level="trace">
             <AppenderRef ref="Console"/>

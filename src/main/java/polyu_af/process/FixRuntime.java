@@ -3,17 +3,22 @@ package polyu_af.process;
 import javassist.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.GlobalProcess;
 import polyu_af.models.AccessVar4Method;
 import polyu_af.models.AccessibleVars;
 import polyu_af.models.MyExpression;
+import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,43 +33,35 @@ import java.util.List;
 public class FixRuntime {
     private static Logger logger = LogManager.getLogger();
 
-
-    private String[] projectClassPath = null;
-    private String outputPath = null;
-    private String sourcePath = null;
-
+    private TargetProgram tp = null;
     private String target = null;
     private String targetFile = null;
     private String targetClass = null;
     private ClassPool poolParent = null;
 
-    public FixRuntime(String outputPath, String[] projectClassPath, String sourcePath) {
-        this.outputPath = outputPath;
-        this.projectClassPath = projectClassPath;
-        this.sourcePath = sourcePath;
+    public FixRuntime(TargetProgram targetProgram) {
+        this.tp = targetProgram;
         this.poolParent = getClassPool();
     }
 
     /**
      * @param accessVar4MethodList
      * @param target
-     * @param args
      */
-    public void process(List<AccessVar4Method> accessVar4MethodList, String target, String[] args) {
+    public void process(List<AccessVar4Method> accessVar4MethodList, String target) {
         setTarget(target);
-        process(accessVar4MethodList, args);
+        process(accessVar4MethodList);
     }
 
     /**
      * use process(String target) instead.
-     *
-     * @param args the arguments to run the target
      */
-    private void process(List<AccessVar4Method> accessVar4MethodList, String[] args) {
+    private void process(List<AccessVar4Method> accessVar4MethodList) {
         if (target != null && target.length() > 0) {
             compileTarget();
             modifyTClass(accessVar4MethodList);
-            runTarget(args);
+//            runTarget();
+            runIt();
         }
     }
 
@@ -76,11 +73,11 @@ public class FixRuntime {
     private ClassPool getClassPool() {
         ClassPool pool = ClassPool.getDefault();
         try {
-            pool.appendClassPath(outputPath);
+            pool.appendClassPath(tp.getOutputPath());
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-//        System.out.println("getClassPool:" + poolParent);
+
         return pool;
     }
 
@@ -91,11 +88,11 @@ public class FixRuntime {
         JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = javaCompiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> fileObjects =
-                fileManager.getJavaFileObjects(ReadFileUtils.joinDir(sourcePath, targetFile));
+                fileManager.getJavaFileObjects(ReadFileUtils.joinDir(tp.getSourcePath(), targetFile));
         List<String> options = new ArrayList<String>();
         options.add("-g");
         options.add("-d");
-        options.add(outputPath);
+        options.add(tp.getOutputPath());
         JavaCompiler.CompilationTask cTask = javaCompiler.getTask(null, null, null, options, null, fileObjects);
         cTask.call();
         try {
@@ -122,22 +119,25 @@ public class FixRuntime {
         } catch (CannotCompileException e) {
             e.printStackTrace();
         }
-        for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
-            try {
+        try {
+            for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
+
                 CtMethod mainMethod = cc.getDeclaredMethod(methodAccessVar.getMethodName());
                 for (AccessibleVars accessVars : methodAccessVar.getVarsList()) {
                     mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
                     for (MyExpression var : accessVars.getVars()) {
-//                        mainMethod.insertAt(accessVars.getLocation(), "System.out.println(\" " + var.getText() + ":\"+" + var.getText() + ");");
                         mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
                     }
 
                 }
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (CannotCompileException e) {
-                e.printStackTrace();
             }
+            cc.writeFile(tp.getOutputPath());    // update the class file
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (CannotCompileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
@@ -145,26 +145,74 @@ public class FixRuntime {
 
     /**
      * Run the modified target .class file
-     *
-     * @param args
      */
-    private void runTarget(String[] args) {
+    private void runTarget() {
         importTargetCp();
         Loader cl = new Loader(poolParent);
         try {
-            cl.run(targetClass, args);
+            logger.info("==================Target Program Log==================");
+            cl.run(tp.getProgramEntry(), tp.getRunningArg());
+            logger.info("===============End of Target Program Log==============");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
     }
 
     private void importTargetCp() {
+        String[] projectClassPath = tp.getClasspathEntries();
         for (int i = 0; i < projectClassPath.length; i++) {
             try {
                 poolParent.insertClassPath(projectClassPath[i]);
             } catch (NotFoundException e) {
                 e.printStackTrace();
             }
+        }
+    }
+//
+//    private List<URL> getURLs(String path) {
+//        File[] files = new File(path).listFiles();
+//        // Convert File to a URL
+//        List<URL> urls = new ArrayList<URL>();
+//        for (File file : files) {
+//            try {
+//                logger.info("file:" + file.toURL());
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (file.isDirectory()) {
+//                urls.addAll(getURLs(file.getAbsolutePath()));
+//            } else {
+//                try {
+//                    urls.add(file.toURL()); // fil// e:/classes/demo
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        return urls;
+//    }
+    private URL getURL(String path) {
+        File files = new File(path);
+        try {
+            return files.toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void runIt() {
+        URL[] urls = new URL[]{getURL(tp.getOutputPath())};
+        ClassLoader loader = new URLClassLoader(urls);
+        try {
+            Class thisClass = loader.loadClass(tp.getProgramEntry());
+            Object iClass = thisClass.newInstance();
+            Method thisMethod = thisClass.getDeclaredMethod("main", String[].class);
+            thisMethod.invoke(iClass, (Object) tp.getRunningArg());
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
     }
 
@@ -179,10 +227,9 @@ public class FixRuntime {
             this.target = target;
             this.targetFile = target + ".java";
             if (target.contains("/")) {
-               target= target.replace("/", ".");
+                target = target.replace("/", ".");
             }
-            this.targetClass = target ;
-            logger.info("targetClass:" + targetClass + "; targetFile:" + targetFile + "; target:" + target);
+            this.targetClass = target;
         }
     }
 }
