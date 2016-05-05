@@ -12,9 +12,10 @@ public class TargetProgram {
 
     private String projectDir = null;
     private String[] classpathEntries = null;
-    private String[] sourcepathEntries = null;
+    private String sourcepath = null;
+    private String outputPath = null;
     private String[] encodings = new String[]{"UTF-8"};
-    private List<FaultClass> faultClassList = null;
+    private List<TargetClass> targetClassList = null;
 
     public String getProjectDir() {
         return projectDir;
@@ -40,32 +41,35 @@ public class TargetProgram {
         this.encodings = encodings;
     }
 
-    public String[] getSourcepathEntries() {
-        return sourcepathEntries;
+
+    public List<TargetClass> getTargetClassList() {
+        return targetClassList;
     }
 
-    public void setSourcepathEntries(String[] sourcepathEntries) {
-        this.sourcepathEntries = sourcepathEntries;
+    public void setTargetClassList(List<TargetClass> targetClassList) {
+        this.targetClassList = targetClassList;
     }
 
-    public List<FaultClass> getFaultClassList() {
-        return faultClassList;
+    public String getOutputPath() {
+        return outputPath;
     }
 
-    public void setFaultClassList(List<FaultClass> faultClassList) {
-        this.faultClassList = faultClassList;
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
     }
 
+    public String getSourcepath() {
+        return sourcepath;
+    }
+
+    public void setSourcepath(String sourcepath) {
+        this.sourcepath = sourcepath;
+    }
 
     public String getSource(String sourceName) {
-        if (sourcepathEntries != null && sourceName != null) {
-            String path = sourcepathEntries[0];
-            if (path.endsWith("/")||sourceName.startsWith("/")) {
-                path += sourceName;
-            } else {
-                path = path + "/" + sourceName;
-            }
-            return ReadFileUtils.readFile(path);
+        if (sourcepath != null && sourceName != null) {
+            String path = sourcepath;
+            return ReadFileUtils.readFile(ReadFileUtils.joinDir(path,sourceName));
         }
         return null;
 
@@ -76,9 +80,10 @@ public class TargetProgram {
         return "TargetProgram{" +
                 "classpathEntries=" + Arrays.toString(classpathEntries) +
                 ", projectDir='" + projectDir + '\'' +
-                ", sourcepathEntries=" + Arrays.toString(sourcepathEntries) +
+                ", sourcepath='" + sourcepath + '\'' +
+                ", outputPath='" + outputPath + '\'' +
                 ", encodings=" + Arrays.toString(encodings) +
-                ", faultClassList=" + faultClassList +
+                ", targetClassList=" + targetClassList +
                 '}';
     }
 }

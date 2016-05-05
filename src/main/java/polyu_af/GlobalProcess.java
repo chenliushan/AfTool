@@ -3,15 +3,13 @@ package polyu_af;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.AccessibleVariables;
-import polyu_af.process.build_exp.BuildBooleanExp;
-import polyu_af.process.build_exp.BuildIntegerExp;
+import polyu_af.process.AccessibleVarVisitor4M;
+import polyu_af.process.FixRuntime;
 import polyu_af.utils.AstUtils;
-import polyu_af.utils.CommonUtils;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -21,27 +19,36 @@ public class GlobalProcess {
 
     public static void main(String arg[]) {
         //read input file
-        GetConfiguration getConfiguration=new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+        GetConfiguration getConfiguration=null;
+        try {
+//            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
         TargetProgram targetProgram = getConfiguration.getTargetProgram();
-        FaultClass faultClass = null;
+        TargetClass targetClass = null;
         List<FaultUnit> faultUnitList = null;
-        if (targetProgram != null && targetProgram.getFaultClassList() != null) {
-            faultClass = targetProgram.getFaultClassList().get(0);
+        if (targetProgram != null && targetProgram.getTargetClassList() != null) {
+            targetClass = targetProgram.getTargetClassList().get(0);
         } else {
             return;
         }
         //create faultFileAST --root
-        String faultFileSource_ = targetProgram.getSource(faultClass.getSourceName());
+        String faultFileSource_ = targetProgram.getSource(targetClass.getSourceName());
         CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
-                targetProgram.getClasspathEntries(), targetProgram.getSourcepathEntries(),
-                targetProgram.getEncodings(), faultClass.getSourceName());
+                targetProgram.getClasspathEntries(), new String[]{targetProgram.getSourcepath()},
+                targetProgram.getEncodings(), targetClass.getSourceName());
 
-//        root.accept(AstUtils.findDeclaration);
         //get accessible variables
-        AccessibleVariables accessibleVariables=new AccessibleVariables(root);
-        root.accept(accessibleVariables);
-        Map<Integer, List<MyExpression>> accessibleVar=accessibleVariables.getAccessibleVariables();
-        CommonUtils.printMap(accessibleVar);
+        AccessibleVarVisitor4M accessibleVariables4m = new AccessibleVarVisitor4M(root);
+        root.accept(accessibleVariables4m);
+        List<AccessVar4Method> accessVar4MethodList =accessibleVariables4m.getAccessVar4MethodList();
+        logger.info("accessVar4MethodList: \n"+ accessVar4MethodList.toString());
+        logger.info("accessVar4MethodList-size:"+ accessVar4MethodList.size());
+
+        FixRuntime fixRuntime=new FixRuntime(targetProgram.getOutputPath(),targetProgram.getClasspathEntries(),targetProgram.getSourcepath());
+        fixRuntime.process(accessVar4MethodList,targetClass.getSourceName(),null);
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -58,8 +65,8 @@ public class GlobalProcess {
 //        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
 
-        if (faultClass != null) {
-            faultUnitList = faultClass.getFaults();
+        if (targetClass != null) {
+            faultUnitList = targetClass.getFaults();
             if (faultUnitList != null) {
                 for (FaultUnit fu : faultUnitList) {
                     //find fault node in root

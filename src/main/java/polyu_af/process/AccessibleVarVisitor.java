@@ -3,11 +3,10 @@ package polyu_af.process;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
+import polyu_af.models.AccessibleVars;
 import polyu_af.models.MyExpression;
 
 import java.util.*;
-
-import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.STATIC_KEYWORD;
 
 /**
  * Created by liushanchen on 16/4/1.
@@ -40,17 +39,18 @@ import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.STATIC_KEYWORD;
  * use getAccessibleVariables to get the access variable for every line of the class
  * one line's accessible variables is equivalent with the biggest line smaller than it.
  */
-public class AccessibleVariables extends ASTVisitor {
+public class AccessibleVarVisitor extends ASTVisitor {
 
-    private static Logger logger = LogManager.getLogger(AccessibleVariables.class.getName());
+    private static Logger logger = LogManager.getLogger(AccessibleVarVisitor.class.getName());
 
     private CompilationUnit root = null;
 
-    public AccessibleVariables(CompilationUnit root) {
+    public AccessibleVarVisitor(CompilationUnit root) {
         this.root = root;
     }
 
     private Map<Integer, List<MyExpression>> accessibleVariables = new HashMap<Integer, List<MyExpression>>();
+    protected List<AccessibleVars> accessibleVarsList = new ArrayList<AccessibleVars>();
     /**
      * each stack element stores the accessible fields in the current scope.
      */
@@ -89,6 +89,26 @@ public class AccessibleVariables extends ASTVisitor {
         return accessibleVariables;
     }
 
+    public List<AccessibleVars> getAccessibleVars() {
+        return accessibleVarsList;
+    }
+
+
+
+    @Override
+    public void endVisit(ExpressionStatement node) {
+        super.endVisit(node);
+        outPut(node.getStartPosition() + node.getLength());
+        outPutAccessibleVars(node.getStartPosition() + node.getLength());
+    }
+
+    @Override
+    public void endVisit(ReturnStatement node) {
+        super.endVisit(node);
+        outPut(node.getStartPosition() + node.getLength());
+        outPutAccessibleVars(node.getStartPosition() + node.getLength());
+    }
+
     /**
      * 进入一个 类 或者 内部类
      * @param node
@@ -121,7 +141,9 @@ public class AccessibleVariables extends ASTVisitor {
         currentStaticField.pop();
         currentField.pop();
 //        currentField.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
 
@@ -146,7 +168,7 @@ public class AccessibleVariables extends ASTVisitor {
     }
 
     @Override
-    public final boolean visit(final MethodDeclaration node) {
+    public  boolean visit(final MethodDeclaration node) {
         if (Modifier.isStatic(node.getModifiers())) {
             isStaticBlock=true;
         }
@@ -157,14 +179,17 @@ public class AccessibleVariables extends ASTVisitor {
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
         return super.visit(node);
     }
     @Override
-    public final void endVisit(final MethodDeclaration node) {
+    public  void endVisit(final MethodDeclaration node) {
         isStaticBlock=false;
         currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
     @Override
@@ -181,14 +206,18 @@ public class AccessibleVariables extends ASTVisitor {
             }
         }
         currentAccessible.push(formalParameters);
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
+
         return super.visit(node);
     }
 
     @Override
     public void endVisit(ForStatement node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
 
@@ -197,14 +226,18 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
+
         return super.visit(node);
     }
 
     @Override
     public void endVisit(Block node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
 
@@ -214,16 +247,21 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
+
         return super.visit(node);
     }
 
     @Override
     public void endVisit(SwitchStatement node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
+
 
     @Override
     public boolean visit(BreakStatement node) {
@@ -231,7 +269,9 @@ public class AccessibleVariables extends ASTVisitor {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
+
         return super.visit(node);
     }
 
@@ -240,14 +280,18 @@ public class AccessibleVariables extends ASTVisitor {
     @Override
     public final boolean visit(final Initializer node) {
         currentAccessible.push(new ArrayList<MyExpression>());
-        outPut(node.getStartPosition());
+        //outPut(node.getStartPosition());
+        //outPutAccessibleVars(node.getStartPosition());
+
         return super.visit(node);
     }
 
     @Override
     public final void endVisit(final Initializer node) {
         currentAccessible.pop();
-        outPut(node.getStartPosition() + node.getLength());
+        //outPut(node.getStartPosition() + node.getLength());
+        //outPutAccessibleVars(node.getStartPosition() + node.getLength());
+
         super.endVisit(node);
     }
 
@@ -259,7 +303,9 @@ public class AccessibleVariables extends ASTVisitor {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
             MyExpression myExpression = new MyExpression(vdf, vdf.getName().toString());
             currentAccessible.peek().add(myExpression);
-            outPut(node.getStartPosition());
+            //outPut(node.getStartPosition());
+            //outPutAccessibleVars(node.getStartPosition());
+
         }
         return super.visit(node);
     }
@@ -307,5 +353,24 @@ public class AccessibleVariables extends ASTVisitor {
 //        if (!currentField.isEmpty()) {
 //            accessibleVariables.get(position).addAll(currentField.peek());
 //        }
+    }
+
+    protected void outPutAccessibleVars(int position) {
+        AccessibleVars vars= new AccessibleVars(root.getLineNumber(position));
+
+        if (!currentAccessible.isEmpty()) {
+            vars.addVar(currentAccessible.peek());
+        }
+        if (!isStaticBlock) {
+            if (!currentField.isEmpty()) {
+               vars.addVar(currentField.peek());
+            }
+        }
+        if (!currentStaticField.isEmpty()) {
+            vars.addVar(currentField.peek());
+        }
+        if (!accessibleVarsList.contains(vars)) {
+            accessibleVarsList.add(vars);
+        }
     }
 }

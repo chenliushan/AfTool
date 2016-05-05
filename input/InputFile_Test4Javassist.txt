@@ -1,0 +1,7 @@
+{"projectDir":"/Users/liushanchen/IdeaProjects/Test4Javassist",
+"encodings":["UTF-8"],
+"targetClassList":[{"sourceName":"attempt/Test.java",
+                    "faults":[{"line":25,"expression":"i==0","expValue":true},
+                                {"line":20,"expression":"exp","expValue":true}]
+                 }]
+}

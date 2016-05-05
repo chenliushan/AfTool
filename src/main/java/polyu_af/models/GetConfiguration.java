@@ -6,13 +6,12 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import polyu_af.exception.NotFoundException;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +28,7 @@ public class GetConfiguration {
     private TargetProgram targetProgram = null;
     private String inputPath = null;//the configuration file's path
 
-    public GetConfiguration(String inputPath) {
+    public GetConfiguration(String inputPath) throws NotFoundException {
         this.inputPath = inputPath;
         getInput();
     }
@@ -42,17 +41,17 @@ public class GetConfiguration {
     public void saveNewFaultClass(String source) {
         if (targetProgram != null) {
             try {
-                String className = targetProgram.getFaultClassList().get(0).getSourceName();
+                String className = targetProgram.getTargetClassList().get(0).getSourceName();
                 int idx = className.lastIndexOf("/");
                 String subPath = className.substring(0, idx);
                 String name = className.substring(idx + 1);
-                Path p = Paths.get(targetProgram.getSourcepathEntries()[0], subPath+"_af");
-                if(Files.exists(p)){
+                Path p = Paths.get(targetProgram.getSourcepath(), subPath + "_af");
+                if (Files.exists(p)) {
 
-                }else{
+                } else {
                     Files.createDirectory(p);
                 }
-                Files.write(Paths.get(targetProgram.getSourcepathEntries()[0], subPath+"_af",name), source.getBytes());
+                Files.write(Paths.get(targetProgram.getSourcepath(), subPath + "_af", name), source.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -66,26 +65,25 @@ public class GetConfiguration {
      *
      * @return
      */
-    private void getInput() {
+    private void getInput() throws NotFoundException {
         String input = ReadFileUtils.readFile(inputPath);
         if (input.trim() != "" && input != null) {
             Gson gson = new Gson();
             targetProgram = gson.fromJson(input, TargetProgram.class);
             if (targetProgram.getProjectDir() != null) {
-                if (targetProgram.getSourcepathEntries() == null && targetProgram.getClasspathEntries() == null) {
-                    targetProgram = readClasspathI(targetProgram.getProjectDir());
+                if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
+                    readClasspathI(targetProgram.getProjectDir());
                 }
-                if (targetProgram.getSourcepathEntries() == null && targetProgram.getClasspathEntries() == null) {
-                    targetProgram = readClasspathE(targetProgram.getProjectDir());
+                if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
+                    readClasspathE(targetProgram.getProjectDir());
                     //sometimes the <component> <output> will miss and will turn to default path "out". this problem not solve yet
                 }
             }
             logger.info("TargetProgram:" + targetProgram.toString());
-            if (targetProgram.getSourcepathEntries() == null && targetProgram.getClasspathEntries() == null) {
-                logger.error("Did not get the desire environment.");
-                logger.error("SourcepathEntries: " + targetProgram.getSourcepathEntries());
+            if (targetProgram.getSourcepath() == null || targetProgram.getClasspathEntries() == null) {
+                logger.error("SourcepathEntries: " + targetProgram.getSourcepath());
                 logger.error("ClasspathEntries: " + targetProgram.getClasspathEntries());
-                return;
+                throw new NotFoundException("Did not get the desire environment.");
             }
 
         }
@@ -99,9 +97,9 @@ public class GetConfiguration {
      * @param path the project path
      * @return
      */
-    private TargetProgram readClasspathE(String path) {
+    private void readClasspathE(String path) {
         List<String> classpathEntries = new ArrayList<String>();
-        List<String> sourcepathEntries = new ArrayList<String>();
+        String sourcepath=null;
         try {
             File iFile = new File(path + "/.classpath");
             if (iFile != null) {
@@ -117,9 +115,9 @@ public class GetConfiguration {
                     if (eElement.getAttribute("kind").equals("lib")) {
                         classpathEntries.add(eElement.getAttribute("path"));
                     }
-                    if (sourcepathEntries.isEmpty() && eElement.getAttribute("kind").equals("src")) {
+                    if (sourcepath==null && eElement.getAttribute("kind").equals("src")) {
                         String spE = eElement.getAttribute("path");
-                        sourcepathEntries.add(ReadFileUtils.joinDir(path, spE));
+                        sourcepath=ReadFileUtils.joinDir(path, spE);
                     }
                 }
             }
@@ -129,10 +127,9 @@ public class GetConfiguration {
         if (!classpathEntries.isEmpty()) {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
-        if (!sourcepathEntries.isEmpty()) {
-            targetProgram.setSourcepathEntries(sourcepathEntries.toArray(new String[sourcepathEntries.size()]));
+        if (sourcepath!=null) {
+            targetProgram.setSourcepath(sourcepath);
         }
-        return targetProgram;
     }
 
 
@@ -142,9 +139,9 @@ public class GetConfiguration {
      * @param path the project path
      * @return
      */
-    private TargetProgram readClasspathI(String path) {
+    private void readClasspathI(String path) {
         List<String> classpathEntries = new ArrayList<String>();
-        List<String> sourcepathEntries = new ArrayList<String>();
+        String sourcepathE = null;
         try {
             String projectName = path.substring(path.lastIndexOf('/') + 1);
 
@@ -157,30 +154,43 @@ public class GetConfiguration {
                 Element rootElement = (Element) doc.getDocumentElement();
                 NodeList componentList = rootElement.getElementsByTagName("component");
                 Element component = (Element) componentList.item(0);
+
+                //get outputPath
+                NodeList outputList = component.getElementsByTagName("output");
+                Element output = (Element) outputList.item(0);
+                if (output != null) {
+                    targetProgram.setOutputPath(imlUrl2Path(path, output.toString()));
+                } else {
+                    targetProgram.setOutputPath(imlUrl2Path(path, "file://$MODULE_DIR$/build/classes/main"));
+                }
+
+                //get sourcePath
                 NodeList contentList = component.getElementsByTagName("content");
                 Element content = (Element) contentList.item(0);
                 NodeList sourceFolderList = content.getElementsByTagName("sourceFolder");
-                Element sourceFolder = (Element) sourceFolderList.item(0);
-
-                String spathNodeValue = sourceFolder.getAttribute("url");
+                String spathNodeValue = null;
+                for (int i = 0; i < sourceFolderList.getLength(); i++) {
+                    Element sourceFolder = (Element) sourceFolderList.item(i);
+                    String sf = sourceFolder.getAttribute("url");
+                    if (sf.endsWith("java") && !sf.contains("test")) {
+                        spathNodeValue = sf;
+                        break;
+                    }
+                }
+                if (spathNodeValue == null) {
+                    return;
+                }
                 String sourcepath = spathNodeValue.substring(spathNodeValue.indexOf("$MODULE_DIR$") + 12);
-                sourcepathEntries.add(ReadFileUtils.joinDir(path, sourcepath));
+                sourcepathE=(imlUrl2Path(path, spathNodeValue));
 
-
+                //get classPath
                 NodeList libraryList = component.getElementsByTagName("library");
                 for (int temp = 0; temp < libraryList.getLength(); temp++) {
                     Element library = (Element) libraryList.item(temp);
                     Element classNode = (Element) library.getElementsByTagName("CLASSES").item(0);
                     Element pathNode = (Element) classNode.getElementsByTagName("root").item(0);
                     String pathNodeValue = pathNode.getAttribute("url");
-                    String classpath = pathNodeValue.substring(pathNodeValue.indexOf("$MODULE_DIR$") + 12);
-
-                    if (classpath.endsWith("!/")) {
-                        classpath = classpath.substring(0, classpath.length() - 2);
-                    }
-                    classpathEntries.add(ReadFileUtils.joinDir(path, classpath));
-
-
+                    classpathEntries.add(imlUrl2Path(path, pathNodeValue));
                 }
             }
         } catch (Exception e) {
@@ -189,11 +199,25 @@ public class GetConfiguration {
         if (!classpathEntries.isEmpty()) {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
-        if (!sourcepathEntries.isEmpty()) {
-            targetProgram.setSourcepathEntries(sourcepathEntries.toArray(new String[sourcepathEntries.size()]));
+        if (sourcepathE!=null) {
+            targetProgram.setSourcepath(sourcepathE);
         }
-        return targetProgram;
+
     }
 
+    public static String imlUrl2Path(String path, String subPath) {
+        if (subPath.endsWith("!/")) {
+            subPath = subPath.substring(0, subPath.length() - 2);
+        }
+        if (subPath.contains("$MODULE_DIR$")) {
+            subPath = subPath.substring(subPath.indexOf("$MODULE_DIR$") + 12);
+        }else{
+            subPath = subPath.substring(subPath.indexOf(":/") + 3);
+            return subPath;
+        }
+
+        return ReadFileUtils.joinDir(path, subPath);
+
+    }
 
 }

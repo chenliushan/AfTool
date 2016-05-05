@@ -1,6 +1,6 @@
 {"projectDir":"/Users/liushanchen/IdeaProjects/AfTest",
 "encodings":["UTF-8"],
-"faultClassList":[{"sourceName":"polyu_af/MyList1.java",
+"targetClassList":[{"sourceName":"polyu_af/MyList1.java",
                     "faults":[{"line":25,"expression":"i==0","expValue":true},
                                 {"line":70,"expression":"exp","expValue":true}]
                  }]

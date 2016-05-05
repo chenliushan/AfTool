@@ -10,7 +10,7 @@ import polyu_af.utils.AstUtils;
  * Created by liushanchen on 16/3/23.
  *
  * discard
- * it is replaced by the AccessibleVariables
+ * it is replaced by the AccessibleVarVisitor
  */
 public class ResolveExp {
     private static Logger logger = LogManager.getLogger(ResolveExp.class.getName());

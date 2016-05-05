@@ -105,16 +105,17 @@ public class AstUtils {
     /**
      * @param source
      * @param classpathEntries
-     * @param sourcepathEntries can only have one path
+     * @param sourcepath       can only have one path
      * @param encodings
      * @param UnitName
      * @return
      */
-    public static CompilationUnit createResolvedAST(String source, String[] classpathEntries, String[] sourcepathEntries, String[] encodings, String UnitName) {
+    public static CompilationUnit createResolvedAST(String source, String[] classpathEntries, String[] sourcepath, String[] encodings, String UnitName) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
-        parser.setEnvironment(classpathEntries, sourcepathEntries, encodings, true);
+
+        parser.setEnvironment(classpathEntries, sourcepath, encodings, true);
         parser.setUnitName(UnitName);
         parser.setSource(source.toCharArray());
         CompilationUnit node = (CompilationUnit) parser.createAST(null);
@@ -133,7 +134,7 @@ public class AstUtils {
 
     /**
      * Find the target node in the root that the FaultUnit Point to.
-     * The root and the faultUnit should comes from the same FaultClass.(not checked yet.)
+     * The root and the faultUnit should comes from the same TargetClass.(not checked yet.)
      *
      * @param root
      * @param fu

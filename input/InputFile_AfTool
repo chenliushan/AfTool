@@ -11,7 +11,7 @@
                                      "lib/org.eclipse.text_3.5.300.v20130515-1451.jar"],
 "sourcepathEntries":["/Users/liushanchen/IdeaProjects/AfTest/src/main/java"],
 "encodings":["UTF-8"],
-"faultClassList":[{"sourceName":"polyu_af/MyList1.java",
+"targetClassList":[{"sourceName":"polyu_af/MyList1.java",
                     "faults":[{"line":68,"expression":"exp","expValue":true},
                                 {"line":70,"expression":"exp1","expValue":true}]
                  }]
