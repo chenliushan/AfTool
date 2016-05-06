@@ -6,7 +6,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
 import polyu_af.process.AccessibleVarVisitor4M;
-import polyu_af.process.FixRuntime;
+import polyu_af.process.ByteCodeMLogVar;
+import polyu_af.process.GetConfiguration;
 import polyu_af.utils.AstUtils;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class GlobalProcess {
     private static Logger logger = LogManager.getLogger(GlobalProcess.class.getName());
 
     public static void main(String arg[]) {
+        long startTime = System.currentTimeMillis();
+
+
         //read input file
         GetConfiguration getConfiguration=null;
         try {
@@ -47,8 +51,9 @@ public class GlobalProcess {
         logger.info("accessVar4MethodList: \n"+ accessVar4MethodList.toString());
         logger.info("accessVar4MethodList-size:"+ accessVar4MethodList.size());
 
-        FixRuntime fixRuntime=new FixRuntime(targetProgram);
-        fixRuntime.process(accessVar4MethodList,targetClass.getSourceName());
+        ByteCodeMLogVar byteCodeMLogVar =new ByteCodeMLogVar(targetProgram);
+        byteCodeMLogVar.process(accessVar4MethodList,targetClass.getSourceName());
+
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -84,5 +89,9 @@ public class GlobalProcess {
                 }
             }
         }
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        logger.info("totalTime:"+totalTime);
+
     }
 }

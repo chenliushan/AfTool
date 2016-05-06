@@ -1,4 +1,4 @@
-package polyu_af.models;
+package polyu_af.process;
 
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
@@ -7,12 +7,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import polyu_af.exception.NotFoundException;
+import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -180,7 +183,6 @@ public class GetConfiguration {
                 if (spathNodeValue == null) {
                     return;
                 }
-                String sourcepath = spathNodeValue.substring(spathNodeValue.indexOf("$MODULE_DIR$") + 12);
                 sourcepathE=(imlUrl2Path(path, spathNodeValue));
 
                 //get classPath
@@ -219,5 +221,22 @@ public class GetConfiguration {
         return ReadFileUtils.joinDir(path, subPath);
 
     }
+//    public static String imlUrl2Path(String projectPath, String subPath) throws MalformedURLException {
+//        URL url=new URL(subPath);
+//        String path=url.getPath();
+//        logger.info("URL.path:"+path);
+//        if (path.endsWith("!/")) {
+//            subPath = subPath.substring(0, subPath.length() - 2);
+//        }
+//        if (subPath.contains("$MODULE_DIR$")) {
+//            subPath = subPath.substring(subPath.indexOf("$MODULE_DIR$") + 12);
+//        }else{
+//            subPath = subPath.substring(subPath.indexOf(":/") + 3);
+//            return subPath;
+//        }
+//
+//        return ReadFileUtils.joinDir(projectPath, subPath);
+//
+//    }
 
 }

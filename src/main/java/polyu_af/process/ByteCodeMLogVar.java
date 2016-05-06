@@ -13,8 +13,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,7 +29,7 @@ import java.util.List;
    3.run the modified Test1.class file
 
 */
-public class FixRuntime {
+public class ByteCodeMLogVar {
     private static Logger logger = LogManager.getLogger();
 
     private TargetProgram tp = null;
@@ -39,7 +38,7 @@ public class FixRuntime {
     private String targetClass = null;
     private ClassPool poolParent = null;
 
-    public FixRuntime(TargetProgram targetProgram) {
+    public ByteCodeMLogVar(TargetProgram targetProgram) {
         this.tp = targetProgram;
         this.poolParent = getClassPool();
     }
@@ -60,8 +59,10 @@ public class FixRuntime {
         if (target != null && target.length() > 0) {
             compileTarget();
             modifyTClass(accessVar4MethodList);
-//            runTarget();
-            runIt();
+//            runTarLoadByJs();
+//            runTarLoadByJn();
+            ExeTarget exeTarget=new ExeTarget(tp);
+            exeTarget.runTarInNThread();
         }
     }
 
@@ -145,8 +146,12 @@ public class FixRuntime {
 
     /**
      * Run the modified target .class file
+     * with the javassit loader
+     * (If the target app contains a javassist loader, there will be an error. )
+     * in the current thread
+     * the log will use current tool's log configuration
      */
-    private void runTarget() {
+    private void runTarLoadByJs() {
         importTargetCp();
         Loader cl = new Loader(poolParent);
         try {
@@ -158,51 +163,14 @@ public class FixRuntime {
         }
     }
 
-    private void importTargetCp() {
-        String[] projectClassPath = tp.getClasspathEntries();
-        for (int i = 0; i < projectClassPath.length; i++) {
-            try {
-                poolParent.insertClassPath(projectClassPath[i]);
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-//
-//    private List<URL> getURLs(String path) {
-//        File[] files = new File(path).listFiles();
-//        // Convert File to a URL
-//        List<URL> urls = new ArrayList<URL>();
-//        for (File file : files) {
-//            try {
-//                logger.info("file:" + file.toURL());
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (file.isDirectory()) {
-//                urls.addAll(getURLs(file.getAbsolutePath()));
-//            } else {
-//                try {
-//                    urls.add(file.toURL()); // fil// e:/classes/demo
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//        return urls;
-//    }
-    private URL getURL(String path) {
-        File files = new File(path);
-        try {
-            return files.toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void runIt() {
+    /**
+     * Run the modified target .class file
+     * with the URLClassLoader
+     * (the target app can run another nesting it without any error)
+     * in the current thread
+     * the log will use current tool's log configuration
+     */
+    private void runTarLoadByJn() {
         URL[] urls = new URL[]{getURL(tp.getOutputPath())};
         ClassLoader loader = new URLClassLoader(urls);
         try {
@@ -216,7 +184,31 @@ public class FixRuntime {
         }
     }
 
-    public void setTarget(String target) {
+
+
+    private void importTargetCp() {
+        String[] projectClassPath = tp.getClasspathEntries();
+        for (int i = 0; i < projectClassPath.length; i++) {
+            try {
+                poolParent.insertClassPath(projectClassPath[i]);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private URL getURL(String path) {
+        File files = new File(path);
+        try {
+            return files.toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private void setTarget(String target) {
         if (target.indexOf(".") > 0) {
             if (target.endsWith(".java")) {
                 setTarget(target.substring(0, target.length() - 5));
