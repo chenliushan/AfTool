@@ -1,107 +1,214 @@
-15:31:02.533 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:]
-15:31:02.534 [main] INFO  attempt.Test - ---------
-15:31:02.534 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:02.535 [main] INFO  attempt.Test - ---------
-15:31:02.535 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:02.535 [main] INFO  attempt.Test - ---------
-15:31:02.535 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:02.535 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:02.535 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
-15:31:02.535 [main] INFO  attempt.Test - ---------
-15:31:02.581 [main] INFO  attempt.Test - options:[]
-15:31:02.581 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
-15:31:02.581 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
-15:31:02.581 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
-15:31:02.581 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:02.581 [main] INFO  attempt.Test - ---------
-15:31:02.581 [main] INFO  attempt.Test - options:[-g]
-15:31:02.581 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
-15:31:02.581 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
-15:31:02.581 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
-15:31:02.581 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:02.581 [main] INFO  attempt.Test - ---------
-15:31:02.581 [main] INFO  attempt.Test - options:[-g, -d]
-15:31:02.582 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
-15:31:02.582 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
-15:31:02.582 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
-15:31:02.582 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:02.582 [main] INFO  attempt.Test - ---------
-15:31:02.591 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@6b57696f
-15:31:02.592 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
-15:31:02.592 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
-15:31:02.592 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
-15:31:02.592 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
-15:31:02.592 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:02.592 [main] INFO  attempt.Test - ---------
-15:31:03.138 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@6b57696f
-15:31:03.138 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
-15:31:03.138 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
-15:31:03.138 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
-15:31:03.138 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
-15:31:03.138 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:03.138 [main] INFO  attempt.Test - ---------
-15:31:03.138 [main] INFO  attempt.Test - targetClass:attempt.Test1
-15:31:03.138 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:03.138 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.138 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
-15:31:03.138 [main] INFO  attempt.Test - ---------
-15:31:03.199 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.199 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.199 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.199 [main] INFO  attempt.Test - ---------
-15:31:03.199 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.199 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.199 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.199 [main] INFO  attempt.Test - ---------
-15:31:03.218 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.219 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.219 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.219 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.219 [main] INFO  attempt.Test - ---------
-15:31:03.221 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.221 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.222 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.222 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.222 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.222 [main] INFO  attempt.Test - ---------
-15:31:03.236 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.236 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.236 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.236 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.236 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.236 [main] INFO  attempt.Test - ---------
-15:31:03.239 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.239 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.239 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.239 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.239 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.240 [main] INFO  attempt.Test - ---------
-15:31:03.242 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.242 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.242 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.242 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.242 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.242 [main] INFO  attempt.Test - ---------
-15:31:03.244 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.244 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.244 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.244 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.244 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.244 [main] INFO  attempt.Test - ---------
-15:31:03.245 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
-15:31:03.245 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
-15:31:03.245 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
-15:31:03.245 [main] INFO  attempt.Test - TargetClass:attempt.Test1
-15:31:03.245 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.245 [main] INFO  attempt.Test - ---------
-15:31:03.247 [main] INFO  attempt.Test - targetClass:attempt.Test1
-15:31:03.247 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
-15:31:03.247 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.247 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
-15:31:03.248 [main] INFO  attempt.Test - ---------
-15:31:03.249 [main] INFO  attempt.Test - cl:javassist.Loader@233795b6
-15:31:03.249 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
-15:31:03.249 [main] INFO  attempt.Test - targetClass:attempt.Test1
-15:31:03.249 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
-15:31:03.249 [main] INFO  attempt.Test - ---------
-15:31:03.519 [main] ERROR attempt.Test1 - a:localVariable in line 29
+16:24:37.525 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:]
+16:24:37.526 [main] INFO  attempt.Test - ---------
+16:24:37.526 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:37.527 [main] INFO  attempt.Test - ---------
+16:24:37.527 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:37.527 [main] INFO  attempt.Test - ---------
+16:24:37.527 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:37.527 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:37.527 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
+16:24:37.527 [main] INFO  attempt.Test - ---------
+16:24:37.572 [main] INFO  attempt.Test - options:[]
+16:24:37.572 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:24:37.573 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
+16:24:37.573 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
+16:24:37.573 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:37.573 [main] INFO  attempt.Test - ---------
+16:24:37.573 [main] INFO  attempt.Test - options:[-g]
+16:24:37.573 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:24:37.573 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
+16:24:37.573 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
+16:24:37.573 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:37.573 [main] INFO  attempt.Test - ---------
+16:24:37.573 [main] INFO  attempt.Test - options:[-g, -d]
+16:24:37.573 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:24:37.573 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
+16:24:37.573 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
+16:24:37.573 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:37.573 [main] INFO  attempt.Test - ---------
+16:24:37.582 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@6b57696f
+16:24:37.582 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
+16:24:37.583 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:24:37.583 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
+16:24:37.583 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
+16:24:37.583 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:37.583 [main] INFO  attempt.Test - ---------
+16:24:38.160 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@6b57696f
+16:24:38.160 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
+16:24:38.160 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:24:38.160 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@480bdb19
+16:24:38.160 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@2a556333
+16:24:38.160 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:38.160 [main] INFO  attempt.Test - ---------
+16:24:38.160 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:24:38.160 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:38.160 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.161 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
+16:24:38.161 [main] INFO  attempt.Test - ---------
+16:24:38.224 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.224 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.224 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.224 [main] INFO  attempt.Test - ---------
+16:24:38.224 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.224 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.224 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.224 [main] INFO  attempt.Test - ---------
+16:24:38.249 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.249 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.249 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.249 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.249 [main] INFO  attempt.Test - ---------
+16:24:38.253 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.253 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.253 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.253 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.253 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.253 [main] INFO  attempt.Test - ---------
+16:24:38.268 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.269 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.269 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.269 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.269 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.269 [main] INFO  attempt.Test - ---------
+16:24:38.272 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.272 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.272 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.272 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.272 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.272 [main] INFO  attempt.Test - ---------
+16:24:38.276 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.276 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.276 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.276 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.276 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.276 [main] INFO  attempt.Test - ---------
+16:24:38.280 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.280 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.280 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.280 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.280 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.280 [main] INFO  attempt.Test - ---------
+16:24:38.280 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:24:38.280 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:24:38.280 [main] INFO  attempt.Test - cc:javassist.CtClassType@13e39c73[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@595b007d[public Test1 ()V], javassist.CtConstructor@72d1ad2e[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:24:38.280 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:24:38.281 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.281 [main] INFO  attempt.Test - ---------
+16:24:38.283 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:24:38.283 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:24:38.283 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.283 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
+16:24:38.284 [main] INFO  attempt.Test - ---------
+16:24:38.285 [main] INFO  attempt.Test - cl:javassist.Loader@233795b6
+16:24:38.285 [main] INFO  attempt.Test - args:[Ljava.lang.String;@5a8e6209
+16:24:38.285 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:24:38.285 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:24:38.285 [main] INFO  attempt.Test - ---------
+16:24:38.500 [main] ERROR attempt.Test1 - a:localVariable in line 29
+16:25:45.428 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:]
+16:25:45.429 [main] INFO  attempt.Test - ---------
+16:25:45.430 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:45.430 [main] INFO  attempt.Test - ---------
+16:25:45.430 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:45.431 [main] INFO  attempt.Test - ---------
+16:25:45.431 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:45.431 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:45.431 [main] INFO  attempt.Test - args:[Ljava.lang.String;@57536d79
+16:25:45.431 [main] INFO  attempt.Test - ---------
+16:25:45.512 [main] INFO  attempt.Test - options:[]
+16:25:45.512 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:25:45.512 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@69a3d1d
+16:25:45.512 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@86be70a
+16:25:45.513 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:45.513 [main] INFO  attempt.Test - ---------
+16:25:45.513 [main] INFO  attempt.Test - options:[-g]
+16:25:45.513 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:25:45.513 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@69a3d1d
+16:25:45.513 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@86be70a
+16:25:45.513 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:45.513 [main] INFO  attempt.Test - ---------
+16:25:45.513 [main] INFO  attempt.Test - options:[-g, -d]
+16:25:45.513 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:25:45.513 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@69a3d1d
+16:25:45.513 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@86be70a
+16:25:45.513 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:45.513 [main] INFO  attempt.Test - ---------
+16:25:45.524 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@587d1d39
+16:25:45.524 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
+16:25:45.524 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:25:45.525 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@69a3d1d
+16:25:45.525 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@86be70a
+16:25:45.525 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:45.525 [main] INFO  attempt.Test - ---------
+16:25:46.053 [main] INFO  attempt.Test - cTask:com.sun.tools.javac.api.JavacTaskImpl@587d1d39
+16:25:46.053 [main] INFO  attempt.Test - options:[-g, -d, /Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/]
+16:25:46.053 [main] INFO  attempt.Test - fileObjects:[RegularFileObject[/Users/liushanchen/IdeaProjects/Test4Javassist/src/main/java/attempt/Test1.java]]
+16:25:46.053 [main] INFO  attempt.Test - fileManager:com.sun.tools.javac.file.JavacFileManager@69a3d1d
+16:25:46.053 [main] INFO  attempt.Test - javaCompiler:com.sun.tools.javac.api.JavacTool@86be70a
+16:25:46.054 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:46.054 [main] INFO  attempt.Test - ---------
+16:25:46.054 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:25:46.054 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:46.054 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.054 [main] INFO  attempt.Test - args:[Ljava.lang.String;@57536d79
+16:25:46.054 [main] INFO  attempt.Test - ---------
+16:25:46.118 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.118 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.118 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.118 [main] INFO  attempt.Test - ---------
+16:25:46.118 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.118 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.118 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.119 [main] INFO  attempt.Test - ---------
+16:25:46.137 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.137 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.137 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.137 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.137 [main] INFO  attempt.Test - ---------
+16:25:46.142 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.142 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.143 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.143 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.143 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.143 [main] INFO  attempt.Test - ---------
+16:25:46.165 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.165 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.165 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.165 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.165 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.165 [main] INFO  attempt.Test - ---------
+16:25:46.173 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.173 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.173 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.174 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.174 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.174 [main] INFO  attempt.Test - ---------
+16:25:46.177 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.178 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.178 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.178 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.178 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.178 [main] INFO  attempt.Test - ---------
+16:25:46.181 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.181 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.181 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.181 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.181 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.181 [main] INFO  attempt.Test - ---------
+16:25:46.182 [main] INFO  attempt.Test - mainMethod:javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V]
+16:25:46.182 [main] INFO  attempt.Test - field:attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;
+16:25:46.182 [main] INFO  attempt.Test - cc:javassist.CtClassType@57c758ac[changed public class attempt.Test1 fields=attempt.Test1.testString:Ljava/lang/String;, attempt.Test1.logger:Lorg/apache/logging/log4j/Logger;,  constructors=javassist.CtConstructor@16293aa2[public Test1 ()V], javassist.CtConstructor@5158b42f[static <clinit> ()V],  methods=javassist.CtMethod@2efd02[public f (I)I], javassist.CtMethod@44a4fe33[public static main ([Ljava/lang/String;)V], ]
+16:25:46.182 [main] INFO  attempt.Test - TargetClass:attempt.Test1
+16:25:46.183 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.183 [main] INFO  attempt.Test - ---------
+16:25:46.186 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:25:46.186 [main] INFO  attempt.Test - targetFile:attempt/Test1.java
+16:25:46.186 [main] INFO  attempt.Test - poolParent:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.186 [main] INFO  attempt.Test - args:[Ljava.lang.String;@57536d79
+16:25:46.186 [main] INFO  attempt.Test - ---------
+16:25:46.187 [main] INFO  attempt.Test - cl:javassist.Loader@77c2494c
+16:25:46.188 [main] INFO  attempt.Test - args:[Ljava.lang.String;@57536d79
+16:25:46.188 [main] INFO  attempt.Test - targetClass:attempt.Test1
+16:25:46.188 [main] INFO  attempt.Test - pool:[class path: java.lang.Object.class:/Users/liushanchen/IdeaProjects/Test4Javassist/build/classes/main/:]
+16:25:46.188 [main] INFO  attempt.Test - ---------
+16:25:46.488 [main] ERROR attempt.Test1 - a:localVariable in line 29

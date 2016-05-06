@@ -15,6 +15,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -102,7 +104,7 @@ public class GetConfiguration {
      */
     private void readClasspathE(String path) {
         List<String> classpathEntries = new ArrayList<String>();
-        String sourcepath=null;
+        String sourcepath = null;
         try {
             File iFile = new File(path + "/.classpath");
             if (iFile != null) {
@@ -118,9 +120,9 @@ public class GetConfiguration {
                     if (eElement.getAttribute("kind").equals("lib")) {
                         classpathEntries.add(eElement.getAttribute("path"));
                     }
-                    if (sourcepath==null && eElement.getAttribute("kind").equals("src")) {
+                    if (sourcepath == null && eElement.getAttribute("kind").equals("src")) {
                         String spE = eElement.getAttribute("path");
-                        sourcepath=ReadFileUtils.joinDir(path, spE);
+                        sourcepath = ReadFileUtils.joinDir(path, spE);
                     }
                 }
             }
@@ -130,7 +132,7 @@ public class GetConfiguration {
         if (!classpathEntries.isEmpty()) {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
-        if (sourcepath!=null) {
+        if (sourcepath != null) {
             targetProgram.setSourcePath(sourcepath);
         }
     }
@@ -183,7 +185,7 @@ public class GetConfiguration {
                 if (spathNodeValue == null) {
                     return;
                 }
-                sourcepathE=(imlUrl2Path(path, spathNodeValue));
+                sourcepathE = (imlUrl2Path(path, spathNodeValue));
 
                 //get classPath
                 NodeList libraryList = component.getElementsByTagName("library");
@@ -196,47 +198,26 @@ public class GetConfiguration {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         if (!classpathEntries.isEmpty()) {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
-        if (sourcepathE!=null) {
+        if (sourcepathE != null) {
             targetProgram.setSourcePath(sourcepathE);
         }
 
     }
 
-    public static String imlUrl2Path(String path, String subPath) {
+    public static String imlUrl2Path(String projectDir, String subPath) throws URISyntaxException {
+        if (subPath.contains("$MODULE_DIR$")) {
+            subPath = subPath.replace("$MODULE_DIR$", projectDir);
+        }
         if (subPath.endsWith("!/")) {
             subPath = subPath.substring(0, subPath.length() - 2);
         }
-        if (subPath.contains("$MODULE_DIR$")) {
-            subPath = subPath.substring(subPath.indexOf("$MODULE_DIR$") + 12);
-        }else{
-            subPath = subPath.substring(subPath.indexOf(":/") + 3);
-            return subPath;
-        }
-
-        return ReadFileUtils.joinDir(path, subPath);
+        URI uri = new URI(subPath);
+        return uri.getPath();
 
     }
-//    public static String imlUrl2Path(String projectPath, String subPath) throws MalformedURLException {
-//        URL url=new URL(subPath);
-//        String path=url.getPath();
-//        logger.info("URL.path:"+path);
-//        if (path.endsWith("!/")) {
-//            subPath = subPath.substring(0, subPath.length() - 2);
-//        }
-//        if (subPath.contains("$MODULE_DIR$")) {
-//            subPath = subPath.substring(subPath.indexOf("$MODULE_DIR$") + 12);
-//        }else{
-//            subPath = subPath.substring(subPath.indexOf(":/") + 3);
-//            return subPath;
-//        }
-//
-//        return ReadFileUtils.joinDir(projectPath, subPath);
-//
-//    }
-
 }

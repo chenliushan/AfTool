@@ -200,7 +200,7 @@ public class ByteCodeMLogVar {
     private URL getURL(String path) {
         File files = new File(path);
         try {
-            return files.toURL();
+            return files.toURI().toURL();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
