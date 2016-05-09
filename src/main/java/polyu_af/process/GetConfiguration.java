@@ -209,7 +209,7 @@ public class GetConfiguration {
 
     }
 
-    public static String imlUrl2Path(String projectDir, String subPath) throws URISyntaxException {
+   private String imlUrl2Path(String projectDir, String subPath) throws URISyntaxException {
         if (subPath.contains("$MODULE_DIR$")) {
             subPath = subPath.replace("$MODULE_DIR$", projectDir);
         }

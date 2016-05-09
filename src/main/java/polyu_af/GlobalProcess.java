@@ -25,8 +25,8 @@ public class GlobalProcess {
         //read input file
         GetConfiguration getConfiguration=null;
         try {
-//            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
-            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
+            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+//            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
         } catch (NotFoundException e) {
             e.printStackTrace();
         }

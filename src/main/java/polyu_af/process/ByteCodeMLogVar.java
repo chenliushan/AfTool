@@ -26,7 +26,11 @@ import java.util.List;
    1.compile the target .java file
    2.overwrites sample/Test1.class  for adding print statements
    to print the known field variables and local variables.
-   3.run the modified Test1.class file
+   -get method by method name and parameters
+   -can find the method in a inner class
+
+existing problem :
+1.line: 174    //if the local variable is not initialized the Javassist cannot find that variable unless it is assigned a value.
 
 */
 public class ByteCodeMLogVar {
@@ -36,6 +40,7 @@ public class ByteCodeMLogVar {
     private String target = null;
     private String targetFile = null;
     private String targetClass = null;
+    private String constructorN = null;
     private ClassPool poolParent = null;
 
     public ByteCodeMLogVar(TargetProgram targetProgram) {
@@ -61,7 +66,7 @@ public class ByteCodeMLogVar {
             modifyTClass(accessVar4MethodList);
 //            runTarLoadByJs();
 //            runTarLoadByJn();
-            ExeTarget exeTarget=new ExeTarget(tp);
+            ExeTarget exeTarget = new ExeTarget(tp);
             exeTarget.runTarInNThread();
         }
     }
@@ -74,7 +79,16 @@ public class ByteCodeMLogVar {
     private ClassPool getClassPool() {
         ClassPool pool = ClassPool.getDefault();
         try {
+            CtClass ctClass = pool.get("java.lang.String");
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
             pool.appendClassPath(tp.getOutputPath());
+            String[] cp = tp.getClasspathEntries();
+            for (int i = 0; i < cp.length; i++) {
+                pool.appendClassPath(cp[i]);
+            }
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
@@ -91,6 +105,10 @@ public class ByteCodeMLogVar {
         Iterable<? extends JavaFileObject> fileObjects =
                 fileManager.getJavaFileObjects(ReadFileUtils.joinDir(tp.getSourcePath(), targetFile));
         List<String> options = new ArrayList<String>();
+        options.add("-classpath");
+        options.add("/Users/liushanchen/IdeaProjects/AfTest/lib/cofoja-1.3-20160207.jar");
+        options.add("-processor");
+        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
         options.add("-g");
         options.add("-d");
         options.add(tp.getOutputPath());
@@ -99,6 +117,7 @@ public class ByteCodeMLogVar {
         try {
             fileManager.close();
         } catch (IOException e) {
+            logger.error("recompile error!!");
             e.printStackTrace();
         }
     }
@@ -108,6 +127,7 @@ public class ByteCodeMLogVar {
      */
     private void modifyTClass(List<AccessVar4Method> accessVar4MethodList) {
         CtClass cc = null;
+        //import the Log package and declare the log variable
         try {
             cc = poolParent.get(targetClass);
             poolParent.importPackage("org.apache.logging.log4j.LogManager");
@@ -120,21 +140,61 @@ public class ByteCodeMLogVar {
         } catch (CannotCompileException e) {
             e.printStackTrace();
         }
-        try {
-            for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
 
-                CtMethod mainMethod = cc.getDeclaredMethod(methodAccessVar.getMethodName());
-                for (AccessibleVars accessVars : methodAccessVar.getVarsList()) {
-                    mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
-                    for (MyExpression var : accessVars.getVars()) {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+
+        //For every method in the list
+        for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
+            CtBehavior mainMethod = null;
+            List<CtClass> ps = methodAccessVar.getParams(poolParent);
+            CtClass[] prams = ps.toArray(new CtClass[ps.size()]);
+            //find the method in the target
+            if (constructorN.equals(methodAccessVar.getMethodName())) {
+                try {
+                    mainMethod = cc.getDeclaredConstructor(prams);
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    mainMethod = cc.getDeclaredMethod(methodAccessVar.getMethodName(), prams);
+                } catch (NotFoundException e) {
+                    try {
+                        CtClass[] nccs = cc.getNestedClasses();
+                        if (nccs != null) {
+                            for (int i = 0; i < nccs.length; i++) {
+                                mainMethod = nccs[i].getDeclaredMethod(methodAccessVar.getMethodName(), prams);
+                                if (mainMethod != null) {
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (NotFoundException e1) {
+                        e1.printStackTrace();
                     }
-
+                    continue;
                 }
             }
-            cc.writeFile(tp.getOutputPath());    // update the class file
-        } catch (NotFoundException e) {
-            e.printStackTrace();
+            if (mainMethod==null){
+                logger.error("mainMethod==null  did not get the method name: "+methodAccessVar.getMethodName()+"!!!!!!");
+                continue;
+            }
+            //modify the byte code to get get the value of every accessible variable in that method
+            for (AccessibleVars accessVars : methodAccessVar.getVarsList()) {
+                try {
+                    mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
+                    for (MyExpression var : accessVars.getVars()) {
+                        //if the local variable is not initialized the Javassist cannot find that variable unless it is assigned a value.
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+                    }
+                } catch (CannotCompileException e) {
+                    logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVars());
+                    e.printStackTrace();
+                }
+            }
+        }
+        // update the class file
+        try {
+            cc.writeFile(tp.getOutputPath());
         } catch (CannotCompileException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -185,7 +245,6 @@ public class ByteCodeMLogVar {
     }
 
 
-
     private void importTargetCp() {
         String[] projectClassPath = tp.getClasspathEntries();
         for (int i = 0; i < projectClassPath.length; i++) {
@@ -222,6 +281,12 @@ public class ByteCodeMLogVar {
                 target = target.replace("/", ".");
             }
             this.targetClass = target;
+            int idx = targetClass.indexOf(".");
+            if (idx > 0) {
+                this.constructorN = targetClass.substring(idx + 1);
+            } else {
+                this.constructorN = targetClass;
+            }
         }
     }
 }

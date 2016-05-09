@@ -1,4 +1,5 @@
 {"projectDir":"/Users/liushanchen/IdeaProjects/AfTest",
+"programEntry":"polyu_af.MyListMain",
 "encodings":["UTF-8"],
 "targetClassList":[{"sourceName":"polyu_af/MyList1.java",
                     "faults":[{"line":25,"expression":"i==0","expValue":true},

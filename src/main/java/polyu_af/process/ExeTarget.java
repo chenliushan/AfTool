@@ -30,7 +30,8 @@ public class ExeTarget {
         Runtime runtime = Runtime.getRuntime();
         try {
             Process process = runtime.exec(getCommand());
-            getProcessOutput(process);
+            getProcessOutput(process.getInputStream());
+            getProcessOutput(process.getErrorStream());
             int exitValue = process.waitFor();
             logger.info("exitValue:" + exitValue);
 
@@ -42,14 +43,16 @@ public class ExeTarget {
     }
 
     private String getCommand() {
-        StringBuilder command = new StringBuilder("java -cp .");
+        StringBuilder command = new StringBuilder("java -javaagent:"+tp.getProjectDir()+"/lib/cofoja-1.3-20160207.jar -cp .");
         String[] cp = tp.getClasspathEntries();
         for (int i = 0; i < cp.length; i++) {
             command.append(":" + cp[i]);
         }
         command.append(":" + tp.getOutputPath());
         //add the log4j2 configuration file in path
-        command.append(":" + tp.getProjectDir() + "/src/main/resources");
+        command.append(":"+ System.getProperty("user.dir")+ "/lib/log4j-api-2.5.jar");
+        command.append(":"+ System.getProperty("user.dir")+ "/lib/log4j-core-2.5.jar");
+        command.append(":"+ System.getProperty("user.dir")+ "/logs");
         command.append(" " + tp.getProgramEntry());
         if (tp.getRunningArg() != null) {
             command.append(" " + tp.getRunningArg());
@@ -58,8 +61,7 @@ public class ExeTarget {
         return command.toString();
     }
 
-    private void getProcessOutput(Process process) {
-        InputStream is = process.getInputStream();
+    private void getProcessOutput(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
         String line = null;
