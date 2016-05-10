@@ -64,9 +64,7 @@ public class GlobalProcess {
 //        CommonUtils.printExpList(buildBooleanExp.getBuildExp());
 
 
-//        Runtime runtime=Runtime.getRuntime();
-//        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
-
+//
 //        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
 
@@ -89,6 +87,11 @@ public class GlobalProcess {
                 }
             }
         }
+        Runtime runtime=Runtime.getRuntime();
+        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
+        long usedMemory=runtime.totalMemory()-runtime.freeMemory();
+        logger.info("usedMemory:"+usedMemory);
+
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         logger.info("totalTime:"+totalTime);

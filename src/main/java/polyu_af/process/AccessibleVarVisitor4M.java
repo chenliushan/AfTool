@@ -36,7 +36,6 @@ public class AccessibleVarVisitor4M extends AccessibleVarVisitor {
 //            System.out.println("isResolved:" + svd.getType().resolveBinding().getName());
 //            System.out.println("isResolved:" + svd.getType().resolveBinding().getQualifiedName());
 //            System.out.println("isResolved:" + svd.getType().resolveBinding().getBinaryName());
-            System.out.println("--------------" );
             if(svd.getType().resolveBinding().isPrimitive()){
                 accessVar4Method.addParamType(svd.getType().toString());
 //                accessVar4Method.addParamType(svd.getType().resolveBinding().getQualifiedName());

@@ -45,7 +45,7 @@ public class MyExpression {
     @Override
     public String toString() {
         return "\nMyExp{" +
-                "astNode:" + astNode +
+                "astNode:" + astNode+
                 ", text:\'" + text + '\'' +
                 '}';
     }

@@ -28,10 +28,7 @@ import java.util.List;
    to print the known field variables and local variables.
    -get method by method name and parameters
    -can find the method in a inner class
-
-existing problem :
-1.line: 174    //if the local variable is not initialized the Javassist cannot find that variable unless it is assigned a value.
-
+   -if the local variable is not initialized just log a string that the variable is not initialized
 */
 public class ByteCodeMLogVar {
     private static Logger logger = LogManager.getLogger();
@@ -42,6 +39,8 @@ public class ByteCodeMLogVar {
     private String targetClass = null;
     private String constructorN = null;
     private ClassPool poolParent = null;
+
+    private boolean isNestedMethod = false;
 
     public ByteCodeMLogVar(TargetProgram targetProgram) {
         this.tp = targetProgram;
@@ -64,8 +63,6 @@ public class ByteCodeMLogVar {
         if (target != null && target.length() > 0) {
             compileTarget();
             modifyTClass(accessVar4MethodList);
-//            runTarLoadByJs();
-//            runTarLoadByJn();
             ExeTarget exeTarget = new ExeTarget(tp);
             exeTarget.runTarInNThread();
         }
@@ -79,11 +76,6 @@ public class ByteCodeMLogVar {
     private ClassPool getClassPool() {
         ClassPool pool = ClassPool.getDefault();
         try {
-            CtClass ctClass = pool.get("java.lang.String");
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
             pool.appendClassPath(tp.getOutputPath());
             String[] cp = tp.getClasspathEntries();
             for (int i = 0; i < cp.length; i++) {
@@ -92,7 +84,6 @@ public class ByteCodeMLogVar {
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-
         return pool;
     }
 
@@ -117,82 +108,42 @@ public class ByteCodeMLogVar {
         try {
             fileManager.close();
         } catch (IOException e) {
-            logger.error("recompile error!!");
+            logger.error("recompile -g error!!");
             e.printStackTrace();
         }
     }
 
     /**
-     * Modify the target file
+     * Modify the target bytecode file
+     *
+     * @param accessVar4MethodList the accessible variables for every line group by method (from AST analysis)
      */
     private void modifyTClass(List<AccessVar4Method> accessVar4MethodList) {
         CtClass cc = null;
-        //import the Log package and declare the log variable
         try {
             cc = poolParent.get(targetClass);
-            poolParent.importPackage("org.apache.logging.log4j.LogManager");
-            poolParent.importPackage("org.apache.logging.log4j.Logger");
-            CtField field = CtField.make(" private static Logger logger = LogManager.getLogger();", cc);
-            cc.addField(field);
         } catch (NotFoundException e) {
             e.printStackTrace();
             return;
-        } catch (CannotCompileException e) {
-            e.printStackTrace();
         }
-
-
+        importPack(cc);
         //For every method in the list
         for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
-            CtBehavior mainMethod = null;
-            List<CtClass> ps = methodAccessVar.getParams(poolParent);
-            CtClass[] prams = ps.toArray(new CtClass[ps.size()]);
-            //find the method in the target
-            if (constructorN.equals(methodAccessVar.getMethodName())) {
-                try {
-                    mainMethod = cc.getDeclaredConstructor(prams);
-                } catch (NotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    mainMethod = cc.getDeclaredMethod(methodAccessVar.getMethodName(), prams);
-                } catch (NotFoundException e) {
-                    try {
-                        CtClass[] nccs = cc.getNestedClasses();
-                        if (nccs != null) {
-                            for (int i = 0; i < nccs.length; i++) {
-                                mainMethod = nccs[i].getDeclaredMethod(methodAccessVar.getMethodName(), prams);
-                                if (mainMethod != null) {
-                                    break;
-                                }
-                            }
-                        }
-                    } catch (NotFoundException e1) {
-                        e1.printStackTrace();
-                    }
-                    continue;
-                }
-            }
-            if (mainMethod==null){
-                logger.error("mainMethod==null  did not get the method name: "+methodAccessVar.getMethodName()+"!!!!!!");
+            isNestedMethod = false;
+            //find the method in the target bytecode file
+            CtBehavior mainMethod = findTMethod(methodAccessVar, cc);
+            //insert log to get the value of every accessible variable
+            if (mainMethod == null) {
+                logger.error("mainMethod==null  did not get the method name: " + methodAccessVar.getMethodName() + "!!!!!!");
                 continue;
-            }
-            //modify the byte code to get get the value of every accessible variable in that method
-            for (AccessibleVars accessVars : methodAccessVar.getVarsList()) {
-                try {
-                    mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
-                    for (MyExpression var : accessVars.getVars()) {
-                        //if the local variable is not initialized the Javassist cannot find that variable unless it is assigned a value.
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
-                    }
-                } catch (CannotCompileException e) {
-                    logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVars());
-                    e.printStackTrace();
+            } else {
+                if (!isNestedMethod) {
+                    logVarValue(methodAccessVar.getVarsList(), mainMethod);
+
                 }
             }
         }
-        // update the class file
+        // rewrite the bytecode file
         try {
             cc.writeFile(tp.getOutputPath());
         } catch (CannotCompileException e) {
@@ -200,8 +151,129 @@ public class ByteCodeMLogVar {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * import the Log package and declare the log variable
+     *
+     * @param cc the target bytecode file
+     */
+    private void importPack(CtClass cc) {
+        poolParent.importPackage("org.apache.logging.log4j.LogManager");
+        poolParent.importPackage("org.apache.logging.log4j.Logger");
+        try {
+            CtField field = CtField.make(" public static Logger logger =org.apache.logging.log4j.LogManager#getLogger();", cc);
+            cc.addField(field);
+        } catch (CannotCompileException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * find the method in the target
+     *
+     * @param methodAccessVar
+     * @param cc
+     * @return
+     */
+    private CtBehavior findTMethod(AccessVar4Method methodAccessVar, CtClass cc) {
+        CtBehavior mainMethod = null;
+        List<CtClass> ps = methodAccessVar.getParams(poolParent);
+        CtClass[] prams = ps.toArray(new CtClass[ps.size()]);
+        if (constructorN.equals(methodAccessVar.getMethodName())) {
+            try {
+                mainMethod = cc.getDeclaredConstructor(prams);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                mainMethod = cc.getDeclaredMethod(methodAccessVar.getMethodName(), prams);
+            } catch (NotFoundException e) {
+                try {
+                    CtClass[] nccs = cc.getNestedClasses();
+                    //find the first method has that name and paras in nested classes
+                    for (int i = 0; i < nccs.length; i++) {
+                        try {
+                            mainMethod = nccs[i].getDeclaredMethod(methodAccessVar.getMethodName(), prams);
+                        } catch (NotFoundException e1) {
+                            continue;
+                        }
+                        if (mainMethod != null) {
+                            isNestedMethod = true;
+                            importPack(nccs[i]);
+                            logNestedCVarValue(methodAccessVar.getVarsList(), mainMethod);
+                            nccs[i].writeFile(tp.getOutputPath());
+                            break;
+                        }
+                    }
+                } catch (NotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (CannotCompileException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        }
+        return mainMethod;
+    }
+
+    /**
+     * insert log to get the value of every accessible variable
+     *
+     * @param varsList   cluster of vars of line
+     * @param mainMethod the method get from bytecode file
+     */
+    private void logVarValue(List<AccessibleVars> varsList, CtBehavior mainMethod) {
+
+        for (AccessibleVars accessVars : varsList) {
+            try {
+                mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
+                for (MyExpression var : accessVars.getVars()) {
+                    try {
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+                    } catch (CannotCompileException e) {
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ": not initialized.\");");
+                        logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
+                    }
+                }
+            } catch (CannotCompileException e) {
+                logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVars());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * insert log to get the value of every accessible variable
+     *
+     * @param varsList   cluster of vars of line
+     * @param mainMethod the method get from bytecode file
+     */
+    private void logNestedCVarValue(List<AccessibleVars> varsList, CtBehavior mainMethod) {
+        for (AccessibleVars accessVars : varsList) {
+            try {
+                mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
+                for (MyExpression var : accessVars.getVars()) {
+                    try {
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + constructorN + "." + var.getText() + ":\"+" + targetClass + "." + var.getText() + ");");
+                    } catch (CannotCompileException e) {
+                        try {
+                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+                        } catch (CannotCompileException e1) {
+                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ": may not initialized.\");");
+                            logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
+
+                        }
+                    }
+                }
+            } catch (CannotCompileException e) {
+                logger.error("Nested location:" + accessVars.getLocation());
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -211,6 +283,7 @@ public class ByteCodeMLogVar {
      * in the current thread
      * the log will use current tool's log configuration
      */
+    @Deprecated
     private void runTarLoadByJs() {
         importTargetCp();
         Loader cl = new Loader(poolParent);
@@ -230,6 +303,7 @@ public class ByteCodeMLogVar {
      * in the current thread
      * the log will use current tool's log configuration
      */
+    @Deprecated
     private void runTarLoadByJn() {
         URL[] urls = new URL[]{getURL(tp.getOutputPath())};
         ClassLoader loader = new URLClassLoader(urls);
