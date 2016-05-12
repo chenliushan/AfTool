@@ -17,7 +17,7 @@ public class BuildIntegerExp extends BuildExpressions {
     @Override
     public void enumerating(IVariableBinding variableA, IVariableBinding variableB) {
         if (variableA.getType().getName().equals("int") && variableB.getType().getName().equals("int")) {
-            MyExpression myExpression = new MyExpression(null, variableA.getName() + " + " + variableB.getName());
+            MyExpression myExpression = new MyExpression(null, variableA.getName() + " + " + variableB.getName(),"int");
             buildExp.add(myExpression);
         }
     }

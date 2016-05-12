@@ -190,7 +190,30 @@ public class AstUtils {
 //        root.accept(resolveTypeVisitor);
         return document.get();
     }
+    public static String getExpType(Type resolveT) {
+        String type = null;
+        if(resolveT!=null){
+            if (resolveT.resolveBinding().isPrimitive()) {
+                type = resolveT.toString();
+            } else {
+                type = resolveT.resolveBinding().getBinaryName();
+            }
+        }
+        return type;
 
+    }
+public static String getExpType(ITypeBinding resolveT) {
+        String type = null;
+        if(resolveT!=null){
+            if (resolveT.isPrimitive()) {
+                type = resolveT.getQualifiedName();
+            } else {
+                type = resolveT.getBinaryName();
+            }
+        }
+        return type;
+
+    }
 
 }
 

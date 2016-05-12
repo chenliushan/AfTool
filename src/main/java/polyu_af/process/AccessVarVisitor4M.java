@@ -1,12 +1,10 @@
 package polyu_af.process;
 
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import polyu_af.models.AccessVar4Method;
-import polyu_af.models.AccessibleVars;
-import polyu_af.models.MyExpression;
+import polyu_af.models.AccessVars4Line;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +12,13 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class AccessibleVarVisitor4M extends AccessibleVarVisitor {
+public class AccessVarVisitor4M extends AccessExpVisitor {
     private List<AccessVar4Method> accessVar4MethodList = new ArrayList<AccessVar4Method>();
     private AccessVar4Method accessVar4Method;
-    private List<AccessibleVars> accesVarsListM;
+    private List<AccessVars4Line> accesVarsListM;
 
 
-    public AccessibleVarVisitor4M(CompilationUnit root) {
+    public AccessVarVisitor4M(CompilationUnit root) {
         super(root);
     }
 
@@ -31,22 +29,15 @@ public class AccessibleVarVisitor4M extends AccessibleVarVisitor {
 
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-//            System.out.println("isResolved:" + Signature.createTypeSignature(String.valueOf(svd.getType()), true));
-//            System.out.println("isResolved:" + svd.getType().toString());
-//            System.out.println("isResolved:" + svd.getType().resolveBinding().getName());
-//            System.out.println("isResolved:" + svd.getType().resolveBinding().getQualifiedName());
-//            System.out.println("isResolved:" + svd.getType().resolveBinding().getBinaryName());
             if(svd.getType().resolveBinding().isPrimitive()){
                 accessVar4Method.addParamType(svd.getType().toString());
-//                accessVar4Method.addParamType(svd.getType().resolveBinding().getQualifiedName());
-
             }else{
                 accessVar4Method.addParamType(svd.getType().resolveBinding().getBinaryName());
             }
 
 
         }
-        accesVarsListM = new ArrayList<AccessibleVars>();
+        accesVarsListM = new ArrayList<AccessVars4Line>();
         return super.visit(node);
     }
 
@@ -60,7 +51,7 @@ public class AccessibleVarVisitor4M extends AccessibleVarVisitor {
     @Override
     protected void outPutAccessibleVars(int position) {
         super.outPutAccessibleVars(position);
-        accesVarsListM.add(super.accessibleVarsList.get(accessibleVarsList.size() - 1));
+        accesVarsListM.add(super.accessVars4LineList.get(accessVars4LineList.size() - 1));
     }
 
     public List<AccessVar4Method> getAccessVar4MethodList() {

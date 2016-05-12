@@ -4,7 +4,7 @@ import javassist.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polyu_af.models.AccessVar4Method;
-import polyu_af.models.AccessibleVars;
+import polyu_af.models.AccessVars4Line;
 import polyu_af.models.MyExpression;
 import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
@@ -241,9 +241,9 @@ public class ByteCodeMLogVar {
      * @param varsList   cluster of vars of line
      * @param mainMethod the method get from bytecode file
      */
-    private void logVarValue(List<AccessibleVars> varsList, CtBehavior mainMethod) {
+    private void logVarValue(List<AccessVars4Line> varsList, CtBehavior mainMethod) {
 
-        for (AccessibleVars accessVars : varsList) {
+        for (AccessVars4Line accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
                 for (MyExpression var : accessVars.getVars()) {
@@ -267,9 +267,9 @@ public class ByteCodeMLogVar {
      * @param varsList   cluster of vars of line
      * @param mainMethod the method get from bytecode file
      */
-    private void logNestedCVarValue(List<AccessibleVars> varsList, CtBehavior mainMethod) {
+    private void logNestedCVarValue(List<AccessVars4Line> varsList, CtBehavior mainMethod) {
         //for very 'line' in the method
-        for (AccessibleVars accessVars : varsList) {
+        for (AccessVars4Line accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
                 //for every var that is accessible in the line

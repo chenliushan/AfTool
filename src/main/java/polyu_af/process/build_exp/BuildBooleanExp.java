@@ -26,7 +26,7 @@ public class BuildBooleanExp extends BuildExpressions {
 //        logger.info("xxxxxx:"+variableB.getType().getName()+variableB.getName());
 
         if (variableA.getType().getName().equals("boolean") && variableB.getType().getName().equals("boolean")) {
-            MyExpression myExpression = new MyExpression(null, variableA.getName() + " && " + variableB.getName());
+            MyExpression myExpression = new MyExpression(null, variableA.getName() + " && " + variableB.getName(),"boolean");
             buildExp.add(myExpression);
         }
     }

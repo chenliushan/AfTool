@@ -1,9 +1,9 @@
-package polyu_af.process;
+package polyu_af.deprecated;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.models.AccessibleVars;
+import polyu_af.models.AccessVars4Line;
 import polyu_af.models.MyExpression;
 
 import java.util.*;
@@ -50,7 +50,7 @@ public class AccessibleVarVisitor extends ASTVisitor {
     }
 
     private Map<Integer, List<MyExpression>> accessibleVariables = new HashMap<Integer, List<MyExpression>>();
-    protected List<AccessibleVars> accessibleVarsList = new ArrayList<AccessibleVars>();
+    protected List<AccessVars4Line> accessVars4LineList = new ArrayList<AccessVars4Line>();
     /**
      * each stack element stores the accessible fields in the current scope.
      */
@@ -89,8 +89,8 @@ public class AccessibleVarVisitor extends ASTVisitor {
         return accessibleVariables;
     }
 
-    public List<AccessibleVars> getAccessibleVars() {
-        return accessibleVarsList;
+    public List<AccessVars4Line> getAccessibleVars() {
+        return accessVars4LineList;
     }
 
 
@@ -154,9 +154,11 @@ public class AccessibleVarVisitor extends ASTVisitor {
      */
     @Override
     public final boolean visit(final FieldDeclaration node) {
+        String type=node.getType().toString();
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.getName().getIdentifier());
+            MyExpression myExpression = new MyExpression(vdf, vdf.getName().getIdentifier(),type);
+
             if (Modifier.isStatic(node.getModifiers())) {
                 currentStaticField.peek().add(myExpression);
             } else {
@@ -175,7 +177,7 @@ public class AccessibleVarVisitor extends ASTVisitor {
             List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-            MyExpression myExpression = new MyExpression(svd, svd.getName().toString());
+            MyExpression myExpression = new MyExpression(svd, svd.getName().toString(),svd.getType().toString());
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
@@ -198,10 +200,11 @@ public class AccessibleVarVisitor extends ASTVisitor {
         formalParameters.addAll(currentAccessible.peek());
         for (Object o : node.initializers()) {
             VariableDeclarationExpression svd = (VariableDeclarationExpression) o;
+            String type=svd.getType().toString();
             for (Object o2 : svd.fragments()) {
                 VariableDeclarationFragment f = (VariableDeclarationFragment) o2;
 //                MyExpression myExpression = new MyExpression(svd, f.resolveBinding().getType().getName().toString(), f.getName().toString());
-                MyExpression myExpression = new MyExpression(svd, f.getName().toString());
+                MyExpression myExpression = new MyExpression(svd, f.getName().toString(),type);
                 formalParameters.add(myExpression);
             }
         }
@@ -298,10 +301,10 @@ public class AccessibleVarVisitor extends ASTVisitor {
 
     @Override
     public final boolean visit(final VariableDeclarationStatement node) {
-
+        String type=node.getType().toString();
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.getName().toString());
+            MyExpression myExpression = new MyExpression(vdf, vdf.getName().toString(),type);
             currentAccessible.peek().add(myExpression);
             //outPut(node.getStartPosition());
             //outPutAccessibleVars(node.getStartPosition());
@@ -356,7 +359,7 @@ public class AccessibleVarVisitor extends ASTVisitor {
     }
 
     protected void outPutAccessibleVars(int position) {
-        AccessibleVars vars= new AccessibleVars(root.getLineNumber(position));
+        AccessVars4Line vars= new AccessVars4Line(root.getLineNumber(position));
 
         if (!currentAccessible.isEmpty()) {
             vars.addVar(currentAccessible.peek());
@@ -367,10 +370,10 @@ public class AccessibleVarVisitor extends ASTVisitor {
             }
         }
         if (!currentStaticField.isEmpty()) {
-            vars.addVar(currentField.peek());
+            vars.addVar(currentStaticField.peek());
         }
-        if (!accessibleVarsList.contains(vars)) {
-            accessibleVarsList.add(vars);
+        if (!accessVars4LineList.contains(vars)) {
+            accessVars4LineList.add(vars);
         }
     }
 }

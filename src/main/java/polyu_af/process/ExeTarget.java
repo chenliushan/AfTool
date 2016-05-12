@@ -53,8 +53,11 @@ public class ExeTarget {
         StringBuilder command = new StringBuilder("java -cp .");
         addCp(command);
         addLogLib(command);
-//        getTargetMainEntry(command);
-        getTargetTestE(command);
+        if(targetClass!=null){
+            getTargetTestE(command);
+        }else{
+            getTargetMainEntry(command);
+        }
         logger.info("command:" + command.toString());
         return command.toString();
     }

@@ -5,7 +5,6 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.Signature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +17,21 @@ public class AccessVar4Method {
 
     private String methodName;
     private List<String> paramTypes;
-    private List<AccessibleVars> varsList;
+    private List<AccessVars4Line> varsList;
 
     public AccessVar4Method(String methodName) {
         this.methodName = methodName;
-        varsList = new ArrayList<AccessibleVars>();
+        varsList = new ArrayList<AccessVars4Line>();
         paramTypes = new ArrayList<String>();
 
     }
 
 
-    public void addLine(AccessibleVars vars) {
+    public void addLine(AccessVars4Line vars) {
         varsList.add(vars);
     }
 
-    public void addLine(List<AccessibleVars> vars) {
+    public void addLine(List<AccessVars4Line> vars) {
         varsList.addAll(vars);
     }
 
@@ -40,7 +39,7 @@ public class AccessVar4Method {
         return methodName;
     }
 
-    public List<AccessibleVars> getVarsList() {
+    public List<AccessVars4Line> getVarsList() {
         return varsList;
     }
 

@@ -8,10 +8,30 @@ import org.eclipse.jdt.core.dom.*;
 public class MyExpression {
     private ASTNode astNode = null;
     private String text = null;
+    private String type = null;
+    private String value = null;
 
-    public MyExpression(ASTNode astNode, String text) {
+    public MyExpression(ASTNode astNode, String text, String type) {
         this.astNode = astNode;
         this.text = text;
+        this.type = type;
+    }
+
+//    public MyExpression(ASTNode astNode, String text) {
+//        this.astNode = astNode;
+//        this.text = text;
+//    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public ASTNode getAstNode() {
@@ -44,9 +64,11 @@ public class MyExpression {
 
     @Override
     public String toString() {
-        return "\nMyExp{" +
-                "astNode:" + astNode+
-                ", text:\'" + text + '\'' +
+        return "\nExp{" +
+//                "astNode:" + getTypeBinding() +
+                ", text:'" + text + '\'' +
+                ", type:'" + type + '\'' +
+//                ", value:'" + value + '\'' +
                 '}';
     }
 }

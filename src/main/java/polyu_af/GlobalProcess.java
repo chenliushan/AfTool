@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.AccessibleVarVisitor4M;
-import polyu_af.process.ByteCodeMLogVar;
-import polyu_af.process.GetConfiguration;
+import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
 
 import java.util.List;
@@ -46,7 +44,7 @@ public class GlobalProcess {
                 targetProgram.getEncodings(), targetClass.getSourceName());
 
         //get accessible variables
-        AccessibleVarVisitor4M accessibleVariables4m = new AccessibleVarVisitor4M(root);
+        AccessVarVisitor4M accessibleVariables4m = new AccessVarVisitor4M(root);
         root.accept(accessibleVariables4m);
         List<AccessVar4Method> accessVar4MethodList =accessibleVariables4m.getAccessVar4MethodList();
         logger.info("accessVar4MethodList: \n"+ accessVar4MethodList.toString());
