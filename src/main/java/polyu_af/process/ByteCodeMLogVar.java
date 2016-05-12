@@ -63,7 +63,7 @@ public class ByteCodeMLogVar {
         if (target != null && target.length() > 0) {
             compileTarget();
             modifyTClass(accessVar4MethodList);
-            ExeTarget exeTarget = new ExeTarget(tp);
+            ExeTarget exeTarget = new ExeTarget(tp,targetClass);
             exeTarget.runTarInNThread();
         }
     }

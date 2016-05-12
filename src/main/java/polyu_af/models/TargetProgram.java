@@ -14,6 +14,7 @@ public class TargetProgram {
     private String[] classpathEntries = null;
     private String sourcePath = null;
     private String outputPath = null;
+    private String testClassPath = null;
     private String programEntry=null;
     private String[] runningArg=null;
     private String[] encodings = new String[]{"UTF-8"};
@@ -93,6 +94,14 @@ public class TargetProgram {
         this.runningArg = runningArg;
     }
 
+    public String getTestClassPath() {
+        return testClassPath;
+    }
+
+    public void setTestClassPath(String testClassPath) {
+        this.testClassPath = testClassPath;
+    }
+
     @Override
     public String toString() {
         return "TargetProgram{" +
@@ -100,6 +109,7 @@ public class TargetProgram {
                 ", projectDir='" + projectDir + '\'' +
                 ", sourcePath='" + sourcePath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
+                ", testClassPath='" + testClassPath + '\'' +
                 ", programEntry='" + programEntry + '\'' +
                 ", runningArg=" + Arrays.toString(runningArg) +
                 ", encodings=" + Arrays.toString(encodings) +

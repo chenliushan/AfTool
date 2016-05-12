@@ -152,8 +152,10 @@ public class GetConfiguration {
             Element component = (Element) componentList.item(0);
             //get output path
             String opPath = getIOutputPath(component);
-            if (opPath == null) return;
             targetProgram.setOutputPath(imlUrl2Path(path, opPath));
+            //get test clas path
+            String testPath=getITestPath(component);
+            targetProgram.setTestClassPath(imlUrl2Path(path, testPath));
             //get sourcePath
             String spathNodeValue = getISourcePath(component);
             if (spathNodeValue == null) return;
@@ -197,13 +199,32 @@ public class GetConfiguration {
      * @return
      */
     private String getIOutputPath(Element component) {
-        if (component == null) return null;
-        NodeList outputList = component.getElementsByTagName("output");
-        Element output = (Element) outputList.item(0);
         String op = null;
-        if (output != null) op = output.getAttribute("url");
+        if (component != null) {
+            NodeList outputList = component.getElementsByTagName("output");
+            Element output = (Element) outputList.item(0);
+            if (output != null) op = output.getAttribute("url");
+        }
         if (op == null) {
             return "file://$MODULE_DIR$/build/classes/main";
+        }
+        return op;
+    }
+    /**
+     * get test class path
+     *
+     * @param component
+     * @return
+     */
+    private String getITestPath(Element component) {
+        String op = null;
+        if (component != null){
+            NodeList outputList = component.getElementsByTagName("output-test");
+            Element output = (Element) outputList.item(0);
+            if (output != null) op = output.getAttribute("url");
+        }
+        if (op == null) {
+            return "file://$MODULE_DIR$/build/classes/test";
         }
         return op;
     }

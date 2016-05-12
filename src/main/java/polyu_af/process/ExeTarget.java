@@ -16,8 +16,15 @@ public class ExeTarget {
     private static Logger logger = LogManager.getLogger();
 
     private TargetProgram tp = null;
+    private String targetClass = null;
+
 
     public ExeTarget(TargetProgram tp) {
+        this.tp = tp;
+    }
+
+    public ExeTarget(TargetProgram tp,String targetClass ) {
+        this.targetClass = targetClass;
         this.tp = tp;
     }
 
@@ -46,11 +53,11 @@ public class ExeTarget {
         StringBuilder command = new StringBuilder("java -cp .");
         addCp(command);
         addLogLib(command);
-        getTargetEntry(command);
+//        getTargetMainEntry(command);
+        getTargetTestE(command);
         logger.info("command:" + command.toString());
         return command.toString();
     }
-
 
     private void addCp(StringBuilder command) {
         String[] cp = tp.getClasspathEntries();
@@ -65,7 +72,7 @@ public class ExeTarget {
         }
     }
 
-    private void getTargetEntry(StringBuilder command) {
+    private void getTargetMainEntry(StringBuilder command) {
         if (tp.getProgramEntry() != null) {
             command.append(" ");
             command.append(tp.getProgramEntry());
@@ -80,9 +87,9 @@ public class ExeTarget {
 
     private void getTargetTestE(StringBuilder command) {
         command.append(":lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:");
-        command.append("");//append the test source classpath
-        command.append(" org.junit.runner.JUnitCore");
-        command.append(" ");//append the [test class name] including the package name
+        command.append(tp.getTestClassPath());//append the test source classpath
+        command.append(" org.junit.runner.JUnitCore ");
+        command.append(targetClass+"Test");//append the [test class name] including the package name
 
     }
 
