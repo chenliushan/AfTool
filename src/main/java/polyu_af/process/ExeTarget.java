@@ -43,22 +43,50 @@ public class ExeTarget {
     }
 
     private String getCommand() {
-        StringBuilder command = new StringBuilder("java -javaagent:"+tp.getProjectDir()+"/lib/cofoja-1.3-20160207.jar -cp .");
-        String[] cp = tp.getClasspathEntries();
-        for (int i = 0; i < cp.length; i++) {
-            command.append(":" + cp[i]);
+        StringBuilder command = new StringBuilder("java -cp .");
+        addCp(command);
+        addLogLib(command);
+        if (tp.getProgramEntry() != null) {
+            command.append(" ");
+            command.append(tp.getProgramEntry());
+        } else {
+            logger.info("the program entry is null");
         }
-        command.append(":" + tp.getOutputPath());
-        //add the log4j2 configuration file in path
-        command.append(":"+ System.getProperty("user.dir")+ "/lib/log4j-api-2.5.jar");
-        command.append(":"+ System.getProperty("user.dir")+ "/lib/log4j-core-2.5.jar");
-        command.append(":"+ System.getProperty("user.dir")+ "/logs");
-        command.append(" " + tp.getProgramEntry());
         if (tp.getRunningArg() != null) {
-            command.append(" " + tp.getRunningArg());
+            command.append(" ");
+            command.append(tp.getRunningArg());
         }
         logger.info("command:" + command.toString());
         return command.toString();
+    }
+
+
+    private void addCp(StringBuilder command ){
+        String[] cp = tp.getClasspathEntries();
+        for (int i = 0; i < cp.length; i++) {
+            command.append(":");
+            command.append(cp[i]);
+            if(cp[i].contains("cofoja")){
+                command.insert(4," -javaagent:"+cp[i]);
+            }
+        }
+    }
+
+    /**
+     * add the log4j2 configuration file in command classpath
+     * this method should be called after append classpath
+     * @param command
+     */
+    private void addLogLib(StringBuilder command ){
+        command.append(":");
+        command.append(System.getProperty("user.dir"));
+        command.append("/lib/log4j-api-2.5.jar");
+        command.append(":");
+        command.append(System.getProperty("user.dir"));
+        command.append("/lib/log4j-core-2.5.jar");
+        command.append(":");
+        command.append(System.getProperty("user.dir"));
+        command.append("/logs");
     }
 
     private void getProcessOutput(InputStream is) {

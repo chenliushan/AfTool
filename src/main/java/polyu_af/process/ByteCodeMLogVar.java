@@ -95,14 +95,7 @@ public class ByteCodeMLogVar {
         StandardJavaFileManager fileManager = javaCompiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> fileObjects =
                 fileManager.getJavaFileObjects(ReadFileUtils.joinDir(tp.getSourcePath(), targetFile));
-        List<String> options = new ArrayList<String>();
-        options.add("-classpath");
-        options.add("/Users/liushanchen/IdeaProjects/AfTest/lib/cofoja-1.3-20160207.jar");
-        options.add("-processor");
-        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
-        options.add("-g");
-        options.add("-d");
-        options.add(tp.getOutputPath());
+        List<String> options = getCompileOptions();
         JavaCompiler.CompilationTask cTask = javaCompiler.getTask(null, null, null, options, null, fileObjects);
         cTask.call();
         try {
@@ -111,6 +104,28 @@ public class ByteCodeMLogVar {
             logger.error("recompile -g error!!");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * getCompileOptions
+     * @return
+     */
+    private  List<String> getCompileOptions(){
+        List<String> options = new ArrayList<String>();
+        options.add("-classpath");
+        String[] cp = tp.getClasspathEntries();
+        StringBuilder classpath=new StringBuilder(".");
+        for (int i = 0; i < cp.length; i++) {
+            classpath.append(":");
+            classpath.append(cp[i]);
+        }
+        options.add(classpath.toString());
+//        options.add("-processor");
+//        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
+        options.add("-g");
+        options.add("-d");
+        options.add(tp.getOutputPath());
+        return options;
     }
 
     /**
@@ -253,9 +268,11 @@ public class ByteCodeMLogVar {
      * @param mainMethod the method get from bytecode file
      */
     private void logNestedCVarValue(List<AccessibleVars> varsList, CtBehavior mainMethod) {
+        //for very 'line' in the method
         for (AccessibleVars accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
+                //for every var that is accessible in the line
                 for (MyExpression var : accessVars.getVars()) {
                     try {
                         mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + constructorN + "." + var.getText() + ":\"+" + targetClass + "." + var.getText() + ");");
@@ -265,7 +282,6 @@ public class ByteCodeMLogVar {
                         } catch (CannotCompileException e1) {
                             mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ": may not initialized.\");");
                             logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
-
                         }
                     }
                 }
