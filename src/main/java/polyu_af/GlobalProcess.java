@@ -29,6 +29,7 @@ public class GlobalProcess {
 //            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
         } catch (NotFoundException e) {
             e.printStackTrace();
+            return;
         }
         TargetProgram targetProgram = getConfiguration.getTargetProgram();
         TargetClass targetClass = null;

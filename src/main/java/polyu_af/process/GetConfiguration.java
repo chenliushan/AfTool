@@ -6,12 +6,14 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -107,23 +109,17 @@ public class GetConfiguration {
         String sourcepath = null;
         try {
             File iFile = new File(path + "/.classpath");
-            if (iFile != null) {
-                DocumentBuilderFactory dbFactory
-                        = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(iFile);
-                doc.getDocumentElement().normalize();
-//                logger.info("Root element :" + doc.getDocumentElement().getNodeName());
-                NodeList nList = doc.getDocumentElement().getElementsByTagName("classpathentry");
-                for (int temp = 0; temp < nList.getLength(); temp++) {
-                    Element eElement = (Element) nList.item(temp);
-                    if (eElement.getAttribute("kind").equals("lib")) {
-                        classpathEntries.add(eElement.getAttribute("path"));
-                    }
-                    if (sourcepath == null && eElement.getAttribute("kind").equals("src")) {
-                        String spE = eElement.getAttribute("path");
-                        sourcepath = ReadFileUtils.joinDir(path, spE);
-                    }
+            Element rootElement = getRootElement(iFile);
+            if (rootElement == null) return;
+            NodeList nList = rootElement.getElementsByTagName("classpathentry");
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                Element eElement = (Element) nList.item(temp);
+                if (eElement.getAttribute("kind").equals("lib")) {
+                    classpathEntries.add(eElement.getAttribute("path"));
+                }
+                if (sourcepath == null && eElement.getAttribute("kind").equals("src")) {
+                    String spE = eElement.getAttribute("path");
+                    sourcepath = ReadFileUtils.joinDir(path, spE);
                 }
             }
         } catch (Exception e) {
@@ -145,62 +141,29 @@ public class GetConfiguration {
      * @return
      */
     private void readClasspathI(String path) {
-        List<String> classpathEntries = new ArrayList<String>();
+        List<String> classpathEntries = null;
         String sourcepathE = null;
         try {
             String projectName = path.substring(path.lastIndexOf('/') + 1);
-
             File iFile = new File(path + "/" + projectName + ".iml");
-            if (iFile != null) {
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(iFile);
-                doc.getDocumentElement().normalize();
-                Element rootElement = (Element) doc.getDocumentElement();
-                NodeList componentList = rootElement.getElementsByTagName("component");
-                Element component = (Element) componentList.item(0);
-
-                //get outputPath
-                NodeList outputList = component.getElementsByTagName("output");
-                Element output = (Element) outputList.item(0);
-                if (output != null) {
-                    targetProgram.setOutputPath(imlUrl2Path(path, output.toString()));
-                } else {
-                    targetProgram.setOutputPath(imlUrl2Path(path, "file://$MODULE_DIR$/build/classes/main"));
-                }
-
-                //get sourcePath
-                NodeList contentList = component.getElementsByTagName("content");
-                Element content = (Element) contentList.item(0);
-                NodeList sourceFolderList = content.getElementsByTagName("sourceFolder");
-                String spathNodeValue = null;
-                for (int i = 0; i < sourceFolderList.getLength(); i++) {
-                    Element sourceFolder = (Element) sourceFolderList.item(i);
-                    String sf = sourceFolder.getAttribute("url");
-                    if (sf.endsWith("java") && !sf.contains("test")) {
-                        spathNodeValue = sf;
-                        break;
-                    }
-                }
-                if (spathNodeValue == null) {
-                    return;
-                }
-                sourcepathE = (imlUrl2Path(path, spathNodeValue));
-
-                //get classPath
-                NodeList libraryList = component.getElementsByTagName("library");
-                for (int temp = 0; temp < libraryList.getLength(); temp++) {
-                    Element library = (Element) libraryList.item(temp);
-                    Element classNode = (Element) library.getElementsByTagName("CLASSES").item(0);
-                    Element pathNode = (Element) classNode.getElementsByTagName("root").item(0);
-                    String pathNodeValue = pathNode.getAttribute("url");
-                    classpathEntries.add(imlUrl2Path(path, pathNodeValue));
-                }
-            }
+            Element rootElement = getRootElement(iFile);
+            if (rootElement == null) return;
+            NodeList componentList = rootElement.getElementsByTagName("component");
+            Element component = (Element) componentList.item(0);
+            //get output path
+            String opPath = getIOutputPath(component);
+            if (opPath == null) return;
+            targetProgram.setOutputPath(imlUrl2Path(path, opPath));
+            //get sourcePath
+            String spathNodeValue = getISourcePath(component);
+            if (spathNodeValue == null) return;
+            sourcepathE = (imlUrl2Path(path, spathNodeValue));
+            //get classPath
+            classpathEntries = getIClassPath(path, component);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (!classpathEntries.isEmpty()) {
+        if (classpathEntries != null && !classpathEntries.isEmpty()) {
             targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
         if (sourcepathE != null) {
@@ -209,7 +172,86 @@ public class GetConfiguration {
 
     }
 
-   private String imlUrl2Path(String projectDir, String subPath) throws URISyntaxException {
+    /**
+     * get the root element of the target configuration file
+     *
+     * @param iFile
+     * @return
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     */
+    private Element getRootElement(File iFile) throws ParserConfigurationException, IOException, SAXException {
+        if (iFile == null) return null;
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(iFile);
+        doc.getDocumentElement().normalize();
+        return doc.getDocumentElement();
+    }
+
+    /**
+     * get outputPath
+     *
+     * @param component
+     * @return
+     */
+    private String getIOutputPath(Element component) {
+        if (component == null) return null;
+        NodeList outputList = component.getElementsByTagName("output");
+        Element output = (Element) outputList.item(0);
+        String op = null;
+        if (output != null) op = output.getAttribute("url");
+        if (op == null) {
+            return "file://$MODULE_DIR$/build/classes/main";
+        }
+        return op;
+    }
+
+    /**
+     * get sourcePath
+     *
+     * @param component
+     * @return
+     */
+    private String getISourcePath(Element component) {
+        if (component == null) return null;
+        NodeList contentList = component.getElementsByTagName("content");
+        Element content = (Element) contentList.item(0);
+        NodeList sourceFolderList = content.getElementsByTagName("sourceFolder");
+        for (int i = 0; i < sourceFolderList.getLength(); i++) {
+            Element sourceFolder = (Element) sourceFolderList.item(i);
+            String sf = sourceFolder.getAttribute("url");
+            if (sf.endsWith("java") && !sf.contains("test")) {
+                return sf;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get target project classPaths
+     *
+     * @param path
+     * @param component
+     * @return
+     * @throws URISyntaxException
+     */
+    private List<String> getIClassPath(String path, Element component) throws URISyntaxException {
+        if (component == null) return null;
+        List<String> classpathEntries = new ArrayList<String>();
+        NodeList libraryList = component.getElementsByTagName("library");
+        for (int temp = 0; temp < libraryList.getLength(); temp++) {
+            Element library = (Element) libraryList.item(temp);
+            Element classNode = (Element) library.getElementsByTagName("CLASSES").item(0);
+            Element pathNode = (Element) classNode.getElementsByTagName("root").item(0);
+            String pathNodeValue = pathNode.getAttribute("url");
+            classpathEntries.add(imlUrl2Path(path, pathNodeValue));
+        }
+        return classpathEntries;
+    }
+
+    private String imlUrl2Path(String projectDir, String subPath) throws URISyntaxException {
         if (subPath.contains("$MODULE_DIR$")) {
             subPath = subPath.replace("$MODULE_DIR$", projectDir);
         }

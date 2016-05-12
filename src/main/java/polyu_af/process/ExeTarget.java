@@ -46,6 +46,26 @@ public class ExeTarget {
         StringBuilder command = new StringBuilder("java -cp .");
         addCp(command);
         addLogLib(command);
+        getTargetEntry(command);
+        logger.info("command:" + command.toString());
+        return command.toString();
+    }
+
+
+    private void addCp(StringBuilder command) {
+        String[] cp = tp.getClasspathEntries();
+        command.append(":");
+        command.append(tp.getOutputPath());
+        for (int i = 0; i < cp.length; i++) {
+            command.append(":");
+            command.append(cp[i]);
+            if (cp[i].contains("cofoja")) {
+                command.insert(4, " -javaagent:" + cp[i]);
+            }
+        }
+    }
+
+    private void getTargetEntry(StringBuilder command) {
         if (tp.getProgramEntry() != null) {
             command.append(" ");
             command.append(tp.getProgramEntry());
@@ -56,28 +76,23 @@ public class ExeTarget {
             command.append(" ");
             command.append(tp.getRunningArg());
         }
-        logger.info("command:" + command.toString());
-        return command.toString();
     }
 
+    private void getTargetTestE(StringBuilder command) {
+        command.append(":lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:");
+        command.append("");//append the test source classpath
+        command.append(" org.junit.runner.JUnitCore");
+        command.append(" ");//append the [test class name] including the package name
 
-    private void addCp(StringBuilder command ){
-        String[] cp = tp.getClasspathEntries();
-        for (int i = 0; i < cp.length; i++) {
-            command.append(":");
-            command.append(cp[i]);
-            if(cp[i].contains("cofoja")){
-                command.insert(4," -javaagent:"+cp[i]);
-            }
-        }
     }
 
     /**
      * add the log4j2 configuration file in command classpath
      * this method should be called after append classpath
+     *
      * @param command
      */
-    private void addLogLib(StringBuilder command ){
+    private void addLogLib(StringBuilder command) {
         command.append(":");
         command.append(System.getProperty("user.dir"));
         command.append("/lib/log4j-api-2.5.jar");
