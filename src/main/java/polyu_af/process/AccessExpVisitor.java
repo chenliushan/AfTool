@@ -11,7 +11,7 @@ import java.util.Stack;
 /**
  * Created by liushanchen on 16/5/12.
  */
-public class AccessExpVisitor extends AccessVarVisitor{
+public class AccessExpVisitor extends AccessVarVisitor {
     private Stack<List<MyExpression>> currentAccessExp = new Stack<List<MyExpression>>();
 
 
@@ -20,10 +20,9 @@ public class AccessExpVisitor extends AccessVarVisitor{
     }
 
 
-
     @Override
     public boolean visit(ExpressionStatement node) {
-        Expression exp=node.getExpression();
+        Expression exp = node.getExpression();
         addExpIntoStack(exp);
 
         return super.visit(node);
@@ -31,21 +30,27 @@ public class AccessExpVisitor extends AccessVarVisitor{
 
     @Override
     public boolean visit(IfStatement node) {
-        Expression exp=node.getExpression();
+        Expression exp = node.getExpression();
         addExpIntoStack(exp);
         return super.visit(node);
     }
 
 
-
     @Override
-    public boolean visit( MethodDeclaration node) {
+    public boolean visit(MethodDeclaration node) {
         newLayerOutsideMethod();
+
         return super.visit(node);
     }
 
     @Override
-    public void endVisit( MethodDeclaration node) {
+    public boolean visit(SingleMemberAnnotation node) {
+        addAnnExpIntoStack(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public void endVisit(MethodDeclaration node) {
         removeLayer();
         super.endVisit(node);
     }
@@ -78,7 +83,7 @@ public class AccessExpVisitor extends AccessVarVisitor{
     @Override
     public boolean visit(SwitchStatement node) {
         newLayerInMethod();
-        Expression exp=node.getExpression();
+        Expression exp = node.getExpression();
         addExpIntoStack(exp);
         return super.visit(node);
     }
@@ -97,21 +102,30 @@ public class AccessExpVisitor extends AccessVarVisitor{
         return super.visit(node);
     }
 
-    private void addExpIntoStack( Expression exp){
+    private void addExpIntoStack(Expression exp) {
         MyExpression myExpression = new MyExpression(exp, exp.toString(), AstUtils.getExpType(exp.resolveTypeBinding()));
         currentAccessExp.peek().add(myExpression);
     }
-    private void newLayerOutsideMethod(){
+
+    private void addAnnExpIntoStack(SingleMemberAnnotation ann) {
+        String text = ann.getValue().toString();
+        String type = ann.resolveTypeBinding().getQualifiedName();
+        MyExpression myExpression = new MyExpression(ann, text, type);
+        currentAccessExp.peek().add(myExpression);
+    }
+
+    private void newLayerOutsideMethod() {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         currentAccessExp.push(formalParameters);
     }
 
-    private void newLayerInMethod(){
+    private void newLayerInMethod() {
         List<MyExpression> formalParameters = new ArrayList<MyExpression>();
         formalParameters.addAll(currentAccessExp.peek());
         currentAccessExp.push(formalParameters);
     }
-    private void removeLayer(){
+
+    private void removeLayer() {
         currentAccessExp.pop();
     }
 
