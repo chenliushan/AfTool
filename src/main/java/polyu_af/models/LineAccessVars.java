@@ -6,35 +6,35 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class AccessVars4Line {
+public class LineAccessVars {
     private int location;
-    private List<MyExpression> vars;
-    private List<MyExpression> exps;
+    private List<MyExp> vars;
+    private List<MyExp> exps;
 
-    public AccessVars4Line(int location) {
+    public LineAccessVars(int location) {
         this.location = location;
-        vars = new ArrayList<MyExpression>();
-        exps = new ArrayList<MyExpression>();
+        vars = new ArrayList<MyExp>();
+        exps = new ArrayList<MyExp>();
     }
 
-    public AccessVars4Line(int location, List<MyExpression> vars) {
+    public LineAccessVars(int location, List<MyExp> vars) {
         this.location = location;
         this.vars = vars;
     }
 
-    public void addVar(MyExpression var) {
+    public void addVar(MyExp var) {
         this.vars.add(var);
     }
 
-    public void addVar(List<MyExpression> vars) {
+    public void addVar(List<MyExp> vars) {
         this.vars.addAll(vars);
     }
 
-    public void addExp(List<MyExpression> exps) {
+    public void addExp(List<MyExp> exps) {
         this.exps.addAll(exps);
     }
 
-    public void addExp(MyExpression exp) {
+    public void addExp(MyExp exp) {
         this.exps.add(exp);
     }
 
@@ -42,7 +42,7 @@ public class AccessVars4Line {
         return location;
     }
 
-    public List<MyExpression> getVars() {
+    public List<MyExp> getVars() {
         return vars;
     }
 

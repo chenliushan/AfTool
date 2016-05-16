@@ -3,11 +3,13 @@ package polyu_af.process;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.models.AccessVars4Line;
-import polyu_af.models.MyExpression;
+import polyu_af.models.LineAccessVars;
+import polyu_af.models.MyExp;
 import polyu_af.utils.AstUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by liushanchen on 16/4/1.
@@ -40,33 +42,33 @@ import java.util.*;
  * use getAccessibleVariables to get the access variable for every line of the class
  * one line's accessible variables is equivalent with the biggest line smaller than it.
  */
-public class AccessVarVisitor extends ASTVisitor {
+public class LAccessVarVisitor extends ASTVisitor {
 
     private static Logger logger = LogManager.getLogger();
 
     protected CompilationUnit root = null;
 
-    public AccessVarVisitor(CompilationUnit root) {
+    public LAccessVarVisitor(CompilationUnit root) {
         this.root = root;
     }
 
-    protected List<AccessVars4Line> accessVars4LineList = new ArrayList<AccessVars4Line>();
+    protected List<LineAccessVars> accessVars4LineList = new ArrayList<LineAccessVars>();
     /**
      * each stack element stores the accessible fields in the current scope.
      */
-    private Stack<List<MyExpression>> currentField = new Stack<List<MyExpression>>();
-    private Stack<List<MyExpression>> currentStaticField = new Stack<List<MyExpression>>();
+    private Stack<List<MyExp>> currentField = new Stack<List<MyExp>>();
+    private Stack<List<MyExp>> currentStaticField = new Stack<List<MyExp>>();
     private boolean isStaticBlock = false;
     /**
      * each stack element stores the accessible formal parameters and local variables
      * in the current scope.
      */
-    private Stack<List<MyExpression>> currentAccessible = new Stack<List<MyExpression>>();
+    private Stack<List<MyExp>> currentAccessible = new Stack<List<MyExp>>();
 
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
 
 
-    public List<AccessVars4Line> getAccessibleVars() {
+    public List<LineAccessVars> getAccessibleVars() {
         return accessVars4LineList;
     }
 
@@ -93,18 +95,18 @@ public class AccessVarVisitor extends ASTVisitor {
     public final boolean visit(final TypeDeclaration node) {
         typeDecl.push(node);
         if (Modifier.isStatic(node.getModifiers())) {
-            currentField.push(new ArrayList<MyExpression>());
+            currentField.push(new ArrayList<MyExp>());
         } else {
             if (currentField.isEmpty()) {
-                currentField.push(new ArrayList<MyExpression>());
+                currentField.push(new ArrayList<MyExp>());
             } else {
-                currentField.push(new ArrayList<MyExpression>(currentField.peek()));
+                currentField.push(new ArrayList<MyExp>(currentField.peek()));
             }
         }
         if (currentStaticField.isEmpty()) {
-            currentStaticField.push(new ArrayList<MyExpression>());
+            currentStaticField.push(new ArrayList<MyExp>());
         } else {
-            currentStaticField.push(new ArrayList<MyExpression>(currentStaticField.peek()));
+            currentStaticField.push(new ArrayList<MyExp>(currentStaticField.peek()));
         }
         return super.visit(node);
     }
@@ -126,10 +128,9 @@ public class AccessVarVisitor extends ASTVisitor {
      */
     @Override
     public final boolean visit(final FieldDeclaration node) {
-        String type = AstUtils.getExpType(node.getType());
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.getName().getIdentifier(), type);
+            MyExp myExpression = new MyExp(vdf, vdf.resolveBinding().getType());
 
             if (Modifier.isStatic(node.getModifiers())) {
                 currentStaticField.peek().add(myExpression);
@@ -145,11 +146,10 @@ public class AccessVarVisitor extends ASTVisitor {
         if (Modifier.isStatic(node.getModifiers())) {
             isStaticBlock = true;
         }
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+        List<MyExp> formalParameters = new ArrayList<MyExp>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-            String type=AstUtils.getExpType(svd.getType());
-            MyExpression myExpression = new MyExpression(svd, svd.getName().toString(), type);
+            MyExp myExpression = new MyExp(svd, svd.resolveBinding().getType());
             formalParameters.add(myExpression);
         }
         currentAccessible.push(formalParameters);
@@ -165,14 +165,13 @@ public class AccessVarVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ForStatement node) {
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+        List<MyExp> formalParameters = new ArrayList<MyExp>();
         formalParameters.addAll(currentAccessible.peek());
         for (Object o : node.initializers()) {
             VariableDeclarationExpression svd = (VariableDeclarationExpression) o;
-            String type = AstUtils.getExpType(svd.getType());
             for (Object o2 : svd.fragments()) {
                 VariableDeclarationFragment f = (VariableDeclarationFragment) o2;
-                MyExpression myExpression = new MyExpression(svd, f.getName().toString(), type);
+                MyExp myExpression = new MyExp(f, f.resolveBinding().getType());
                 formalParameters.add(myExpression);
             }
         }
@@ -221,10 +220,9 @@ public class AccessVarVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(final VariableDeclarationStatement node) {
-        String type = AstUtils.getExpType(node.getType());
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExpression myExpression = new MyExpression(vdf, vdf.getName().toString(), type);
+            MyExp myExpression = new MyExp(vdf, vdf.resolveBinding().getType());
             currentAccessible.peek().add(myExpression);
         }
         return super.visit(node);
@@ -232,7 +230,7 @@ public class AccessVarVisitor extends ASTVisitor {
 
 
     protected void outPutAccessibleVars(int position) {
-        AccessVars4Line vars = new AccessVars4Line(root.getLineNumber(position));
+        LineAccessVars vars = new LineAccessVars(root.getLineNumber(position));
 
         if (!currentAccessible.isEmpty()) {
             vars.addVar(currentAccessible.peek());
@@ -249,12 +247,14 @@ public class AccessVarVisitor extends ASTVisitor {
             accessVars4LineList.add(vars);
         }
     }
-    private void newLayerInMethod(){
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+
+    private void newLayerInMethod() {
+        List<MyExp> formalParameters = new ArrayList<MyExp>();
         formalParameters.addAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
     }
-    private void removeLayer(){
+
+    private void removeLayer() {
         currentAccessible.pop();
     }
 

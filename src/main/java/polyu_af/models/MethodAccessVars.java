@@ -12,26 +12,26 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class AccessVar4Method {
+public class MethodAccessVars {
     private static Logger logger = LogManager.getLogger();
 
     private String methodName;
     private List<String> paramTypes;
-    private List<AccessVars4Line> varsList;
+    private List<LineAccessVars> varsList;
 
-    public AccessVar4Method(String methodName) {
+    public MethodAccessVars(String methodName) {
         this.methodName = methodName;
-        varsList = new ArrayList<AccessVars4Line>();
+        varsList = new ArrayList<LineAccessVars>();
         paramTypes = new ArrayList<String>();
 
     }
 
 
-    public void addLine(AccessVars4Line vars) {
+    public void addLine(LineAccessVars vars) {
         varsList.add(vars);
     }
 
-    public void addLine(List<AccessVars4Line> vars) {
+    public void addLine(List<LineAccessVars> vars) {
         varsList.addAll(vars);
     }
 
@@ -39,7 +39,7 @@ public class AccessVar4Method {
         return methodName;
     }
 
-    public List<AccessVars4Line> getVarsList() {
+    public List<LineAccessVars> getVarsList() {
         return varsList;
     }
 

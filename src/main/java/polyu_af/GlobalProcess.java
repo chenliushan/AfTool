@@ -44,14 +44,15 @@ public class GlobalProcess {
                 targetProgram.getEncodings(), targetClass.getSourceName());
 
         //get accessible variables
-        AccessVarVisitor4M accessibleVariables4m = new AccessVarVisitor4M(root);
-        root.accept(accessibleVariables4m);
-        List<AccessVar4Method> accessVar4MethodList =accessibleVariables4m.getAccessVar4MethodList();
-        logger.info("accessVar4MethodList: \n"+ accessVar4MethodList.toString());
-        logger.info("accessVar4MethodList-size:"+ accessVar4MethodList.size());
+
+        MAccessVarVisitor mvv =new MAccessVarVisitor(root);
+        root.accept(mvv);
+        List<MethodAccessVars> lineLists= mvv.getMethodAccessVars();
+        logger.info("List<MethodAccessVars> : \n"+ lineLists.toString());
+        logger.info("List<MethodAccessVars> -size:"+ lineLists.size());
 
         ByteCodeMLogVar byteCodeMLogVar =new ByteCodeMLogVar(targetProgram);
-        byteCodeMLogVar.process(accessVar4MethodList,targetClass.getSourceName());
+        byteCodeMLogVar.process(lineLists,targetClass.getSourceName());
 
 
         //build expression with accessible variables

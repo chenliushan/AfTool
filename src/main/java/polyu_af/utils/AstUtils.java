@@ -2,23 +2,11 @@ package polyu_af.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ITrackedNodePosition;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
-import polyu_af.deprecated.VariableScope;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -190,9 +178,10 @@ public class AstUtils {
 //        root.accept(resolveTypeVisitor);
         return document.get();
     }
+
     public static String getExpType(Type resolveT) {
         String type = null;
-        if(resolveT!=null){
+        if (resolveT != null) {
             if (resolveT.resolveBinding().isPrimitive()) {
                 type = resolveT.toString();
             } else {
@@ -202,9 +191,10 @@ public class AstUtils {
         return type;
 
     }
-public static String getExpType(ITypeBinding resolveT) {
+
+    public static String getExpType(ITypeBinding resolveT) {
         String type = null;
-        if(resolveT!=null){
+        if (resolveT != null) {
             if (resolveT.isPrimitive()) {
                 type = resolveT.getQualifiedName();
             } else {

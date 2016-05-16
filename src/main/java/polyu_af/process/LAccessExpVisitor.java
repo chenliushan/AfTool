@@ -1,8 +1,7 @@
 package polyu_af.process;
 
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.models.MyExpression;
-import polyu_af.utils.AstUtils;
+import polyu_af.models.MyExp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +10,11 @@ import java.util.Stack;
 /**
  * Created by liushanchen on 16/5/12.
  */
-public class AccessExpVisitor extends AccessVarVisitor {
-    private Stack<List<MyExpression>> currentAccessExp = new Stack<List<MyExpression>>();
+public class LAccessExpVisitor extends LAccessVarVisitor {
+    private Stack<List<MyExp>> currentAccessExp = new Stack<List<MyExp>>();
 
 
-    public AccessExpVisitor(CompilationUnit root) {
+    public LAccessExpVisitor(CompilationUnit root) {
         super(root);
     }
 
@@ -103,24 +102,22 @@ public class AccessExpVisitor extends AccessVarVisitor {
     }
 
     private void addExpIntoStack(Expression exp) {
-        MyExpression myExpression = new MyExpression(exp, exp.toString(), AstUtils.getExpType(exp.resolveTypeBinding()));
+        MyExp myExpression = new MyExp(exp, exp.resolveTypeBinding());
         currentAccessExp.peek().add(myExpression);
     }
 
     private void addAnnExpIntoStack(SingleMemberAnnotation ann) {
-        String text = ann.getValue().toString();
-        String type = ann.resolveTypeBinding().getQualifiedName();
-        MyExpression myExpression = new MyExpression(ann, text, type);
+        MyExp myExpression = new MyExp(ann, ann.resolveTypeBinding());
         currentAccessExp.peek().add(myExpression);
     }
 
     private void newLayerOutsideMethod() {
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+        List<MyExp> formalParameters = new ArrayList<MyExp>();
         currentAccessExp.push(formalParameters);
     }
 
     private void newLayerInMethod() {
-        List<MyExpression> formalParameters = new ArrayList<MyExpression>();
+        List<MyExp> formalParameters = new ArrayList<MyExp>();
         formalParameters.addAll(currentAccessExp.peek());
         currentAccessExp.push(formalParameters);
     }

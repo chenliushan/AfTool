@@ -3,9 +3,9 @@ package polyu_af.process;
 import javassist.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.models.AccessVar4Method;
-import polyu_af.models.AccessVars4Line;
-import polyu_af.models.MyExpression;
+import polyu_af.models.LineAccessVars;
+import polyu_af.models.MethodAccessVars;
+import polyu_af.models.MyExp;
 import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
@@ -13,7 +13,8 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,22 +49,22 @@ public class ByteCodeMLogVar {
     }
 
     /**
-     * @param accessVar4MethodList
+     * @param vars
      * @param target
      */
-    public void process(List<AccessVar4Method> accessVar4MethodList, String target) {
+    public void process(List<MethodAccessVars> vars, String target) {
         setTarget(target);
-        process(accessVar4MethodList);
+        process(vars);
     }
 
     /**
      * use process(String target) instead.
      */
-    private void process(List<AccessVar4Method> accessVar4MethodList) {
+    private void process(List<MethodAccessVars> vars) {
         if (target != null && target.length() > 0) {
             compileTarget();
-            modifyTClass(accessVar4MethodList);
-            ExeTarget exeTarget = new ExeTarget(tp,targetClass);
+            modifyTClass(vars);
+            ExeTarget exeTarget = new ExeTarget(tp, targetClass);
             exeTarget.runTarInNThread();
         }
     }
@@ -108,13 +109,14 @@ public class ByteCodeMLogVar {
 
     /**
      * getCompileOptions
+     *
      * @return
      */
-    private  List<String> getCompileOptions(){
+    private List<String> getCompileOptions() {
         List<String> options = new ArrayList<String>();
         options.add("-classpath");
         String[] cp = tp.getClasspathEntries();
-        StringBuilder classpath=new StringBuilder(".");
+        StringBuilder classpath = new StringBuilder(".");
         for (int i = 0; i < cp.length; i++) {
             classpath.append(":");
             classpath.append(cp[i]);
@@ -133,7 +135,7 @@ public class ByteCodeMLogVar {
      *
      * @param accessVar4MethodList the accessible variables for every line group by method (from AST analysis)
      */
-    private void modifyTClass(List<AccessVar4Method> accessVar4MethodList) {
+    private void modifyTClass(List<MethodAccessVars> accessVar4MethodList) {
         CtClass cc = null;
         try {
             cc = poolParent.get(targetClass);
@@ -143,7 +145,7 @@ public class ByteCodeMLogVar {
         }
         importPack(cc);
         //For every method in the list
-        for (AccessVar4Method methodAccessVar : accessVar4MethodList) {
+        for (MethodAccessVars methodAccessVar : accessVar4MethodList) {
             isNestedMethod = false;
             //find the method in the target bytecode file
             CtBehavior mainMethod = findTMethod(methodAccessVar, cc);
@@ -191,7 +193,7 @@ public class ByteCodeMLogVar {
      * @param cc
      * @return
      */
-    private CtBehavior findTMethod(AccessVar4Method methodAccessVar, CtClass cc) {
+    private CtBehavior findTMethod(MethodAccessVars methodAccessVar, CtClass cc) {
         CtBehavior mainMethod = null;
         List<CtClass> ps = methodAccessVar.getParams(poolParent);
         CtClass[] prams = ps.toArray(new CtClass[ps.size()]);
@@ -241,16 +243,16 @@ public class ByteCodeMLogVar {
      * @param varsList   cluster of vars of line
      * @param mainMethod the method get from bytecode file
      */
-    private void logVarValue(List<AccessVars4Line> varsList, CtBehavior mainMethod) {
+    private void logVarValue(List<LineAccessVars> varsList, CtBehavior mainMethod) {
 
-        for (AccessVars4Line accessVars : varsList) {
+        for (LineAccessVars accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
-                for (MyExpression var : accessVars.getVars()) {
+                for (MyExp var : accessVars.getVars()) {
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ":\"+" + var.getAstNodeVar() + ");");
                     } catch (CannotCompileException e) {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ": not initialized.\");");
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ": not initialized.\");");
                         logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
                     }
                 }
@@ -267,20 +269,20 @@ public class ByteCodeMLogVar {
      * @param varsList   cluster of vars of line
      * @param mainMethod the method get from bytecode file
      */
-    private void logNestedCVarValue(List<AccessVars4Line> varsList, CtBehavior mainMethod) {
+    private void logNestedCVarValue(List<LineAccessVars> varsList, CtBehavior mainMethod) {
         //for very 'line' in the method
-        for (AccessVars4Line accessVars : varsList) {
+        for (LineAccessVars accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
                 //for every var that is accessible in the line
-                for (MyExpression var : accessVars.getVars()) {
+                for (MyExp var : accessVars.getVars()) {
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + constructorN + "." + var.getText() + ":\"+" + targetClass + "." + var.getText() + ");");
+                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + constructorN + "." + var.getAstNodeVar() + ":\"+" + targetClass + "." + var.getAstNodeVar() + ");");
                     } catch (CannotCompileException e) {
                         try {
-                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ":\"+" + var.getText() + ");");
+                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ":\"+" + var.getAstNodeVar() + ");");
                         } catch (CannotCompileException e1) {
-                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getText() + ": may not initialized.\");");
+                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ": may not initialized.\");");
                             logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
                         }
                     }
