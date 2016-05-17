@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /*
    This program
@@ -96,7 +97,7 @@ public class ByteCodeMLogVar {
         StandardJavaFileManager fileManager = javaCompiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> fileObjects =
                 fileManager.getJavaFileObjects(ReadFileUtils.joinDir(tp.getSourcePath(), targetFile));
-        List<String> options = getCompileOptions();
+        List<String> options = tp.getCompileOptions();
         JavaCompiler.CompilationTask cTask = javaCompiler.getTask(null, null, null, options, null, fileObjects);
         cTask.call();
         try {
@@ -107,28 +108,7 @@ public class ByteCodeMLogVar {
         }
     }
 
-    /**
-     * getCompileOptions
-     *
-     * @return
-     */
-    private List<String> getCompileOptions() {
-        List<String> options = new ArrayList<String>();
-        options.add("-classpath");
-        String[] cp = tp.getClasspathEntries();
-        StringBuilder classpath = new StringBuilder(".");
-        for (int i = 0; i < cp.length; i++) {
-            classpath.append(":");
-            classpath.append(cp[i]);
-        }
-        options.add(classpath.toString());
-//        options.add("-processor");
-//        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
-        options.add("-g");
-        options.add("-d");
-        options.add(tp.getOutputPath());
-        return options;
-    }
+
 
     /**
      * Modify the target bytecode file
@@ -237,6 +217,7 @@ public class ByteCodeMLogVar {
         return mainMethod;
     }
 
+
     /**
      * insert log to get the value of every accessible variable
      *
@@ -248,13 +229,14 @@ public class ByteCodeMLogVar {
         for (LineAccessVars accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
-                for (MyExp var : accessVars.getVars()) {
+                for (Map.Entry<String, MyExp> var : accessVars.getVars().entrySet()) {
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ":\"+" + var.getAstNodeVar() + ");");
+                        mainMethod.insertAt(accessVars.getLocation(), logValStatement(var.getValue().getAstNodeVar()));
                     } catch (CannotCompileException e) {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ": not initialized.\");");
+                        mainMethod.insertAt(accessVars.getLocation(), logNInitStatement(var.getValue().getAstNodeVar()));
                         logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
                     }
+
                 }
             } catch (CannotCompileException e) {
                 logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVars());
@@ -275,14 +257,14 @@ public class ByteCodeMLogVar {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"---------\");");
                 //for every var that is accessible in the line
-                for (MyExp var : accessVars.getVars()) {
+                for (Map.Entry<String, MyExp> var : accessVars.getVars().entrySet()) {
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + constructorN + "." + var.getAstNodeVar() + ":\"+" + targetClass + "." + var.getAstNodeVar() + ");");
+                        mainMethod.insertAt(accessVars.getLocation(), logConStatement(var.getValue().getAstNodeVar()));
                     } catch (CannotCompileException e) {
                         try {
-                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ":\"+" + var.getAstNodeVar() + ");");
+                            mainMethod.insertAt(accessVars.getLocation(), logValStatement(var.getValue().getAstNodeVar()));
                         } catch (CannotCompileException e1) {
-                            mainMethod.insertAt(accessVars.getLocation(), "logger.info(\"" + var.getAstNodeVar() + ": may not initialized.\");");
+                            mainMethod.insertAt(accessVars.getLocation(), logNInitStatement(var.getValue().getAstNodeVar()));
                             logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
                         }
                     }
@@ -292,6 +274,18 @@ public class ByteCodeMLogVar {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String logValStatement(String varName) {
+        return "logger.info(\"" + varName + ":\"+(" + varName + "));";
+    }
+
+    private String logNInitStatement(String varName) {
+        return "logger.info(\"" + varName + ":\"+" + "\": may not initialized.\");";
+    }
+
+    private String logConStatement(String varName) {
+        return "logger.info(\"" + constructorN + "." + varName + ":\"+(" + targetClass + "." + varName + "));";
     }
 
     /**

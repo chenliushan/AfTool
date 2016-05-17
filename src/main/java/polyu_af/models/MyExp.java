@@ -22,6 +22,8 @@ public class MyExp {
                 break;
             case ASTNode.METHOD_INVOCATION:
                 break;
+            case ASTNode.PREFIX_EXPRESSION:
+                break;
             default:
                 throw new NotAcceptExpNodeTypeException(getAstNodeType(astNode));
         }
@@ -47,13 +49,16 @@ public class MyExp {
                 return svd.getName().toString();
             case ASTNode.SINGLE_MEMBER_ANNOTATION:
                 SingleMemberAnnotation sma = (SingleMemberAnnotation) astNode;
-                return sma.getValue().toString();
+                return sma.getValue().resolveConstantExpressionValue().toString();
             case ASTNode.INFIX_EXPRESSION:
                 InfixExpression ife = (InfixExpression) astNode;
                 return ife.toString();
             case ASTNode.METHOD_INVOCATION:
                 MethodInvocation mi = (MethodInvocation) astNode;
                 return mi.toString();
+            case ASTNode.PREFIX_EXPRESSION:
+                PrefixExpression pi = (PrefixExpression) astNode;
+                return pi.toString();
             default:
                 return astNode.toString();
         }
@@ -89,6 +94,9 @@ public class MyExp {
             case ASTNode.METHOD_INVOCATION:
                 MethodInvocation mi = (MethodInvocation) astNode;
                 return mi.resolveTypeBinding();
+            case ASTNode.PREFIX_EXPRESSION:
+                PrefixExpression pi = (PrefixExpression) astNode;
+                return pi.resolveTypeBinding();
             default:
                 return null;
         }
@@ -97,6 +105,9 @@ public class MyExp {
 
     public String getTypeName() {
         ITypeBinding type = getType();
+        if(type==null){
+            return null;
+        }
         if (type.isPrimitive()) {
             return type.getQualifiedName();
         } else {
@@ -107,10 +118,9 @@ public class MyExp {
 
     @Override
     public String toString() {
-        return "\nExp{" +
-                "astNode:" + getAstNodeVar() +
-                ", nodeType:" + getAstNodeType() +
-                "; type:" + getTypeName() +
-                '}';
+        return "Exp{" +
+                "nodeType: " + getAstNodeType() +
+                "; |type: " + getTypeName() +
+                "}\n";
     }
 }

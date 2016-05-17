@@ -39,7 +39,7 @@ public class ResolveExp {
              *
              * shortcoming: the 'same name variable' may occur more than once in the fault node
              * or maybe it not occur in the fault node ( visit the root to resolve?
-             * there may be more different 'same name variable' in the root)
+             * there may be several 'same name variables' in the same root)
              */
             InfixExpression in = (InfixExpression) expAst;
             final Expression leftOperand = in.getLeftOperand();

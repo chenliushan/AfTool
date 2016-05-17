@@ -6,11 +6,8 @@ import org.eclipse.jdt.core.dom.*;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MyExp;
-import polyu_af.utils.AstUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by liushanchen on 16/4/1.
@@ -57,14 +54,14 @@ public class LAccessVarVisitor extends ASTVisitor {
     /**
      * each stack element stores the accessible fields in the current scope.
      */
-    private Stack<List<MyExp>> currentField = new Stack<List<MyExp>>();
-    private Stack<List<MyExp>> currentStaticField = new Stack<List<MyExp>>();
+    private Stack<Map<String, MyExp>> currentField = new Stack<Map<String, MyExp>>();
+    private Stack<Map<String, MyExp>> currentStaticField = new Stack<Map<String, MyExp>>();
     private boolean isStaticBlock = false;
     /**
      * each stack element stores the accessible formal parameters and local variables
      * in the current scope.
      */
-    private Stack<List<MyExp>> currentAccessible = new Stack<List<MyExp>>();
+    private Stack<Map<String, MyExp>> currentAccessible = new Stack<Map<String, MyExp>>();
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
     public List<LineAccessVars> getAccessibleVars() {
         return accessVars4LineList;
@@ -93,24 +90,24 @@ public class LAccessVarVisitor extends ASTVisitor {
     public final boolean visit(final TypeDeclaration node) {
         typeDecl.push(node);
         if (Modifier.isStatic(node.getModifiers())) {
-            currentField.push(new ArrayList<MyExp>());
+            currentField.push(new HashMap<String, MyExp>());
         } else {
             if (currentField.isEmpty()) {
-                currentField.push(new ArrayList<MyExp>());
+                currentField.push(new HashMap<String, MyExp>());
             } else {
-                currentField.push(new ArrayList<MyExp>(currentField.peek()));
+                currentField.push(new HashMap<String, MyExp>(currentField.peek()));
             }
         }
         if (currentStaticField.isEmpty()) {
-            currentStaticField.push(new ArrayList<MyExp>());
+            currentStaticField.push(new HashMap<String, MyExp>());
         } else {
-            currentStaticField.push(new ArrayList<MyExp>(currentStaticField.peek()));
+            currentStaticField.push(new HashMap<String, MyExp>(currentStaticField.peek()));
         }
         return super.visit(node);
     }
 
     @Override
-    public final void endVisit(final TypeDeclaration node) {
+    public void endVisit(final TypeDeclaration node) {
         typeDecl.pop();
         currentStaticField.pop();
         currentField.pop();
@@ -131,9 +128,9 @@ public class LAccessVarVisitor extends ASTVisitor {
             try {
                 myExpression = new MyExp(vdf);
                 if (Modifier.isStatic(node.getModifiers())) {
-                    currentStaticField.peek().add(myExpression);
+                    currentStaticField.peek().put(myExpression.getAstNodeVar(),myExpression);
                 } else {
-                    currentField.peek().add(myExpression);
+                    currentField.peek().put(myExpression.getAstNodeVar(),myExpression);
                 }
             } catch (NotAcceptExpNodeTypeException e) {
                 e.printStackTrace();
@@ -148,13 +145,13 @@ public class LAccessVarVisitor extends ASTVisitor {
         if (Modifier.isStatic(node.getModifiers())) {
             isStaticBlock = true;
         }
-        List<MyExp> formalParameters = new ArrayList<MyExp>();
+        Map<String, MyExp> formalParameters = new HashMap<String, MyExp>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
             MyExp myExpression = null;
             try {
                 myExpression = new MyExp(svd);
-                formalParameters.add(myExpression);
+                formalParameters.put(myExpression.getAstNodeVar(),myExpression);
             } catch (NotAcceptExpNodeTypeException e) {
                 e.printStackTrace();
             }
@@ -172,8 +169,8 @@ public class LAccessVarVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ForStatement node) {
-        List<MyExp> formalParameters = new ArrayList<MyExp>();
-        formalParameters.addAll(currentAccessible.peek());
+        Map<String, MyExp> formalParameters = new HashMap<String, MyExp>();
+        formalParameters.putAll(currentAccessible.peek());
         for (Object o : node.initializers()) {
             VariableDeclarationExpression svd = (VariableDeclarationExpression) o;
             for (Object o2 : svd.fragments()) {
@@ -181,7 +178,7 @@ public class LAccessVarVisitor extends ASTVisitor {
                 MyExp myExpression = null;
                 try {
                     myExpression = new MyExp(f);
-                    formalParameters.add(myExpression);
+                    formalParameters.put(myExpression.getAstNodeVar(),myExpression);
                 } catch (NotAcceptExpNodeTypeException e) {
                     e.printStackTrace();
                 }
@@ -237,7 +234,7 @@ public class LAccessVarVisitor extends ASTVisitor {
             MyExp myExpression = null;
             try {
                 myExpression = new MyExp(vdf);
-                currentAccessible.peek().add(myExpression);
+                currentAccessible.peek().put(myExpression.getAstNodeVar(),myExpression);
             } catch (NotAcceptExpNodeTypeException e) {
                 e.printStackTrace();
             }
@@ -266,8 +263,8 @@ public class LAccessVarVisitor extends ASTVisitor {
     }
 
     private void newLayerInMethod() {
-        List<MyExp> formalParameters = new ArrayList<MyExp>();
-        formalParameters.addAll(currentAccessible.peek());
+        HashMap<String, MyExp> formalParameters = new HashMap<String, MyExp>();
+        formalParameters.putAll(currentAccessible.peek());
         currentAccessible.push(formalParameters);
     }
 

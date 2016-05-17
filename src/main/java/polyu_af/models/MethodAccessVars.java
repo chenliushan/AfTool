@@ -13,7 +13,7 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class MethodAccessVars {
-    private static Logger logger = LogManager.getLogger();
+    private Logger logger = LogManager.getLogger();
 
     private String methodName;
     private List<String> paramTypes;

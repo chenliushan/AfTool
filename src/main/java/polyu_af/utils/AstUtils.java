@@ -2,11 +2,14 @@ package polyu_af.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import polyu_af.models.FaultUnit;
+
+import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -99,14 +102,28 @@ public class AstUtils {
      * @return
      */
     public static CompilationUnit createResolvedAST(String source, String[] classpathEntries, String[] sourcepath, String[] encodings, String UnitName) {
+//        Map options = JavaCore.getOptions();
+
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setResolveBindings(true);
+//        parser.setCompilerOptions(options);
+        parser.setEnvironment(classpathEntries, sourcepath, encodings, true);
+        parser.setUnitName(UnitName);
+        parser.setSource(source.toCharArray());
+        CompilationUnit node = (CompilationUnit) parser.createAST(null);
+        return node;
+    }
+
+    public static Expression createResolvedExpAST(String source, String[] classpathEntries, String[] sourcepath, String[] encodings, String UnitName) {
+        ASTParser parser = ASTParser.newParser(AST.JLS8);
+        parser.setKind(ASTParser.K_EXPRESSION);
         parser.setResolveBindings(true);
 
         parser.setEnvironment(classpathEntries, sourcepath, encodings, true);
         parser.setUnitName(UnitName);
         parser.setSource(source.toCharArray());
-        CompilationUnit node = (CompilationUnit) parser.createAST(null);
+        Expression node = (Expression) parser.createAST(null);
         return node;
     }
 
@@ -177,32 +194,6 @@ public class AstUtils {
         }
 //        root.accept(resolveTypeVisitor);
         return document.get();
-    }
-
-    public static String getExpType(Type resolveT) {
-        String type = null;
-        if (resolveT != null) {
-            if (resolveT.resolveBinding().isPrimitive()) {
-                type = resolveT.toString();
-            } else {
-                type = resolveT.resolveBinding().getBinaryName();
-            }
-        }
-        return type;
-
-    }
-
-    public static String getExpType(ITypeBinding resolveT) {
-        String type = null;
-        if (resolveT != null) {
-            if (resolveT.isPrimitive()) {
-                type = resolveT.getQualifiedName();
-            } else {
-                type = resolveT.getBinaryName();
-            }
-        }
-        return type;
-
     }
 
 }

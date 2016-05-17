@@ -18,7 +18,8 @@ public class GlobalProcess {
 
     public static void main(String arg[]) {
         long startTime = System.currentTimeMillis();
-
+        TargetProgram targetProgram=null;
+        TargetClass targetClass = null;
 
         //read input file
         GetConfiguration getConfiguration=null;
@@ -29,8 +30,8 @@ public class GlobalProcess {
             e.printStackTrace();
             return;
         }
-        TargetProgram targetProgram = getConfiguration.getTargetProgram();
-        TargetClass targetClass = null;
+         targetProgram = getConfiguration.getTargetProgram();
+
         List<FaultUnit> faultUnitList = null;
         if (targetProgram != null && targetProgram.getTargetClassList() != null) {
             targetClass = targetProgram.getTargetClassList().get(0);

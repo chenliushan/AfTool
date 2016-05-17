@@ -2,8 +2,10 @@ package polyu_af.models;
 
 import polyu_af.utils.ReadFileUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -19,6 +21,28 @@ public class TargetProgram {
     private String[] runningArg=null;
     private String[] encodings = new String[]{"UTF-8"};
     private List<TargetClass> targetClassList = null;
+
+    /**
+     * getCompileOptions
+     *
+     * @return
+     */
+    public List<String> getCompileOptions() {
+        List<String> options = new ArrayList<String>();
+        options.add("-classpath");
+        StringBuilder classpath = new StringBuilder(".");
+        for (int i = 0; i < classpathEntries.length; i++) {
+            classpath.append(":");
+            classpath.append(classpathEntries[i]);
+        }
+        options.add(classpath.toString());
+//        options.add("-processor");
+//        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
+        options.add("-g");
+        options.add("-d");
+        options.add(outputPath);
+        return options;
+    }
 
     public String getProjectDir() {
         return projectDir;
