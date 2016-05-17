@@ -1,6 +1,7 @@
 package polyu_af.process;
 
 import org.eclipse.jdt.core.dom.*;
+import polyu_af.exception.NotAcceptExpNodeTypeException;
 import polyu_af.models.MyExp;
 
 import java.util.ArrayList;
@@ -114,13 +115,21 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
     }
 
     private void addExpIntoStack(Expression exp) {
-        MyExp myExpression = new MyExp(exp, exp.resolveTypeBinding());
-        currentAccessExp.peek().add(myExpression);
+        try {
+            MyExp  myExpression = new MyExp(exp);
+            currentAccessExp.peek().add(myExpression);
+        } catch (NotAcceptExpNodeTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addAnnExpIntoStack(SingleMemberAnnotation ann) {
-        MyExp myExpression = new MyExp(ann, ann.resolveAnnotationBinding().getAnnotationType());
-        currentAccessExp.peek().add(myExpression);
+        try {
+            MyExp myExpression = new MyExp(ann);
+            currentAccessExp.peek().add(myExpression);
+        } catch (NotAcceptExpNodeTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     private void newLayerOutsideMethod() {

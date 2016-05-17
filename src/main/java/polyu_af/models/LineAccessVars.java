@@ -58,14 +58,5 @@ public class LineAccessVars {
                 '}';
     }
 
-    public class ExpVal extends MyExp {
 
-
-        public ExpVal(ASTNode astNode, ITypeBinding type) {
-            super(astNode, type);
-        }
-
-
-
-    }
 }

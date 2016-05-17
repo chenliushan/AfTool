@@ -3,6 +3,7 @@ package polyu_af.process;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
+import polyu_af.exception.NotAcceptExpNodeTypeException;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MyExp;
 import polyu_af.utils.AstUtils;
@@ -64,10 +65,7 @@ public class LAccessVarVisitor extends ASTVisitor {
      * in the current scope.
      */
     private Stack<List<MyExp>> currentAccessible = new Stack<List<MyExp>>();
-
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
-
-
     public List<LineAccessVars> getAccessibleVars() {
         return accessVars4LineList;
     }
@@ -116,7 +114,6 @@ public class LAccessVarVisitor extends ASTVisitor {
         typeDecl.pop();
         currentStaticField.pop();
         currentField.pop();
-
         super.endVisit(node);
     }
 
@@ -130,13 +127,18 @@ public class LAccessVarVisitor extends ASTVisitor {
     public final boolean visit(final FieldDeclaration node) {
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExp myExpression = new MyExp(vdf, vdf.resolveBinding().getType());
-
-            if (Modifier.isStatic(node.getModifiers())) {
-                currentStaticField.peek().add(myExpression);
-            } else {
-                currentField.peek().add(myExpression);
+            MyExp myExpression = null;
+            try {
+                myExpression = new MyExp(vdf);
+                if (Modifier.isStatic(node.getModifiers())) {
+                    currentStaticField.peek().add(myExpression);
+                } else {
+                    currentField.peek().add(myExpression);
+                }
+            } catch (NotAcceptExpNodeTypeException e) {
+                e.printStackTrace();
             }
+
         }
         return super.visit(node);
     }
@@ -149,8 +151,13 @@ public class LAccessVarVisitor extends ASTVisitor {
         List<MyExp> formalParameters = new ArrayList<MyExp>();
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
-            MyExp myExpression = new MyExp(svd, svd.resolveBinding().getType());
-            formalParameters.add(myExpression);
+            MyExp myExpression = null;
+            try {
+                myExpression = new MyExp(svd);
+                formalParameters.add(myExpression);
+            } catch (NotAcceptExpNodeTypeException e) {
+                e.printStackTrace();
+            }
         }
         currentAccessible.push(formalParameters);
         return super.visit(node);
@@ -171,8 +178,13 @@ public class LAccessVarVisitor extends ASTVisitor {
             VariableDeclarationExpression svd = (VariableDeclarationExpression) o;
             for (Object o2 : svd.fragments()) {
                 VariableDeclarationFragment f = (VariableDeclarationFragment) o2;
-                MyExp myExpression = new MyExp(f, f.resolveBinding().getType());
-                formalParameters.add(myExpression);
+                MyExp myExpression = null;
+                try {
+                    myExpression = new MyExp(f);
+                    formalParameters.add(myExpression);
+                } catch (NotAcceptExpNodeTypeException e) {
+                    e.printStackTrace();
+                }
             }
         }
         currentAccessible.push(formalParameters);
@@ -222,8 +234,13 @@ public class LAccessVarVisitor extends ASTVisitor {
     public boolean visit(final VariableDeclarationStatement node) {
         for (Object o : node.fragments()) {
             VariableDeclarationFragment vdf = (VariableDeclarationFragment) o;
-            MyExp myExpression = new MyExp(vdf, vdf.resolveBinding().getType());
-            currentAccessible.peek().add(myExpression);
+            MyExp myExpression = null;
+            try {
+                myExpression = new MyExp(vdf);
+                currentAccessible.peek().add(myExpression);
+            } catch (NotAcceptExpNodeTypeException e) {
+                e.printStackTrace();
+            }
         }
         return super.visit(node);
     }
