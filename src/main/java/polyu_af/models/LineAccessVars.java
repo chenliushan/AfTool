@@ -1,5 +1,8 @@
 package polyu_af.models;
 
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,5 +56,16 @@ public class LineAccessVars {
                 ", \n--vars:" + vars +
                 ", \n--exps:" + exps +
                 '}';
+    }
+
+    public class ExpVal extends MyExp {
+
+
+        public ExpVal(ASTNode astNode, ITypeBinding type) {
+            super(astNode, type);
+        }
+
+
+
     }
 }

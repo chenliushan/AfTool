@@ -1,9 +1,6 @@
 package polyu_af.models;
 
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.*;
 
 /**
  * Created by liushanchen on 16/5/16.
@@ -11,7 +8,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 public class MyExp {
     private ASTNode astNode = null;
     private ITypeBinding type = null;
-    private Class<?> value = null;
+    private Object value = null;
 
     public MyExp(ASTNode astNode, ITypeBinding type) {
         this.astNode = astNode;
@@ -35,8 +32,23 @@ public class MyExp {
         } else if (nType == ASTNode.SINGLE_VARIABLE_DECLARATION) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) astNode;
             return svd.getName().toString();
+        }else if(nType==ASTNode.SINGLE_MEMBER_ANNOTATION){
+            SingleMemberAnnotation sma=(SingleMemberAnnotation)astNode;
+            return sma.getValue().toString();
         }
-        return null;
+//        else if(nType==ASTNode.ASSIGNMENT){
+//            Assignment assign= (Assignment)astNode;
+//            int rh=assign.getRightHandSide().getNodeType();
+//            return ASTNode.nodeClassForType(rh).getName();
+//        }else if(nType==ASTNode.METHOD_INVOCATION){
+//            MethodInvocation mi= (MethodInvocation)astNode;
+//            return mi.toString();
+//        }else if(nType==ASTNode.METHOD_INVOCATION){
+//            PostfixExpression pe= (PostfixExpression)astNode;
+//            return pe.toString();
+//        }
+
+        return astNode.toString();
     }
 
     public String getAstNodeType() {
@@ -73,11 +85,11 @@ public class MyExp {
         this.type = type;
     }
 
-    public Class<?> getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(Class<?> value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

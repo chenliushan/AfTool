@@ -20,17 +20,26 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
 
 
     @Override
-    public boolean visit(ExpressionStatement node) {
-        Expression exp = node.getExpression();
-        addExpIntoStack(exp);
-
+    public boolean visit(InfixExpression node) {
+        addExpIntoStack(node);
         return super.visit(node);
     }
 
     @Override
+    public void endVisit(Assignment node) {
+        addExpIntoStack(node);
+        super.endVisit(node);
+    }
+
+    @Override
+    public void endVisit(MethodInvocation node) {
+        addExpIntoStack(node);
+        super.endVisit(node);
+    }
+
+    @Override
     public boolean visit(IfStatement node) {
-        Expression exp = node.getExpression();
-        addExpIntoStack(exp);
+        newLayerInMethod();
         return super.visit(node);
     }
 
@@ -78,12 +87,15 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
         super.endVisit(node);
     }
 
+    @Override
+    public boolean visit(WhileStatement node) {
+        newLayerInMethod();
+        return super.visit(node);
+    }
 
     @Override
     public boolean visit(SwitchStatement node) {
         newLayerInMethod();
-        Expression exp = node.getExpression();
-        addExpIntoStack(exp);
         return super.visit(node);
     }
 
@@ -107,7 +119,7 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
     }
 
     private void addAnnExpIntoStack(SingleMemberAnnotation ann) {
-        MyExp myExpression = new MyExp(ann, ann.resolveTypeBinding());
+        MyExp myExpression = new MyExp(ann, ann.resolveAnnotationBinding().getAnnotationType());
         currentAccessExp.peek().add(myExpression);
     }
 
