@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,8 +64,9 @@ public class ByteCodeMLogVar {
         if (target != null && target.length() > 0) {
             compileTarget();
             modifyTClass(vars);
-            ExeTarget exeTarget = new ExeTarget(tp, targetClass);
-            exeTarget.runTarInNThread();
+
+            ExeTarget exeTarget=new ExeTargetJunit(tp,targetFile);
+            exeTarget.process();
         }
     }
 
@@ -159,7 +159,7 @@ public class ByteCodeMLogVar {
         poolParent.importPackage("org.apache.logging.log4j.LogManager");
         poolParent.importPackage("org.apache.logging.log4j.Logger");
         try {
-            CtField field = CtField.make(" public static Logger logger =org.apache.logging.log4j.LogManager#getLogger();", cc);
+            CtField field = CtField.make(" public Logger logger =org.apache.logging.log4j.LogManager#getLogger(\"AfTool\");", cc);
             cc.addField(field);
         } catch (CannotCompileException e) {
             e.printStackTrace();

@@ -14,7 +14,10 @@
     <Loggers>
 
         <Root level="trace">
-            <AppenderRef ref="File"/>
+            <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="AfTool" level="trace" additivity="false">
+            <AppenderRef ref="TargetFile"/>
+        </Logger>
     </Loggers>
 </Configuration>

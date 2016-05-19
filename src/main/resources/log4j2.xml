@@ -18,6 +18,9 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+        <File name="TargetFile" fileName="logs/targetLog.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
     </Appenders>
 <!-- levels: ALL,TRACE, DEBUG, INFO, WARN, ERROR ,FATAL,OFF-->
     <Loggers>
@@ -25,8 +28,12 @@
             <!--<AppenderRef ref="Console"/>-->
             <AppenderRef ref="File"/>
         </Logger>
+        <Logger name="AfTool" level="trace" additivity="false">
+            <AppenderRef ref="TargetFile"/>
+        </Logger>
         <Root level="trace">
             <AppenderRef ref="Console"/>
         </Root>
+
     </Loggers>
 </Configuration>

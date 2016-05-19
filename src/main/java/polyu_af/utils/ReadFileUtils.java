@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -42,6 +44,15 @@ public class ReadFileUtils {
             subPath = path + subPath;
         }
         return subPath;
+    }
+    public static URL getURL(String path) {
+        File files = new File(path);
+        try {
+            return files.toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
