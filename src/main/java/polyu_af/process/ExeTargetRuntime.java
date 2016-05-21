@@ -15,10 +15,6 @@ import java.io.InputStreamReader;
 public class ExeTargetRuntime extends ExeTarget{
     private  Logger logger = LogManager.getLogger();
 
-    private TargetProgram tp = null;
-    private String targetClass = null;
-
-
     public ExeTargetRuntime(TargetProgram tp, String targetClass ) {
         super(tp,targetClass);
     }

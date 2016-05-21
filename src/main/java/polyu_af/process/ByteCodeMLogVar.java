@@ -7,6 +7,7 @@ import polyu_af.models.LineAccessVars;
 import polyu_af.models.MethodAccessVars;
 import polyu_af.models.MyExp;
 import polyu_af.models.TargetProgram;
+import polyu_af.utils.MyJavaAgentLoader;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.tools.JavaCompiler;
@@ -62,10 +63,12 @@ public class ByteCodeMLogVar {
      */
     private void process(List<MethodAccessVars> vars) {
         if (target != null && target.length() > 0) {
+            MyJavaAgentLoader.loadAgent();
+
             compileTarget();
             modifyTClass(vars);
 
-            ExeTarget exeTarget=new ExeTargetJunit(tp,targetFile);
+            ExeTarget exeTarget=new ExeTargetRuntime(tp,targetFile);
             exeTarget.process();
         }
     }
