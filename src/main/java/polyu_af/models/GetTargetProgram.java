@@ -1,4 +1,4 @@
-package polyu_af.process;
+package polyu_af.models;
 
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import polyu_af.exception.NotFoundException;
-import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,10 +15,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,13 +26,13 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/3/17.
  */
-public class GetConfiguration {
-    private static Logger logger = LogManager.getLogger(GetConfiguration.class.getName());
+public class GetTargetProgram {
+    private static Logger logger = LogManager.getLogger(GetTargetProgram.class.getName());
 
     private TargetProgram targetProgram = null;
     private String inputPath = null;//the configuration file's path
 
-    public GetConfiguration(String inputPath) throws NotFoundException {
+    public GetTargetProgram(String inputPath) throws NotFoundException {
         this.inputPath = inputPath;
         getInput();
     }
@@ -73,7 +70,7 @@ public class GetConfiguration {
      * @return
      */
     private void getInput() throws NotFoundException {
-        String input = ReadFileUtils.readFile(inputPath);
+        String input = ReadFileUtils.getSource(inputPath);
         if (input.trim() != "" && input != null) {
             Gson gson = new Gson();
             targetProgram = gson.fromJson(input, TargetProgram.class);

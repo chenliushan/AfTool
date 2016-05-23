@@ -15,8 +15,8 @@ import java.io.InputStreamReader;
 public class ExeTargetRuntime extends ExeTarget{
     private  Logger logger = LogManager.getLogger();
 
-    public ExeTargetRuntime(TargetProgram tp, String targetClass ) {
-        super(tp,targetClass);
+    public ExeTargetRuntime(TargetProgram tp ) {
+        super(tp);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ExeTargetRuntime extends ExeTarget{
         StringBuilder command = new StringBuilder("java -cp .");
         addCp(command);
         addLogLib(command);
-        if(targetClass!=null){
+        if(tp.getCurrentTarget()!=null){
             getTargetTestE(command);
         }else{
             getTargetMainEntry(command);
@@ -83,7 +83,7 @@ public class ExeTargetRuntime extends ExeTarget{
         command.append(":lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:");
         command.append(tp.getTestClassPath());//append the test source classpath
         command.append(" org.junit.runner.JUnitCore ");
-        command.append(targetClass+"Test");//append the [test class name] including the package name
+        command.append(tp.getCurrentTarget().getQualifyFileName()+"Test");//append the [test class name] including the package name
 
     }
 

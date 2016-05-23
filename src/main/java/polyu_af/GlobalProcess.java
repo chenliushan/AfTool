@@ -22,15 +22,15 @@ public class GlobalProcess {
         TargetClass targetClass = null;
 
         //read input file
-        GetConfiguration getConfiguration=null;
+        GetTargetProgram getTargetProgram =null;
         try {
-            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
-//            getConfiguration = new GetConfiguration(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
+            getTargetProgram = new GetTargetProgram(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
+//            getTargetProgram = new GetTargetProgram(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
         } catch (NotFoundException e) {
             e.printStackTrace();
             return;
         }
-         targetProgram = getConfiguration.getTargetProgram();
+         targetProgram = getTargetProgram.getTargetProgram();
 
         List<FaultUnit> faultUnitList = null;
         if (targetProgram != null && targetProgram.getTargetClassList() != null) {
@@ -52,8 +52,8 @@ public class GlobalProcess {
         logger.info("List<MethodAccessVars> : \n"+ lineLists.toString());
         logger.info("List<MethodAccessVars> -size:"+ lineLists.size());
 
-        ByteCodeMLogVar byteCodeMLogVar =new ByteCodeMLogVar(targetProgram);
-        byteCodeMLogVar.process(lineLists,targetClass.getSourceName());
+        ByteCodeP byteCodeP =new ByteCodeP(targetProgram);
+        byteCodeP.process(lineLists);
 
 
         //build expression with accessible variables
@@ -80,7 +80,7 @@ public class GlobalProcess {
 //                    resolveExp.resolveExp();
                     //testing modify the expression
 //                    if (!fu.getExpression().equals("exp")) {
-//                       getConfiguration.saveNewFaultClass(
+//                       getTargetProgram.saveNewFaultClass(
 //                               AstUtils.parseExpRecordModifications(
 //                                       root, fu.getExpression(), faultFileSource_));
 //

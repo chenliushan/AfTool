@@ -23,8 +23,8 @@ public class ExeTargetJunit extends ExeTarget {
     private Logger logger = LogManager.getLogger();
 
 
-    public ExeTargetJunit(TargetProgram tp, String targetClass) {
-        super(tp, targetClass);
+    public ExeTargetJunit(TargetProgram tp) {
+        super(tp);
 
     }
 
@@ -34,7 +34,8 @@ public class ExeTargetJunit extends ExeTarget {
         core.addListener(new RingingListener());
         Result result = null;
         try {
-            result = core.run(loader.loadClass(targetClass + "Test"));
+            String targetClass=tp.getCurrentTarget().getQualifyFileName();
+            result = core.run(loader.loadClass(targetClass+ "Test"));
             logger.info("targetClass:" + loader.loadClass(targetClass + "Test"));
 
         } catch (ClassNotFoundException e) {

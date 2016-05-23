@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -16,9 +17,13 @@ import java.net.URL;
 public class ReadFileUtils {
     private static Logger logger = LogManager.getLogger(ReadFileUtils.class.getName());
 
-    public static String readFile(String fileName) {
-        String fileContent = "";
+    public static String getSource(String fileName) {
         File file = new File(fileName);
+        return getSource(file);
+    }
+
+    public static String getSource(File file) {
+        String fileContent = "";
         if (file.exists()) {
             if (file.isFile()) {
                 try {
@@ -29,11 +34,31 @@ public class ReadFileUtils {
                         buffer.append(text + "\n");
                     fileContent = buffer.toString();
                 } catch (IOException ioException) {
-                    logger.error("readFile: " + ioException.getStackTrace().toString());
+                    logger.error("getSource: " + ioException.getStackTrace().toString());
                 }
             }
         }
         return fileContent;
+    }
+
+    public static ArrayList<File> getListFiles(String path) {
+        File directory = new File(path);
+        return getListFiles(directory);
+    }
+
+    public static ArrayList<File> getListFiles(File directory) {
+        ArrayList<File> files = new ArrayList<File>();
+        if (directory.isFile()) {
+            files.add(directory);
+            return files;
+        } else if (directory.isDirectory()) {
+            File[] fileArr = directory.listFiles();
+            for (int i = 0; i < fileArr.length; i++) {
+                File fileOne = fileArr[i];
+                files.addAll(getListFiles(fileOne));
+            }
+        }
+        return files;
     }
 
 
@@ -45,6 +70,7 @@ public class ReadFileUtils {
         }
         return subPath;
     }
+
     public static URL getURL(String path) {
         File files = new File(path);
         try {

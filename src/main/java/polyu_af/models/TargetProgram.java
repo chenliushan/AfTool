@@ -1,11 +1,12 @@
 package polyu_af.models;
 
+import polyu_af.exception.NotFoundException;
 import polyu_af.utils.ReadFileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/3/17.
@@ -17,10 +18,62 @@ public class TargetProgram {
     private String sourcePath = null;
     private String outputPath = null;
     private String testClassPath = null;
-    private String programEntry=null;
-    private String[] runningArg=null;
+    private String programEntry = null;
+    private String[] runningArg = null;
     private String[] encodings = new String[]{"UTF-8"};
     private List<TargetClass> targetClassList = null;
+    private List<TargetFile> targetFiles = null;
+    private int currentT = 0;
+
+    public void obtainProgramFiles()  {
+        ArrayList<File> files = ReadFileUtils.getListFiles(sourcePath);
+        List<TargetFile> targetFiles = new ArrayList<TargetFile>();
+
+        for (File f : files) {
+            String ap = f.getAbsolutePath();
+            String s = null;
+            if (ap.equals(sourcePath)) {
+                continue;
+            } else if (ap.startsWith(sourcePath)) {
+                s = ap.substring(sourcePath.length());
+            } else if (ap.contains(sourcePath)) {
+                s = ap.substring(sourcePath.length() + ap.indexOf(sourcePath));
+            }
+            targetFiles.add(new TargetFile(ap, s));
+        }
+//        if(targetFiles==null) {
+//            throw new NotFoundException(sourcePath);
+//        }
+        this.targetFiles = targetFiles;
+    }
+
+    public TargetFile getCurrentTarget()  {
+        if(targetFiles==null)
+            obtainProgramFiles();
+        return targetFiles.get(currentT);
+    }
+
+    public TargetFile nextTarget() {
+        currentT++;
+        if(currentT<targetFiles.size()){
+            return getCurrentTarget();
+        }else{
+            return null;
+        }
+    }
+    public void moveIndex2Next() {
+        currentT++;
+        if(currentT>=targetFiles.size()){
+            currentT=targetFiles.size()-1;
+        }
+    }
+
+    public List<TargetFile> getTargetFiles() {
+        if (targetFiles == null) {
+            obtainProgramFiles();
+        }
+        return targetFiles;
+    }
 
     /**
      * getCompileOptions
@@ -48,9 +101,6 @@ public class TargetProgram {
         return projectDir;
     }
 
-    public void setProjectDir(String projectDir) {
-        this.projectDir = projectDir;
-    }
 
     public String[] getClasspathEntries() {
         return classpathEntries;
@@ -64,18 +114,11 @@ public class TargetProgram {
         return encodings;
     }
 
-    public void setEncodings(String[] encodings) {
-        this.encodings = encodings;
-    }
-
 
     public List<TargetClass> getTargetClassList() {
         return targetClassList;
     }
 
-    public void setTargetClassList(List<TargetClass> targetClassList) {
-        this.targetClassList = targetClassList;
-    }
 
     public String getOutputPath() {
         return outputPath;
@@ -96,7 +139,7 @@ public class TargetProgram {
     public String getSource(String sourceName) {
         if (sourcePath != null && sourceName != null) {
             String path = sourcePath;
-            return ReadFileUtils.readFile(ReadFileUtils.joinDir(path,sourceName));
+            return ReadFileUtils.getSource(ReadFileUtils.joinDir(path, sourceName));
         }
         return null;
 
@@ -106,17 +149,10 @@ public class TargetProgram {
         return programEntry;
     }
 
-    public void setProgramEntry(String programEntry) {
-        this.programEntry = programEntry;
-    }
-
     public String[] getRunningArg() {
         return runningArg;
     }
 
-    public void setRunningArg(String[] runningArg) {
-        this.runningArg = runningArg;
-    }
 
     public String getTestClassPath() {
         return testClassPath;
@@ -138,6 +174,7 @@ public class TargetProgram {
                 ", runningArg=" + Arrays.toString(runningArg) +
                 ", encodings=" + Arrays.toString(encodings) +
                 ", targetClassList=" + targetClassList +
+                ", targetClassList=" + targetFiles +
                 '}';
     }
 }
