@@ -13,19 +13,17 @@ import java.util.List;
  */
 public class TargetProgram {
 
-    private String projectDir = null;
-    private String[] classpathEntries = null;
-    private String sourcePath = null;
-    private String outputPath = null;
-    private String testClassPath = null;
-    private String programEntry = null;
-    private String[] runningArg = null;
-    private String[] encodings = new String[]{"UTF-8"};
+    private TargetConfig tc=null;
     private List<TargetClass> targetClassList = null;
     private List<TargetFile> targetFiles = null;
     private int currentT = 0;
 
+    public TargetProgram(TargetConfig tc) {
+        this.tc = tc;
+    }
+
     public void obtainProgramFiles()  {
+        String sourcePath=tc.getSourcePath();
         ArrayList<File> files = ReadFileUtils.getListFiles(sourcePath);
         List<TargetFile> targetFiles = new ArrayList<TargetFile>();
 
@@ -84,97 +82,99 @@ public class TargetProgram {
         List<String> options = new ArrayList<String>();
         options.add("-classpath");
         StringBuilder classpath = new StringBuilder(".");
-        for (int i = 0; i < classpathEntries.length; i++) {
+        for (int i = 0; i < tc.getClasspathEntries().length; i++) {
             classpath.append(":");
-            classpath.append(classpathEntries[i]);
+            classpath.append(tc.getClasspathEntries()[i]);
         }
         options.add(classpath.toString());
 //        options.add("-processor");
 //        options.add("com.google.java.contract.core.apt.AnnotationProcessor");
         options.add("-g");
         options.add("-d");
-        options.add(outputPath);
+        options.add(tc.getOutputPath());
         return options;
     }
 
-    public String getProjectDir() {
-        return projectDir;
+    public TargetConfig getTc() {
+        return tc;
     }
 
-
-    public String[] getClasspathEntries() {
-        return classpathEntries;
+    public void setTc(TargetConfig tc) {
+        this.tc = tc;
     }
+//    public String getProjectDir() {
+//        return projectDir;
+//    }
+//
+//
+//    public String[] getClasspathEntries() {
+//        return classpathEntries;
+//    }
+//
+//    public void setClasspathEntries(String[] classpathEntries) {
+//        this.classpathEntries = classpathEntries;
+//    }
+//
+//    public String[] getEncodings() {
+//        return encodings;
+//    }
+//
+//
+//    public List<TargetClass> getTargetClassList() {
+//        return targetClassList;
+//    }
+//
+//
+//    public String getOutputPath() {
+//        return tc.getOutputPath();
+//    }
+//
+//    public void setOutputPath(String outputPath) {
+//        this.outputPath = outputPath;
+//    }
+//
+//    public String getSourcePath() {
+//        return sourcePath;
+//    }
+//
+//    public void setSourcePath(String sourcePath) {
+//        this.sourcePath = sourcePath;
+//    }
+//
+//    public String getSource(String sourceName) {
+//        if (sourcePath != null && sourceName != null) {
+//            String path = sourcePath;
+//            return ReadFileUtils.getSource(ReadFileUtils.joinDir(path, sourceName));
+//        }
+//        return null;
+//
+//    }
+//
+//    public String getProgramEntry() {
+//        return programEntry;
+//    }
+//
+//    public String[] getRunningArg() {
+//        return runningArg;
+//    }
+//
+//
+//    public String getTestClassPath() {
+//        return testClassPath;
+//    }
+//
+//    public void setTestClassPath(String testClassPath) {
+//        this.testClassPath = testClassPath;
+//    }
 
-    public void setClasspathEntries(String[] classpathEntries) {
-        this.classpathEntries = classpathEntries;
-    }
-
-    public String[] getEncodings() {
-        return encodings;
-    }
-
-
-    public List<TargetClass> getTargetClassList() {
-        return targetClassList;
-    }
-
-
-    public String getOutputPath() {
-        return outputPath;
-    }
-
-    public void setOutputPath(String outputPath) {
-        this.outputPath = outputPath;
-    }
-
-    public String getSourcePath() {
-        return sourcePath;
-    }
-
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
-    }
-
-    public String getSource(String sourceName) {
-        if (sourcePath != null && sourceName != null) {
-            String path = sourcePath;
-            return ReadFileUtils.getSource(ReadFileUtils.joinDir(path, sourceName));
-        }
-        return null;
-
-    }
-
-    public String getProgramEntry() {
-        return programEntry;
-    }
-
-    public String[] getRunningArg() {
-        return runningArg;
-    }
-
-
-    public String getTestClassPath() {
-        return testClassPath;
-    }
-
-    public void setTestClassPath(String testClassPath) {
-        this.testClassPath = testClassPath;
-    }
 
     @Override
     public String toString() {
         return "TargetProgram{" +
-                "classpathEntries=" + Arrays.toString(classpathEntries) +
-                ", projectDir='" + projectDir + '\'' +
-                ", sourcePath='" + sourcePath + '\'' +
-                ", outputPath='" + outputPath + '\'' +
-                ", testClassPath='" + testClassPath + '\'' +
-                ", programEntry='" + programEntry + '\'' +
-                ", runningArg=" + Arrays.toString(runningArg) +
-                ", encodings=" + Arrays.toString(encodings) +
+                "currentT=" + currentT +
+                ", tc=" + tc +
                 ", targetClassList=" + targetClassList +
-                ", targetClassList=" + targetFiles +
+                ", targetFiles=" + targetFiles +
                 '}';
     }
 }

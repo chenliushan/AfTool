@@ -2,7 +2,8 @@ package polyu_af.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.models.TargetProgram;
+import polyu_af.models.TargetConfig;
+import polyu_af.models.TargetFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,11 +13,12 @@ import java.io.InputStreamReader;
 /**
  * Created by liushanchen on 16/5/6.
  */
-public class ExeTargetRuntime extends ExeTarget{
-    private  Logger logger = LogManager.getLogger();
+public class ExeTargetRuntime extends ExeTarget {
+    private Logger logger = LogManager.getLogger();
+    private TargetFile tf = null;
 
-    public ExeTargetRuntime(TargetProgram tp ) {
-        super(tp);
+    public ExeTargetRuntime(TargetConfig tc) {
+        super(tc);
     }
 
     /**
@@ -24,7 +26,8 @@ public class ExeTargetRuntime extends ExeTarget{
      * in a new thread
      * the log configuration file should be added in the new thread's classpath
      */
-    public void process() {
+    public void process(TargetFile targetFile) {
+        this.tf = targetFile;
         Runtime runtime = Runtime.getRuntime();
         try {
             Process process = runtime.exec(getCommand());
@@ -44,9 +47,9 @@ public class ExeTargetRuntime extends ExeTarget{
         StringBuilder command = new StringBuilder("java -cp .");
         addCp(command);
         addLogLib(command);
-        if(tp.getCurrentTarget()!=null){
+        if (tf != null) {
             getTargetTestE(command);
-        }else{
+        } else {
             getTargetMainEntry(command);
         }
         logger.info("command:" + command.toString());
@@ -54,9 +57,9 @@ public class ExeTargetRuntime extends ExeTarget{
     }
 
     private void addCp(StringBuilder command) {
-        String[] cp = tp.getClasspathEntries();
+        String[] cp = tc.getClasspathEntries();
         command.append(":");
-        command.append(tp.getOutputPath());
+        command.append(tc.getOutputPath());
         for (int i = 0; i < cp.length; i++) {
             command.append(":");
             command.append(cp[i]);
@@ -67,23 +70,23 @@ public class ExeTargetRuntime extends ExeTarget{
     }
 
     private void getTargetMainEntry(StringBuilder command) {
-        if (tp.getProgramEntry() != null) {
+        if (tc.getProgramEntry() != null) {
             command.append(" ");
-            command.append(tp.getProgramEntry());
+            command.append(tc.getProgramEntry());
         } else {
             logger.info("the program entry is null");
         }
-        if (tp.getRunningArg() != null) {
+        if (tc.getRunningArg() != null) {
             command.append(" ");
-            command.append(tp.getRunningArg());
+            command.append(tc.getRunningArg());
         }
     }
 
     private void getTargetTestE(StringBuilder command) {
         command.append(":lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:");
-        command.append(tp.getTestClassPath());//append the test source classpath
+        command.append(tc.getTestClassPath());//append the test source classpath
         command.append(" org.junit.runner.JUnitCore ");
-        command.append(tp.getCurrentTarget().getQualifyFileName()+"Test");//append the [test class name] including the package name
+        command.append(tf.getQualifyFileName() + "Test");//append the [test class name] including the package name
 
     }
 

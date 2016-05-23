@@ -17,52 +17,49 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by liushanchen on 16/3/17.
  */
-public class GetTargetProgram {
-    private static Logger logger = LogManager.getLogger(GetTargetProgram.class.getName());
+public class GetTargetConfig {
+    private static Logger logger = LogManager.getLogger(GetTargetConfig.class.getName());
 
-    private TargetProgram targetProgram = null;
+    private TargetConfig tc = null;
     private String inputPath = null;//the configuration file's path
 
-    public GetTargetProgram(String inputPath) throws NotFoundException {
+    public GetTargetConfig(String inputPath) throws NotFoundException {
         this.inputPath = inputPath;
         getInput();
     }
 
-    public TargetProgram getTargetProgram() {
-        return targetProgram;
+    public TargetConfig getTc() {
+        return tc;
     }
 
-
-    public void saveNewFaultClass(String source) {
-        if (targetProgram != null) {
-            try {
-                String className = targetProgram.getTargetClassList().get(0).getSourceName();
-                int idx = className.lastIndexOf("/");
-                String subPath = className.substring(0, idx);
-                String name = className.substring(idx + 1);
-                Path p = Paths.get(targetProgram.getSourcePath(), subPath + "_af");
-                if (Files.exists(p)) {
-
-                } else {
-                    Files.createDirectory(p);
-                }
-                Files.write(Paths.get(targetProgram.getSourcePath(), subPath + "_af", name), source.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
+//
+//    public void saveNewFaultClass(String source) {
+//        if (tc != null) {
+//            try {
+//                String className = tc.getTargetClassList().get(0).getSourceName();
+//                int idx = className.lastIndexOf("/");
+//                String subPath = className.substring(0, idx);
+//                String name = className.substring(idx + 1);
+//                Path p = Paths.get(tc.getSourcePath(), subPath + "_af");
+//                if (Files.exists(p)) {
+//
+//                } else {
+//                    Files.createDirectory(p);
+//                }
+//                Files.write(Paths.get(tc.getSourcePath(), subPath + "_af", name), source.getBytes());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//
+//    }
 
     /**
      * read the input file and create inputFile object
@@ -73,20 +70,20 @@ public class GetTargetProgram {
         String input = ReadFileUtils.getSource(inputPath);
         if (input.trim() != "" && input != null) {
             Gson gson = new Gson();
-            targetProgram = gson.fromJson(input, TargetProgram.class);
-            if (targetProgram.getProjectDir() != null) {
-                if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
-                    readClasspathI(targetProgram.getProjectDir());
+            tc = gson.fromJson(input, TargetConfig.class);
+            if (tc.getProjectDir() != null) {
+                if (tc.getSourcePath() == null || tc.getClasspathEntries() == null) {
+                    readClasspathI(tc.getProjectDir());
                 }
-                if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
-                    readClasspathE(targetProgram.getProjectDir());
+                if (tc.getSourcePath() == null || tc.getClasspathEntries() == null) {
+                    readClasspathE(tc.getProjectDir());
                     //sometimes the <component> <output> will miss and will turn to default path "out". this problem not solve yet
                 }
             }
-            logger.info("TargetProgram:" + targetProgram.toString());
-            if (targetProgram.getSourcePath() == null || targetProgram.getClasspathEntries() == null) {
-                logger.error("SourcepathEntries: " + targetProgram.getSourcePath());
-                logger.error("ClasspathEntries: " + targetProgram.getClasspathEntries());
+            logger.info("TargetProgram:" + tc.toString());
+            if (tc.getSourcePath() == null || tc.getClasspathEntries() == null) {
+                logger.error("SourcepathEntries: " + tc.getSourcePath());
+                logger.error("ClasspathEntries: " + tc.getClasspathEntries());
                 throw new NotFoundException("Did not get the desire environment.");
             }
 
@@ -123,10 +120,10 @@ public class GetTargetProgram {
 
         }
         if (!classpathEntries.isEmpty()) {
-            targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
+            tc.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
         if (sourcepath != null) {
-            targetProgram.setSourcePath(sourcepath);
+            tc.setSourcePath(sourcepath);
         }
     }
 
@@ -149,10 +146,10 @@ public class GetTargetProgram {
             Element component = (Element) componentList.item(0);
             //get output path
             String opPath = getIOutputPath(component);
-            targetProgram.setOutputPath(imlUrl2Path(path, opPath));
+            tc.setOutputPath(imlUrl2Path(path, opPath));
             //get test clas path
             String testPath=getITestPath(component);
-            targetProgram.setTestClassPath(imlUrl2Path(path, testPath));
+            tc.setTestClassPath(imlUrl2Path(path, testPath));
             //get sourcePath
             String spathNodeValue = getISourcePath(component);
             if (spathNodeValue == null) return;
@@ -163,10 +160,10 @@ public class GetTargetProgram {
             e.printStackTrace();
         }
         if (classpathEntries != null && !classpathEntries.isEmpty()) {
-            targetProgram.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
+            tc.setClasspathEntries(classpathEntries.toArray(new String[classpathEntries.size()]));
         }
         if (sourcepathE != null) {
-            targetProgram.setSourcePath(sourcepathE);
+            tc.setSourcePath(sourcepathE);
         }
 
     }

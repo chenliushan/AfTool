@@ -1,19 +1,20 @@
 package polyu_af.process;
 
-import polyu_af.models.TargetProgram;
+import polyu_af.models.TargetConfig;
+import polyu_af.models.TargetFile;
 
 /**
  * Created by liushanchen on 16/5/19.
  */
 public abstract class ExeTarget {
-    protected TargetProgram tp = null;
+    protected TargetConfig tc = null;
 
 
-    public ExeTarget(TargetProgram tp) {
-        this.tp = tp;
+    public ExeTarget(TargetConfig targetConfig) {
+        this.tc = targetConfig;
     }
 
-    public abstract void process();
+    public abstract void process(TargetFile tf);
 
 
 }

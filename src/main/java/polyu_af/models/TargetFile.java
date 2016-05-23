@@ -12,7 +12,7 @@ public class TargetFile {
     private String packageName = null;//specify the package and the class name
     private String fileName = null;//specify the package and the class name
     private List<FaultUnit> faults = null;
-
+    private List<MethodAccessVars> methodAccessVars=null;
 
 
     public TargetFile(String absoluteDir,String dirSource) {
@@ -76,12 +76,20 @@ public class TargetFile {
         }
         setPackageName(pn);
     }
-    public String getSource(String sourceName) {
+    public String getSource() {
         if (absoluteDir!=null) {
             return ReadFileUtils.getSource(absoluteDir);
         }
         return null;
 
+    }
+
+    public List<MethodAccessVars> getMethodAccessVars() {
+        return methodAccessVars;
+    }
+
+    public void setMethodAccessVars(List<MethodAccessVars> methodAccessVars) {
+        this.methodAccessVars = methodAccessVars;
     }
 
     public String getAbsoluteDir() {

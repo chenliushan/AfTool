@@ -47,6 +47,11 @@ public class MethodAccessVars {
         return paramTypes;
     }
 
+    /**
+     * 获取参数类型的qualified name
+     * @param classPool
+     * @return
+     */
     public List<CtClass> getParams(ClassPool classPool) {
         List<CtClass> ccParamTypes = new ArrayList<CtClass>();
         for (String p : paramTypes) {

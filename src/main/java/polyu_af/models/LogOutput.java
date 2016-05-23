@@ -10,11 +10,15 @@ public class LogOutput {
     }
 
     public String getDeclaration() {
-        return "public Logger logger =org.apache.logging.log4j.LogManager#getLogger(\"AfTool\");\"";
+        return "public static Logger logger =org.apache.logging.log4j.LogManager#getLogger(\"AfTool\");\"";
     }
 
     public String getLineDivider() {
         return "logger.info(\"---------\");";
+    }
+
+    public String getMethodName(String methodName) {
+        return "logger.info(\"" + methodName + "\");";
     }
 
     public String logValStatement(String varName) {

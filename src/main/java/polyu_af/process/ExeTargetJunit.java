@@ -7,6 +7,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import polyu_af.models.TargetConfig;
+import polyu_af.models.TargetFile;
 import polyu_af.models.TargetProgram;
 import polyu_af.utils.ReadFileUtils;
 
@@ -23,18 +25,18 @@ public class ExeTargetJunit extends ExeTarget {
     private Logger logger = LogManager.getLogger();
 
 
-    public ExeTargetJunit(TargetProgram tp) {
-        super(tp);
+    public ExeTargetJunit(TargetConfig tc) {
+        super(tc);
 
     }
 
-    public void process() {
+    public void process(TargetFile tf) {
         ClassLoader loader = new URLClassLoader(newCpUrl());
         JUnitCore core = new JUnitCore();
         core.addListener(new RingingListener());
         Result result = null;
         try {
-            String targetClass=tp.getCurrentTarget().getQualifyFileName();
+            String targetClass=tf.getQualifyFileName();
             result = core.run(loader.loadClass(targetClass+ "Test"));
             logger.info("targetClass:" + loader.loadClass(targetClass + "Test"));
 
@@ -87,12 +89,12 @@ public class ExeTargetJunit extends ExeTarget {
 
 
     private URL[] newCpUrl() {
-        List<String> cps = new ArrayList(Arrays.asList(tp.getClasspathEntries()));
+        List<String> cps = new ArrayList(Arrays.asList(tc.getClasspathEntries()));
         List<URL> cpsUrl = new ArrayList<URL>();
-        if (!cps.contains(tp.getOutputPath())) {
-            cps.add(tp.getOutputPath());
+        if (!cps.contains(tc.getOutputPath())) {
+            cps.add(tc.getOutputPath());
         }
-        cps.add(tp.getTestClassPath());
+        cps.add(tc.getTestClassPath());
         for (String cp : cps) {
             cpsUrl.add(ReadFileUtils.getURL(cp));
         }

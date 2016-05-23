@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.*;
+import polyu_af.process.ExeTarget;
+import polyu_af.process.ExeTargetRuntime;
+import polyu_af.process.MAccessVarVisitor;
 import polyu_af.utils.AstUtils;
 
 import java.util.List;
@@ -18,43 +20,48 @@ public class GlobalProcess {
 
     public static void main(String arg[]) {
         long startTime = System.currentTimeMillis();
-        TargetProgram targetProgram=null;
-        TargetClass targetClass = null;
+        TargetConfig targetConfig = null;
+        TargetProgram targetProgram = null;
+
 
         //read input file
-        GetTargetProgram getTargetProgram =null;
+        GetTargetConfig getTargetConfig = null;
         try {
-            getTargetProgram = new GetTargetProgram(System.getProperty("user.dir") + "/input/InputFile_AfTest_1");
-//            getTargetProgram = new GetTargetProgram(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
+            getTargetConfig = new GetTargetConfig(System.getProperty("user.dir") + "/input/InputFile_AfTest_2");
+//            getTargetConfig = new GetTargetConfig(System.getProperty("user.dir") + "/input/InputFile_Test4Javassist.txt");
         } catch (NotFoundException e) {
             e.printStackTrace();
             return;
         }
-         targetProgram = getTargetProgram.getTargetProgram();
-
-        List<FaultUnit> faultUnitList = null;
-        if (targetProgram != null && targetProgram.getTargetClassList() != null) {
-            targetClass = targetProgram.getTargetClassList().get(0);
+        targetConfig = getTargetConfig.getTc();
+        if (targetConfig != null) {
+            targetProgram = new TargetProgram(targetConfig);
         } else {
             return;
         }
+
+        List<FaultUnit> faultUnitList = null;
+
         //create faultFileAST --root
-        String faultFileSource_ = targetProgram.getSource(targetClass.getSourceName());
-        CompilationUnit root = AstUtils.createResolvedAST(faultFileSource_,
-                targetProgram.getClasspathEntries(), new String[]{targetProgram.getSourcePath()},
-                targetProgram.getEncodings(), targetClass.getSourceName());
+        TargetFile tf = targetProgram.getCurrentTarget();
+        CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
+                targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
+                targetConfig.getEncodings(), targetProgram.getCurrentTarget().getQualifyFileName());
 
         //get accessible variables
 
-        MAccessVarVisitor mvv =new MAccessVarVisitor(root);
+        MAccessVarVisitor mvv = new MAccessVarVisitor(root);
         root.accept(mvv);
-        List<MethodAccessVars> lineLists= mvv.getMethodAccessVars();
-        logger.info("List<MethodAccessVars> : \n"+ lineLists.toString());
-        logger.info("List<MethodAccessVars> -size:"+ lineLists.size());
+        List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
+        logger.info("List<MethodAccessVars> : \n" + methodLineLists.toString());
+        logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
+        tf.setMethodAccessVars(methodLineLists);
 
-        ByteCodeP byteCodeP =new ByteCodeP(targetProgram);
-        byteCodeP.process(lineLists);
+        ByteCodeP byteCodeP = new ByteCodePMethod(targetProgram);
+        byteCodeP.process(tf);
 
+        ExeTarget exeTarget = new ExeTargetRuntime(targetConfig);
+        exeTarget.process(targetProgram.getCurrentTarget());
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -69,8 +76,8 @@ public class GlobalProcess {
 //        ReadFileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
 
-        if (targetClass != null) {
-            faultUnitList = targetClass.getFaults();
+        if (tf != null) {
+            faultUnitList = tf.getFaults();
             if (faultUnitList != null) {
                 for (FaultUnit fu : faultUnitList) {
                     //find fault node in root
@@ -80,7 +87,7 @@ public class GlobalProcess {
 //                    resolveExp.resolveExp();
                     //testing modify the expression
 //                    if (!fu.getExpression().equals("exp")) {
-//                       getTargetProgram.saveNewFaultClass(
+//                       getTargetConfig.saveNewFaultClass(
 //                               AstUtils.parseExpRecordModifications(
 //                                       root, fu.getExpression(), faultFileSource_));
 //
@@ -88,14 +95,14 @@ public class GlobalProcess {
                 }
             }
         }
-        Runtime runtime=Runtime.getRuntime();
-        logger.info("freeMemory:"+runtime.freeMemory()+"; totalMemory:"+runtime.totalMemory());
-        long usedMemory=runtime.totalMemory()-runtime.freeMemory();
-        logger.info("usedMemory:"+usedMemory);
+        Runtime runtime = Runtime.getRuntime();
+        logger.info("freeMemory:" + runtime.freeMemory() + "; totalMemory:" + runtime.totalMemory());
+        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+        logger.info("usedMemory:" + usedMemory);
 
-        long endTime   = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
-        logger.info("totalTime:"+totalTime);
+        logger.info("totalTime:" + totalTime);
 
     }
 }
