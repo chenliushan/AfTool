@@ -1,11 +1,9 @@
 package polyu_af.process;
 
 import org.eclipse.jdt.core.dom.*;
-import polyu_af.GlobalProcess;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
 import polyu_af.models.LineAccessVars;
-import polyu_af.models.MyExp;
-import polyu_af.utils.AstUtils;
+import polyu_af.models.MyExpAst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +13,8 @@ import java.util.Stack;
  * Created by liushanchen on 16/5/12.
  */
 public class LAccessExpVisitor extends LAccessVarVisitor {
-    private Stack<List<MyExp>> currentAccessExp = new Stack<List<MyExp>>();
-    private List<MyExp> allExp = new ArrayList<MyExp>();
+    private Stack<List<MyExpAst>> currentAccessExp = new Stack<List<MyExpAst>>();
+    private List<MyExpAst> allExp = new ArrayList<MyExpAst>();
 
 
     public LAccessExpVisitor(CompilationUnit root) {
@@ -135,9 +133,9 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
 
     private void addExpIntoStack(Expression exp) {
         try {
-            MyExp myExpression = new MyExp(exp);
-            allExp.add(myExpression);
-            currentAccessExp.peek().add(myExpression);
+            MyExpAst myExpressionAst = new MyExpAst(exp);
+            allExp.add(myExpressionAst);
+            currentAccessExp.peek().add(myExpressionAst);
         } catch (NotAcceptExpNodeTypeException e) {
             e.printStackTrace();
         }
@@ -145,21 +143,21 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
 
     private void addAnnExpIntoStack(SingleMemberAnnotation ann) {
         try {
-            MyExp myExpression = new MyExp(ann);
-            allExp.add(myExpression);
-            currentAccessExp.peek().add(myExpression);
+            MyExpAst myExpressionAst = new MyExpAst(ann);
+            allExp.add(myExpressionAst);
+            currentAccessExp.peek().add(myExpressionAst);
         } catch (NotAcceptExpNodeTypeException e) {
             e.printStackTrace();
         }
     }
 
     private void newLayerOutsideMethod() {
-        List<MyExp> formalParameters = new ArrayList<MyExp>();
+        List<MyExpAst> formalParameters = new ArrayList<MyExpAst>();
         currentAccessExp.push(formalParameters);
     }
 
     private void newLayerInMethod() {
-        List<MyExp> formalParameters = new ArrayList<MyExp>();
+        List<MyExpAst> formalParameters = new ArrayList<MyExpAst>();
         formalParameters.addAll(currentAccessExp.peek());
         currentAccessExp.push(formalParameters);
     }

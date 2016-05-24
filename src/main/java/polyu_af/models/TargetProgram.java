@@ -1,11 +1,9 @@
 package polyu_af.models;
 
-import polyu_af.exception.NotFoundException;
-import polyu_af.utils.ReadFileUtils;
+import polyu_af.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,7 +22,7 @@ public class TargetProgram {
 
     public void obtainProgramFiles()  {
         String sourcePath=tc.getSourcePath();
-        ArrayList<File> files = ReadFileUtils.getListFiles(sourcePath);
+        ArrayList<File> files = FileUtils.getListFiles(sourcePath);
         List<TargetFile> targetFiles = new ArrayList<TargetFile>();
 
         for (File f : files) {
@@ -144,7 +142,7 @@ public class TargetProgram {
 //    public String getSource(String sourceName) {
 //        if (sourcePath != null && sourceName != null) {
 //            String path = sourcePath;
-//            return ReadFileUtils.getSource(ReadFileUtils.joinDir(path, sourceName));
+//            return FileUtils.getSource(FileUtils.joinDir(path, sourceName));
 //        }
 //        return null;
 //

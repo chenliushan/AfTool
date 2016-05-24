@@ -1,6 +1,6 @@
 package polyu_af.models;
 
-import polyu_af.utils.ReadFileUtils;
+import polyu_af.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +77,7 @@ public class TargetConfig {
     public String getSource(String sourceName) {
         if (sourcePath != null && sourceName != null) {
             String path = sourcePath;
-            return ReadFileUtils.getSource(ReadFileUtils.joinDir(path, sourceName));
+            return FileUtils.getSource(FileUtils.joinDir(path, sourceName));
         }
         return null;
 

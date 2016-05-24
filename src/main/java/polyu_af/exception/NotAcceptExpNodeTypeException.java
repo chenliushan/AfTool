@@ -5,6 +5,6 @@ package polyu_af.exception;
  */
 public class NotAcceptExpNodeTypeException extends Exception {
     public NotAcceptExpNodeTypeException(String msg) {
-        super("MyExp not accept node type:"+msg);
+        super("MyExpAst not accept node type:"+msg);
     }
 }

@@ -1,6 +1,6 @@
 package polyu_af.models;
 
-import polyu_af.utils.ReadFileUtils;
+import polyu_af.utils.FileUtils;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class TargetFile {
     }
     public String getSource() {
         if (absoluteDir!=null) {
-            return ReadFileUtils.getSource(absoluteDir);
+            return FileUtils.getSource(absoluteDir);
         }
         return null;
 
@@ -99,10 +99,11 @@ public class TargetFile {
     @Override
     public String toString() {
         return "TargetFile{" +
-                "absoluteDir:'" + absoluteDir + '\'' +
-                ", packageName:'" + packageName + '\'' +
-                ", fileName:'" + fileName + '\'' +
-                ", faults:" + faults +
-                '}';
+                "absoluteDir='" + absoluteDir + '\'' +
+                ", packageName='" + packageName + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", faults=" + faults +
+                ", methodAccessVars=" + methodAccessVars +
+                "}\n";
     }
 }

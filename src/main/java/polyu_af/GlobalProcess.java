@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.ExeTarget;
-import polyu_af.process.ExeTargetRuntime;
-import polyu_af.process.MAccessVarVisitor;
+import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
 
 import java.util.List;
@@ -53,15 +51,19 @@ public class GlobalProcess {
         MAccessVarVisitor mvv = new MAccessVarVisitor(root);
         root.accept(mvv);
         List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
+        mvv=null;
+
         logger.info("List<MethodAccessVars> : \n" + methodLineLists.toString());
         logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
         tf.setMethodAccessVars(methodLineLists);
 
-        ByteCodeP byteCodeP = new ByteCodePMethod(targetProgram);
-        byteCodeP.process(tf);
-
-        ExeTarget exeTarget = new ExeTargetRuntime(targetConfig);
-        exeTarget.process(targetProgram.getCurrentTarget());
+        System.out.println("-------------------"+targetProgram.getTargetFiles());
+        polyu_af.utils.FileUtils.outputObj(targetProgram.getTargetFiles());
+//        ByteCodeP byteCodeP = new ByteCodePMethod(targetProgram);
+//        byteCodeP.process(tf);
+//
+//        ExeTarget exeTarget = new ExeTargetRuntime(targetConfig);
+//        exeTarget.process(targetProgram.getCurrentTarget());
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -73,7 +75,7 @@ public class GlobalProcess {
 
 
 //
-//        ReadFileUtils.printMap(AstUtils.astForm);
+//        FileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
 
         if (tf != null) {

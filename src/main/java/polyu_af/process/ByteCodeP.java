@@ -1,8 +1,11 @@
-package polyu_af.models;
+package polyu_af.process;
 
 import javassist.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import polyu_af.models.LogOutput;
+import polyu_af.models.TargetConfig;
+import polyu_af.models.TargetFile;
 import polyu_af.utils.MyJavaAgentLoader;
 
 import javax.tools.JavaCompiler;
@@ -27,7 +30,7 @@ public abstract class ByteCodeP {
         this.tc = targetConfig;
         this.poolParent = getClassPool();
         this.lo = new LogOutput();
-        MyJavaAgentLoader.loadAgent();
+//        MyJavaAgentLoader.loadAgent();
     }
 
     public abstract void process(TargetFile tf);

@@ -9,8 +9,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import polyu_af.models.TargetConfig;
 import polyu_af.models.TargetFile;
-import polyu_af.models.TargetProgram;
-import polyu_af.utils.ReadFileUtils;
+import polyu_af.utils.FileUtils;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -96,7 +95,7 @@ public class ExeTargetJunit extends ExeTarget {
         }
         cps.add(tc.getTestClassPath());
         for (String cp : cps) {
-            cpsUrl.add(ReadFileUtils.getURL(cp));
+            cpsUrl.add(FileUtils.getURL(cp));
         }
         return cpsUrl.toArray(new URL[cps.size()]);
 

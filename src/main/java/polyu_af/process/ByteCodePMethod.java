@@ -1,4 +1,4 @@
-package polyu_af.models;
+package polyu_af.process;
 
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
@@ -6,12 +6,11 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import polyu_af.models.TargetFile;
+import polyu_af.models.TargetProgram;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/5/23.
@@ -43,7 +42,7 @@ public class ByteCodePMethod extends ByteCodeP {
             if (cc != null) {
                 importLogPack(cc);
                 findMethods(cc);
-//                findNestedClass();
+                findNestedClass();
                 rewrite(cc);
 
             }

@@ -1,4 +1,4 @@
-package polyu_af.models;
+package polyu_af.process;
 
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +8,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import polyu_af.exception.NotFoundException;
-import polyu_af.utils.ReadFileUtils;
+import polyu_af.models.TargetConfig;
+import polyu_af.utils.FileUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +68,7 @@ public class GetTargetConfig {
      * @return
      */
     private void getInput() throws NotFoundException {
-        String input = ReadFileUtils.getSource(inputPath);
+        String input = FileUtils.getSource(inputPath);
         if (input.trim() != "" && input != null) {
             Gson gson = new Gson();
             tc = gson.fromJson(input, TargetConfig.class);
@@ -113,7 +114,7 @@ public class GetTargetConfig {
                 }
                 if (sourcepath == null && eElement.getAttribute("kind").equals("src")) {
                     String spE = eElement.getAttribute("path");
-                    sourcepath = ReadFileUtils.joinDir(path, spE);
+                    sourcepath = FileUtils.joinDir(path, spE);
                 }
             }
         } catch (Exception e) {

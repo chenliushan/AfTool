@@ -1,17 +1,15 @@
-package polyu_af.models;
+package polyu_af.process;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtBehavior;
+import javassist.CtClass;
+import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.utils.MyJavaAgentLoader;
+import polyu_af.models.*;
 
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/5/23.
@@ -24,10 +22,10 @@ import java.util.Map;
  * -if the local variable is not initialized just log a string that the variable is not initialized
  */
 public class ByteCodePVars extends ByteCodeP {
-    private  Logger logger = LogManager.getLogger();
+    private Logger logger = LogManager.getLogger();
     private boolean isNestedMethod = false;
-    private TargetFile tf=null;
-    private CtClass cc =null;
+    private TargetFile tf = null;
+    private CtClass cc = null;
 
     public ByteCodePVars(TargetProgram targetProgram) {
         super(targetProgram.getTc());
@@ -37,11 +35,11 @@ public class ByteCodePVars extends ByteCodeP {
      * use process(String target) instead.
      */
     public void process(TargetFile targetFile) {
-        this.tf=targetFile;
+        this.tf = targetFile;
         if (tc != null && tf != null) {
             compileTarget(tf.getAbsoluteDir());
-            cc=findTargetClass();
-            if(cc!=null){
+            cc = findTargetClass();
+            if (cc != null) {
                 importLogPack(cc);
                 //For every method in the list
                 forMethods(tf.getMethodAccessVars());
@@ -52,6 +50,7 @@ public class ByteCodePVars extends ByteCodeP {
 
     /**
      * find target class
+     *
      * @return CtClass
      */
     private CtClass findTargetClass() {
@@ -68,7 +67,7 @@ public class ByteCodePVars extends ByteCodeP {
     /**
      * rewrite the bytecode file
      */
-    private void rewrite(CtClass ctClass){
+    private void rewrite(CtClass ctClass) {
         try {
             ctClass.writeFile(tc.getOutputPath());
         } catch (CannotCompileException e) {
@@ -78,7 +77,7 @@ public class ByteCodePVars extends ByteCodeP {
         }
     }
 
-    private void forMethods( List<MethodAccessVars> accessVar4MethodList) {
+    private void forMethods(List<MethodAccessVars> accessVar4MethodList) {
         for (MethodAccessVars methodAccessVar : accessVar4MethodList) {
             isNestedMethod = false;
             //find the method in the target bytecode file
@@ -159,17 +158,18 @@ public class ByteCodePVars extends ByteCodeP {
         for (LineAccessVars accessVars : varsList) {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), lo.getLineDivider());
-                for (Map.Entry<String, MyExp> var : accessVars.getVars().entrySet()) {
+
+                for (MyExp var : accessVars.getVarsList()) {
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), lo.logValStatement(var.getValue().getAstNodeVar()));
+                        mainMethod.insertAt(accessVars.getLocation(), lo.logValStatement(var.getExpVar()));
                     } catch (CannotCompileException e) {
-                        mainMethod.insertAt(accessVars.getLocation(), lo.logNInitStatement(var.getValue().getAstNodeVar()));
+                        mainMethod.insertAt(accessVars.getLocation(), lo.logNInitStatement(var.getExpVar()));
                         logger.error("CannotCompileException: location:" + accessVars.getLocation() + "var:" + var);
                     }
 
                 }
             } catch (CannotCompileException e) {
-                logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVars());
+                logger.error("location:" + accessVars.getLocation() + "vars:" + accessVars.getVarsList());
                 e.printStackTrace();
             }
         }
@@ -187,17 +187,18 @@ public class ByteCodePVars extends ByteCodeP {
             try {
                 mainMethod.insertAt(accessVars.getLocation(), lo.getLineDivider());
                 //for every var that is accessible in the line
-                for (Map.Entry<String, MyExp> var : accessVars.getVars().entrySet()) {
+                for (MyExp var : accessVars.getVarsList()) {
+
                     try {
-                        mainMethod.insertAt(accessVars.getLocation(), lo.logConStatement(var.getValue().getAstNodeVar(), tf.getQualifyFileName()));
+                        mainMethod.insertAt(accessVars.getLocation(), lo.logConStatement(var.getExpVar(), tf.getQualifyFileName()));
                     } catch (CannotCompileException e) {
                         try {
-                            mainMethod.insertAt(accessVars.getLocation(), lo.logValStatement(var.getValue().getAstNodeVar()));
+                            mainMethod.insertAt(accessVars.getLocation(), lo.logValStatement(var.getExpVar()));
                         } catch (CannotCompileException e1) {
-                            mainMethod.insertAt(accessVars.getLocation(), lo.logNInitStatement(var.getValue().getAstNodeVar()));
+                            mainMethod.insertAt(accessVars.getLocation(), lo.logNInitStatement(var.getExpVar()));
                             logger.error(" Nested CannotCompileException: location:"
                                     + accessVars.getLocation() + "var:"
-                                    + tf.getQualifyFileName() + "." + var.getValue().getAstNodeVar());
+                                    + tf.getQualifyFileName() + "." + var.getExpVar());
                         }
                     }
                 }
