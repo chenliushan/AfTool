@@ -114,8 +114,18 @@ public class MyExpAst {
             return type.getBinaryName();
         }
     }
+    public static String getTypeName(ITypeBinding type) {
+        if(type==null){
+            return null;
+        }
+        if (type.isPrimitive()) {
+            return type.getQualifiedName();
+        } else {
+            return type.getBinaryName();
+        }
+    }
     public MyExp getME(){
-        return new MyExp(getType(),getAstNodeVar());
+        return new MyExp(getTypeName(getType()),getAstNodeVar());
     }
 
 

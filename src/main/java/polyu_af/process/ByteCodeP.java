@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import polyu_af.models.LogOutput;
 import polyu_af.models.TargetConfig;
 import polyu_af.models.TargetFile;
-import polyu_af.utils.MyJavaAgentLoader;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -17,7 +16,6 @@ import java.util.List;
 
 /**
  * Created by liushanchen on 16/5/23.
- *
  */
 public abstract class ByteCodeP {
     private Logger logger = LogManager.getLogger();
@@ -34,6 +32,7 @@ public abstract class ByteCodeP {
     }
 
     public abstract void process(TargetFile tf);
+
     /**
      * get the targetClassPool that contain the target classpath
      *
@@ -91,7 +90,8 @@ public abstract class ByteCodeP {
             e.printStackTrace();
         }
     }
-     protected void declareLogger(CtClass cc) {
+
+    protected void declareLogger(CtClass cc) {
         try {
             CtField field = CtField.make(lo.getDeclaration(), cc);
             cc.addField(field);
@@ -99,7 +99,6 @@ public abstract class ByteCodeP {
             e.printStackTrace();
         }
     }
-
 
 
 }
