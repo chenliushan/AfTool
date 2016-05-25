@@ -19,6 +19,11 @@ public class TargetFile {
         this.absoluteDir=absoluteDir;
         dividePackageAndFile(new StringBuilder(dirSource));
     }
+    public TargetFile(String absoluteDir,String pn,String fn) {
+        this.absoluteDir=absoluteDir;
+        this.packageName=pn;
+        this.fileName=fn;
+    }
 
 
     public List<FaultUnit> getFaults() {
@@ -41,8 +46,12 @@ public class TargetFile {
         return fileName + ".class";
     }
 
+
     public String getQualifyFileName() {
         return packageName + "." + fileName;
+    }
+    public String getDirAndFileName() {
+        return getPackageDir() + fileName;
     }
 
     private void setFileName(String fileName) {
@@ -105,5 +114,12 @@ public class TargetFile {
                 ", faults=" + faults +
                 ", methodAccessVars=" + methodAccessVars +
                 "}\n";
+    }
+    public static class TfPara{
+        public static final String ABSOLUTE_DIR="absoluteDir";
+        public static final String PACKAGE_NAME="packageName";
+        public static final String FILE_NAME="fileName";
+        public static final String FAULTS="faults";
+        public static final String METHOD_ACCESS_VARS="methodAccessVars";
     }
 }

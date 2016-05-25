@@ -7,16 +7,16 @@ import polyu_af.exception.NotAcceptExpNodeTypeException;
  * Created by liushanchen on 16/5/16.
  */
 public class MyExp {
-    private ITypeBinding type = null;
+    private String type = null;
     private String expVar=null;
 
     public MyExp(ITypeBinding type, String expVar) {
-        this.type = type;
+        this.type = getTypeName(type);
         this.expVar = expVar;
     }
 
     public String getNodeString() {
-        return getTypeName()+" "+expVar;
+        return type+" "+expVar;
     }
 
     public String getExpVar() {
@@ -24,15 +24,11 @@ public class MyExp {
     }
 
 
-    public ITypeBinding getType() {
+    public String getType() {
         return type;
     }
-    public boolean isPrimitive() {
-        return type.isPrimitive();
-    }
 
-    public String getTypeName() {
-        ITypeBinding type = getType();
+    public static String getTypeName(ITypeBinding type) {
         if(type==null){
             return null;
         }
@@ -47,7 +43,11 @@ public class MyExp {
     public String toString() {
         return "MyExp{" +
                 "expVar='" + expVar + '\'' +
-                ", type=" + getTypeName() +
+                ", type=" + type +
                 "}\n";
+    }
+    public static class MePara{
+        public static final String TYPE="type";
+        public static final String EXP_VAR="expVar";
     }
 }

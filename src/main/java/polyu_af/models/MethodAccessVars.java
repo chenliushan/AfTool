@@ -13,7 +13,7 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class MethodAccessVars {
-    private Logger logger = LogManager.getLogger();
+//    private Logger logger = LogManager.getLogger();
 
     private String methodName;
     private List<String> paramTypes;
@@ -59,7 +59,6 @@ public class MethodAccessVars {
                 CtClass ccp = classPool.getCtClass(p);
                 ccParamTypes.add(ccp);
             } catch (NotFoundException e) {
-                logger.error("p:" + p);
                 e.printStackTrace();
             }
         }
@@ -79,5 +78,10 @@ public class MethodAccessVars {
                 ", paramTypes=" + paramTypes +
                 ", varsList=" + varsList +
                 '}';
+    }
+    public static class MavPara{
+        public static final String METHOD_NAME="methodName";
+        public static final String PARAM_TYPES="paramTypes";
+        public static final String VARS_LIST="varsList";
     }
 }

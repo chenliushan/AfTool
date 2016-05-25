@@ -7,7 +7,9 @@ import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
 import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
+import polyu_af.utils.FileUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,8 +59,9 @@ public class GlobalProcess {
         logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
         tf.setMethodAccessVars(methodLineLists);
 
-        System.out.println("-------------------"+targetProgram.getTargetFiles());
-        polyu_af.utils.FileUtils.outputObj(targetProgram.getTargetFiles());
+        polyu_af.utils.FileUtils.outputTfList(targetProgram.getTargetFiles());
+        List<TargetFile> newTfList=FileUtils.json2Obj();
+
 //        ByteCodeP byteCodeP = new ByteCodePMethod(targetProgram);
 //        byteCodeP.process(tf);
 //

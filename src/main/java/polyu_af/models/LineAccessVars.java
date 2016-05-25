@@ -1,20 +1,19 @@
 package polyu_af.models;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import polyu_af.utils.AstUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liushanchen on 16/5/4.
  */
 public class LineAccessVars {
-    private static Logger logger = LogManager.getLogger();
+//    private static Logger logger = LogManager.getLogger();
 
     private int location;
     private List<MyExp> varsList;
@@ -31,11 +30,11 @@ public class LineAccessVars {
     }
 
 
-//    public void addVar(List<MyExp> vars) {
+    //    public void addVar(List<MyExp> vars) {
 //        this.varsList.addAll(vars);
 //    }
     public void addVar(List<MyExpAst> vars) {
-        for(MyExpAst mea:vars){
+        for (MyExpAst mea : vars) {
             this.varsList.add(mea.getME());
         }
     }
@@ -58,6 +57,7 @@ public class LineAccessVars {
 
     /**
      * if the exp is valid in line then add this exp in this line
+     *
      * @param myExpAstList
      * @return
      */
@@ -69,7 +69,7 @@ public class LineAccessVars {
                 case ASTNode.SINGLE_MEMBER_ANNOTATION:
                     String smaValue = me.getAstNodeVar();
                     Expression expAst = AstUtils.createExpAST(smaValue);
-                    if(expAst!=null &&checkExpInType(expAst)){
+                    if (expAst != null && checkExpInType(expAst)) {
                         addVar(me.getME());
                     }
                     break;
@@ -84,7 +84,6 @@ public class LineAccessVars {
 
                     break;
                 default:
-                    logger.error("no match type:" + astNode.toString());
                     break;
             }
 
@@ -96,8 +95,8 @@ public class LineAccessVars {
 
     private boolean checkExpInString(String e) {
 
-        for(MyExp me:varsList){
-            if(me.getExpVar().equals(e)){
+        for (MyExp me : varsList) {
+            if (me.getExpVar().equals(e)) {
                 return true;
             }
         }
@@ -118,10 +117,13 @@ public class LineAccessVars {
         }
         //if there is exp in same type and value?
         if (e.resolveTypeBinding() != null) {
-            for (MyExp me:varsList) {
+            for (MyExp me : varsList) {
                 if (me.getType() != null) {
-                    if (me.getType().getBinaryName().equals(e.resolveTypeBinding().getBinaryName())
+                    if ((me.getType().equals(e.resolveTypeBinding().getBinaryName()) ||
+                            me.getType().equals(e.resolveTypeBinding().getBinaryName()))
                             && me.getExpVar().equals(e.toString())) {
+//                        if (me.getType().getBinaryName().equals(e.resolveTypeBinding().getBinaryName())
+//                                && me.getExpVar().equals(e.toString())) {
                         return true;
                     }
                 } else {
@@ -134,5 +136,9 @@ public class LineAccessVars {
         return false;
     }
 
+    public static class LavPara {
+        public static final String LOCATION = "location";
+        public static final String VARS_LIST = "varsList";
+    }
 
 }

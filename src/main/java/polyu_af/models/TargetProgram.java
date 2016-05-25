@@ -12,7 +12,6 @@ import java.util.List;
 public class TargetProgram {
 
     private TargetConfig tc=null;
-    private List<TargetClass> targetClassList = null;
     private List<TargetFile> targetFiles = null;
     private int currentT = 0;
 
@@ -100,6 +99,7 @@ public class TargetProgram {
     public void setTc(TargetConfig tc) {
         this.tc = tc;
     }
+
 //    public String getProjectDir() {
 //        return projectDir;
 //    }
@@ -171,7 +171,6 @@ public class TargetProgram {
         return "TargetProgram{" +
                 "currentT=" + currentT +
                 ", tc=" + tc +
-                ", targetClassList=" + targetClassList +
                 ", targetFiles=" + targetFiles +
                 '}';
     }
