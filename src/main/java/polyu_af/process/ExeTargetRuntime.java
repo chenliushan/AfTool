@@ -105,7 +105,7 @@ public class ExeTargetRuntime extends ExeTarget {
         command.append("/lib/log4j-core-2.5.jar");
         command.append(":");
         command.append(System.getProperty("user.dir"));
-        command.append("/logs");
+        command.append("/src/main/resources");
     }
 
     private void getProcessOutput(InputStream is) {

@@ -1,4 +1,4 @@
-package polyu_af.process;
+package polyu_af.visitors;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;

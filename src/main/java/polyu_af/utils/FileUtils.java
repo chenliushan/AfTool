@@ -42,7 +42,7 @@ public class FileUtils {
 //                .create();
         Gson gson=new Gson();
         String jsonObj = gson.toJson(obj);
-        System.out.println("jsonObj:" + jsonObj);
+//        System.out.println("jsonObj:" + jsonObj);
         writeFile(jsonObj,path);
     }
 

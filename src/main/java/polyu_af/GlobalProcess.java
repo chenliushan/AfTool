@@ -7,9 +7,8 @@ import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
 import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
-import polyu_af.utils.FileUtils;
+import polyu_af.visitors.MAccessVarVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,13 +59,9 @@ public class GlobalProcess {
         tf.setMethodAccessVars(methodLineLists);
 
         polyu_af.utils.FileUtils.outputTfList(targetProgram.getTargetFiles());
-        List<TargetFile> newTfList=FileUtils.json2Obj();
-
-//        ByteCodeP byteCodeP = new ByteCodePMethod(targetProgram);
-//        byteCodeP.process(tf);
 //
-//        ExeTarget exeTarget = new ExeTargetRuntime(targetConfig);
-//        exeTarget.process(targetProgram.getCurrentTarget());
+        ExeTarget exeTarget = new ExeTargetRuntime(targetConfig);
+        exeTarget.process(targetProgram.getCurrentTarget());
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));

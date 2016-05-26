@@ -6,7 +6,7 @@
 .gradle
 out
 build
-logs/targetLog.log
+logs
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -15,7 +15,8 @@ logs/targetLog.log
 
 *.war
 *.ear
-
+*/.DS_Store
+.DS_Store
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 

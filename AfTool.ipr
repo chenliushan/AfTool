@@ -11,6 +11,7 @@
       <entry name="!?*.groovy"/>
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true"/>
+    <bytecodeTargetLevel target="1.8"/>
   </component>
   <component name="CopyrightManager" default="">
     <module2copyright/>

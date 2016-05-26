@@ -39,29 +39,6 @@ public class GetTargetConfig {
         return tc;
     }
 
-//
-//    public void saveNewFaultClass(String source) {
-//        if (tc != null) {
-//            try {
-//                String className = tc.getTargetClassList().get(0).getSourceName();
-//                int idx = className.lastIndexOf("/");
-//                String subPath = className.substring(0, idx);
-//                String name = className.substring(idx + 1);
-//                Path p = Paths.get(tc.getSourcePath(), subPath + "_af");
-//                if (Files.exists(p)) {
-//
-//                } else {
-//                    Files.createDirectory(p);
-//                }
-//                Files.write(Paths.get(tc.getSourcePath(), subPath + "_af", name), source.getBytes());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//
-//    }
-
     /**
      * read the input file and create inputFile object
      *
