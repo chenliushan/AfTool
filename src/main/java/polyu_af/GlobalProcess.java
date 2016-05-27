@@ -53,9 +53,8 @@ public class GlobalProcess {
         root.accept(mvv);
         List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
         mvv=null;
-
-        logger.info("List<MethodAccessVars> : \n" + methodLineLists.toString());
-        logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
+//        logger.info("List<MethodAccessVars> : \n" + methodLineLists.toString());
+//        logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
         tf.setMethodAccessVars(methodLineLists);
 
         polyu_af.utils.FileUtils.outputTfList(targetProgram.getTargetFiles());

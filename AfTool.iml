@@ -69,6 +69,24 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/MLogAgent.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/MyJunit.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -151,6 +169,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/org.eclipse.text_3.5.300.v20130515-1451.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/VarLogAgent.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>

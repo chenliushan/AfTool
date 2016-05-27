@@ -2,6 +2,7 @@ package polyu_af.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import polyu_af.models.ExeCommand;
 import polyu_af.models.TargetConfig;
 import polyu_af.models.TargetFile;
 
@@ -29,8 +30,13 @@ public class ExeTargetRuntime extends ExeTarget {
     public void process(TargetFile targetFile) {
         this.tf = targetFile;
         Runtime runtime = Runtime.getRuntime();
+        ExeCommand exeCommand=new ExeCommand(tc);
+//        String command=exeCommand.getMLogAgCommand(tf.getQualifyFileName());
+        String command=exeCommand.getVarLogAgCommand(tf.getQualifyFileName());
+        System.out.println("command:"+command);
+
         try {
-            Process process = runtime.exec(getCommand());
+            Process process = runtime.exec(command);
             getProcessOutput(process.getInputStream());
             getProcessOutput(process.getErrorStream());
             int exitValue = process.waitFor();
@@ -43,70 +49,93 @@ public class ExeTargetRuntime extends ExeTarget {
         }
     }
 
-    private String getCommand() {
-        StringBuilder command = new StringBuilder("java -cp .");
-        addCp(command);
-        addLogLib(command);
-        if (tf != null) {
-            getTargetTestE(command);
-        } else {
-            getTargetMainEntry(command);
-        }
-        logger.info("command:" + command.toString());
-        return command.toString();
-    }
-
-    private void addCp(StringBuilder command) {
-        String[] cp = tc.getClasspathEntries();
-        command.append(":");
-        command.append(tc.getOutputPath());
-        for (int i = 0; i < cp.length; i++) {
-            command.append(":");
-            command.append(cp[i]);
-            if (cp[i].contains("cofoja")) {
-                command.insert(4, " -javaagent:" + cp[i]);
-            }
-        }
-    }
-
-    private void getTargetMainEntry(StringBuilder command) {
-        if (tc.getProgramEntry() != null) {
-            command.append(" ");
-            command.append(tc.getProgramEntry());
-        } else {
-            logger.info("the program entry is null");
-        }
-        if (tc.getRunningArg() != null) {
-            command.append(" ");
-            command.append(tc.getRunningArg());
-        }
-    }
-
-    private void getTargetTestE(StringBuilder command) {
-        command.append(":lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:");
-        command.append(tc.getTestClassPath());//append the test source classpath
-        command.append(" org.junit.runner.JUnitCore ");
-        command.append(tf.getQualifyFileName() + "Test");//append the [test class name] including the package name
-
-    }
-
-    /**
-     * add the log4j2 configuration file in command classpath
-     * this method should be called after append classpath
-     *
-     * @param command
-     */
-    private void addLogLib(StringBuilder command) {
-        command.append(":");
-        command.append(System.getProperty("user.dir"));
-        command.append("/lib/log4j-api-2.5.jar");
-        command.append(":");
-        command.append(System.getProperty("user.dir"));
-        command.append("/lib/log4j-core-2.5.jar");
-        command.append(":");
-        command.append(System.getProperty("user.dir"));
-        command.append("/src/main/resources");
-    }
+//    private String getCommand() {
+//        StringBuilder command = new StringBuilder("java -cp .");
+//        addCp(command);
+//        addLogLib(command);
+//        if (tf != null) {
+//            commandTgTestClass(command);
+//        } else {
+//            commandTgMainEntry(command);
+//        }
+//        logger.info("command:" + command.toString());
+//        return command.toString();
+//    }
+//
+//    private void addCp(StringBuilder command) {
+//        String[] cp = tc.getClasspathEntries();
+//        command.append(":");
+//        command.append(tc.getOutputPath());
+//        for (int i = 0; i < cp.length; i++) {
+//            command.append(":");
+//            command.append(cp[i]);
+//            if (cp[i].contains("cofoja")) {
+//                command.insert(4, " -javaagent:" + cp[i]);
+//            }
+//        }
+//    }
+//
+//    private void addMlogAgent(StringBuilder command) {
+//        StringBuilder sb = new StringBuilder(" -javaagent:lib/MLogAgent.jar=");
+//        sb.append(tc.getSourcePath());
+//        sb.append(" ");
+//        command.insert(4, sb);
+//    }
+//
+//    private void addVarlogAgent(StringBuilder command) {
+//        StringBuilder sb = new StringBuilder(" -javaagent:lib/VarLogAgent.jar=");
+//        sb.append(tc.getSourcePath());
+//        sb.append(" ");
+//        command.insert(4, sb);
+//    }
+//
+//    private void commandTgMainEntry(StringBuilder command) {
+//        if (tc.getProgramEntry() != null) {
+//            command.append(" ");
+//            command.append(tc.getProgramEntry());
+//        } else {
+//            logger.info("the program entry is null");
+//        }
+//        if (tc.getRunningArg() != null) {
+//            command.append(" ");
+//            command.append(tc.getRunningArg());
+//        }
+//    }
+//
+//    private void commandTgTestClass(StringBuilder command) {
+//        command.append(tc.getTestClassPath());//append the test source classpath
+//        command.append(":lib/junit-4.11.jar:lib/MyJunit.jar:lib/hamcrest-core-1.3.jar:");
+//        command.append(" polyu_af.MyJunitCore ");
+//        command.append(tf.getQualifyFileName() + "Test");//append the [test class name] including the package name
+//
+//    }
+//
+//    private void commandTfTestMethod(StringBuilder command, String methodName) {
+//        command.append(tc.getTestClassPath());//append the test source classpath
+//        command.append(":lib/junit-4.11.jar:lib/MyJunit.jar:lib/hamcrest-core-1.3.jar:");
+//        command.append(" polyu_af.MyJunitCore ");
+//        command.append(tf.getQualifyFileName() + "Test#" + methodName);//append the [test class name] including the package name
+//
+//    }
+//
+//    /**
+//     * add the log4j2 configuration file in command classpath
+//     * this method should be called after append classpath
+//     *
+//     * @param command
+//     */
+//    private void addLogLib(StringBuilder command) {
+//        command.append(":");
+//        command.append(System.getProperty("user.dir"));
+//        command.append("/lib/log4j-api-2.5.jar");
+//        command.append(":");
+//        command.append(System.getProperty("user.dir"));
+//        command.append("/lib/log4j-core-2.5.jar");
+//        command.append(":");
+//        //add log4j.xml into classpath
+//        command.append(System.getProperty("user.dir"));
+//        command.append("/src/main/resources");
+//    }
 
     private void getProcessOutput(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
