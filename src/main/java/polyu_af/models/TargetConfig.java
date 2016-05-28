@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class TargetConfig {
     private String projectDir = null;
-    private String rootPackage = null;
+    private String[] rootPackage = null;
     private String[] classpathEntries = null;
     private String sourcePath = null;
     private String outputPath = null;
@@ -44,11 +44,11 @@ public class TargetConfig {
         return options;
     }
 
-    public String getRootPackage() {
+    public String[] getRootPackage() {
         return rootPackage;
     }
 
-    public void setRootPackage(String rootPackage) {
+    public void setRootPackage(String[] rootPackage) {
         this.rootPackage = rootPackage;
     }
 

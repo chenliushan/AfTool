@@ -100,7 +100,7 @@ public class ExeCommand {
         addCp(command);
         addJavassistCp(command);
         addAfToolCp(command);
-        addGsonCp(command);
+
         return command;
     }
 
@@ -116,29 +116,46 @@ public class ExeCommand {
             }
         }
         addLogLib(command);
+        addGsonCp(command);
     }
+
     private void addJavassistCp(StringBuilder command) {
         command.append(":lib/javassist.jar");
     }
+
     private void addAfToolCp(StringBuilder command) {
         command.append(":build/classes/main");
     }
+
     private void addGsonCp(StringBuilder command) {
         command.append(":lib/gson-2.5.jar");
     }
 
+    private String getRootPackages() {
+        String[] rp = tc.getRootPackage();
+        StringBuilder rpsb = new StringBuilder("");
+        for (int i = 0; i < rp.length; i++) {
+            rpsb.append(rp[i]);
+            rpsb.append(",");
+        }
+        if (rpsb.toString().endsWith(",")) {
+            rpsb.deleteCharAt(rpsb.length() - 1);
+        }
+        return rpsb.toString();
+    }
+
     private void addMLogAgent(StringBuilder command) {
         StringBuilder sb = new StringBuilder(" -javaagent:lib/MLogAgent.jar=");
-//        sb.append(tc.getSourcePath());
-        sb.append("polyu_af");
+        sb.append(getRootPackages());
+//        sb.append("polyu_af");
         sb.append(" ");
         command.insert(4, sb);
     }
 
     private void addVarLogAgent(StringBuilder command) {
         StringBuilder sb = new StringBuilder(" -javaagent:lib/VarLogAgent.jar=");
-//        sb.append(tc.getSourcePath());
-        sb.append("polyu_af");
+        sb.append(getRootPackages());
+//        sb.append("polyu_af");
         sb.append(" ");
         command.insert(4, sb);
     }
