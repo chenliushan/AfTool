@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
 import polyu_af.process.AnalyzeMLog;
+import polyu_af.process.AnalyzeVarLog;
 import polyu_af.process.ExeTargetRuntime;
 import polyu_af.process.GetTargetConfig;
 import polyu_af.utils.AstUtils;
@@ -26,7 +27,7 @@ public class GlobalProcess {
         TargetConfig targetConfig = null;
         TargetProgram targetProgram = null;
 
-        /* read input file */
+        /****************************Get target program's configuration *********************************/
         GetTargetConfig getTargetConfig = null;
         try {
             getTargetConfig = new GetTargetConfig(System.getProperty("user.dir") + "/input/InputFile_AfTest_2");
@@ -41,11 +42,10 @@ public class GlobalProcess {
         } else {
             return;
         }
-
         /****************************Run all test with MLogAgent*********************************/
         AbsExeCommand exeMLogAg = new ExeMLogAgCommand(targetConfig);
-        String mLogAgCommand = exeMLogAg.testClass(targetProgram.getTargetTestsClasses());
-        ExeTargetRuntime.process(mLogAgCommand);
+        ExeTargetRuntime.process(exeMLogAg.testClass(targetProgram.getTargetTestsClasses()));
+        exeMLogAg=null;
         /****************************Analyse of MJR log finding fail tests*********************************/
         List<TestCluster> testClusters = FileUtils.json2TestClusterList();
         List<TestUnit> allFailures = new ArrayList<TestUnit>();
@@ -55,7 +55,7 @@ public class GlobalProcess {
             }
         }
         testClusters = null;
-        /****************************Analysis of M log finding related class*********************************/
+        /****************************Analysis of MLog & finding related class*********************************/
         List<String> relatedClass = null;
         if (allFailures.size() > 0) {
             AnalyzeMLog analyzeMLog = new AnalyzeMLog();
@@ -64,8 +64,9 @@ public class GlobalProcess {
             logger.info("mLogAnalyResults:" + relatedClass);
         }
         /****************************Analysis of the AST of the related class*********************************/
-        /* create faultFileAST --root */
+        /* analyze related classes */
         for (String qname : relatedClass) {
+            /* create faultFile's AST */
             TargetFile tf = targetProgram.getTarget(qname);
             if (tf != null) {
                 CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
@@ -82,11 +83,13 @@ public class GlobalProcess {
         /* out put first step (AST analysis) results */
         FileUtils.outputTfList(targetProgram.getTargetSources());
         /****************************Run tests with VarLogAgent*********************************/
-//        ExeCommand exeCommand = new ExeCommand(targetConfig);
-//        String command=exeCommand.getMLogAgCommand(tf.getQualifyFileName());
-//        ExeTargetRuntime.process(command);
+        AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
+        ExeTargetRuntime.process(exeVarLogAg.testFailClass(allFailures));
+        exeVarLogAg=null;
         /****************************Analysis of the Var log*********************************/
-
+        AnalyzeVarLog varLog=new AnalyzeVarLog(targetProgram.getTargetSources());
+        List<LineState> lsList= varLog.analyze();
+        logger.info("List<LineState>:"+lsList);
         /****************************Finding fault location and status*********************************/
 
         //build expression with accessible variables

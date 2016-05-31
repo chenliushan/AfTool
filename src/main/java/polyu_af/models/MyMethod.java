@@ -44,6 +44,21 @@ public class MyMethod {
     public String getMethodName() {
         return methodName;
     }
+    public String getLongName() {
+        StringBuilder sb=new StringBuilder(methodName);
+        sb.append("(");
+        for(String p:paramTypes){
+            sb.append(p);
+            sb.append(",");
+        }
+        if(sb.toString().endsWith(",")){
+            sb.deleteCharAt(sb.length()-1);
+        }
+
+        sb.append(")");
+        System.out.println("MyMethod.getLongName:"+sb.toString());
+        return sb.toString();
+    }
 
     public List<LineAccessVars> getVarsList() {
         return varsList;

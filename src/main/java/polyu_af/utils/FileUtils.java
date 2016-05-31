@@ -146,6 +146,7 @@ public class FileUtils {
         String text;
         try {
             while ((text = input.readLine()) != null){
+                if(text=="\n"||text.length()==0){continue;}
                 TestCluster cluster = gson.fromJson(text, new TypeToken<TestCluster>() {}.getType());
                 testClusters.add(cluster);
             }

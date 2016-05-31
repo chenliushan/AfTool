@@ -2,6 +2,7 @@ package polyu_af.models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import polyu_af.TestUnit;
 
 import java.util.List;
 
@@ -124,6 +125,16 @@ public abstract class AbsExeCommand {
         for (TargetFile tt : targetTests) {
             tfNames.append(" ");
             tfNames.append(tt.getQualifyFileName());
+        }
+        command.append(tfNames);
+        return command.toString();
+    }
+    public String testFailClass(List<TestUnit> allFailures) {
+        addMJTestCp();
+        StringBuilder tfNames = new StringBuilder();
+        for (TestUnit tt : allFailures) {
+            tfNames.append(" ");
+            tfNames.append(tt.getQualifyName());
         }
         command.append(tfNames);
         return command.toString();
