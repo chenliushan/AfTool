@@ -4,7 +4,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import polyu_af.models.LineAccessVars;
-import polyu_af.models.MethodAccessVars;
+import polyu_af.models.MyMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class MAccessVarVisitor extends LAccessExpVisitor {
-    private List<MethodAccessVars> methodAccessVars = new ArrayList<MethodAccessVars>();
-    private MethodAccessVars accessVar4Method;
+    private List<MyMethod> myMethodAccessVars = new ArrayList<MyMethod>();
+    private MyMethod accessVar4Method;
     private List<LineAccessVars> accesVarsListM;
 
 
@@ -25,7 +25,7 @@ public class MAccessVarVisitor extends LAccessExpVisitor {
     @Override
     public final boolean visit(final MethodDeclaration node) {
 
-        accessVar4Method = new MethodAccessVars(node.getName().toString());
+        accessVar4Method = new MyMethod(node.getName().toString());
 
         for (Object o : node.parameters()) {
             SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
@@ -45,7 +45,7 @@ public class MAccessVarVisitor extends LAccessExpVisitor {
     public final void endVisit(final MethodDeclaration node) {
         super.endVisit(node);
         accessVar4Method.addLine(accesVarsListM);
-        methodAccessVars.add(accessVar4Method);
+        myMethodAccessVars.add(accessVar4Method);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MAccessVarVisitor extends LAccessExpVisitor {
         accesVarsListM.add(super.accessVars4LineList.get(accessVars4LineList.size() - 1));
     }
 
-    public List<MethodAccessVars> getMethodAccessVars() {
-        return methodAccessVars;
+    public List<MyMethod> getMyMethodAccessVars() {
+        return myMethodAccessVars;
     }
 }

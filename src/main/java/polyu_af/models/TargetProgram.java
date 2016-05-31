@@ -53,6 +53,14 @@ public class TargetProgram {
     public TargetFile getCurrentTarget() {
         return targetSources.get(currentT);
     }
+    public TargetFile getTarget(String qualifyName) {
+        for(TargetFile tf:targetSources){
+            if(tf.getQualifyFileName().equals(qualifyName)){
+                return tf;
+            }
+        }
+        return null;
+    }
 
     public TargetFile nextTarget() {
         currentT++;

@@ -5,12 +5,14 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
+import polyu_af.process.AnalyzeMLog;
 import polyu_af.process.ExeTargetRuntime;
 import polyu_af.process.GetTargetConfig;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.FileUtils;
 import polyu_af.visitors.MAccessVarVisitor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,8 +26,7 @@ public class GlobalProcess {
         TargetConfig targetConfig = null;
         TargetProgram targetProgram = null;
 
-
-        //read input file
+        /* read input file */
         GetTargetConfig getTargetConfig = null;
         try {
             getTargetConfig = new GetTargetConfig(System.getProperty("user.dir") + "/input/InputFile_AfTest_2");
@@ -43,27 +44,43 @@ public class GlobalProcess {
 
         /****************************Run all test with MLogAgent*********************************/
         AbsExeCommand exeMLogAg = new ExeMLogAgCommand(targetConfig);
-        String mLogAgCommand=exeMLogAg.testClass(targetProgram.getTargetTestsClasses());
+        String mLogAgCommand = exeMLogAg.testClass(targetProgram.getTargetTestsClasses());
         ExeTargetRuntime.process(mLogAgCommand);
         /****************************Analyse of MJR log finding fail tests*********************************/
-
+        List<TestCluster> testClusters = FileUtils.json2TestClusterList();
+        List<TestUnit> allFailures = new ArrayList<TestUnit>();
+        for (TestCluster cluster : testClusters) {
+            if (!cluster.isSuccessful()) {
+                allFailures.addAll(cluster.getFailureTestList());
+            }
+        }
+        testClusters = null;
         /****************************Analysis of M log finding related class*********************************/
-
+        List<String> relatedClass = null;
+        if (allFailures.size() > 0) {
+            AnalyzeMLog analyzeMLog = new AnalyzeMLog();
+            analyzeMLog.analyze(allFailures);
+            relatedClass = analyzeMLog.getRelatedClass();
+            logger.info("mLogAnalyResults:" + relatedClass);
+        }
         /****************************Analysis of the AST of the related class*********************************/
-        /*create faultFileAST --root*/
-//        TargetFile tf = targetProgram.getCurrentTarget();
-//        CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
-//                targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
-//                targetConfig.getEncodings(), targetProgram.getCurrentTarget().getQualifyFileName());
-        /****************************Finding the accessible variables*********************************/
-        /*get accessible variables*/
-//        MAccessVarVisitor mvv = new MAccessVarVisitor(root);
-//        root.accept(mvv);
-//        List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
-//        mvv = null;
-//        tf.setMethodAccessVars(methodLineLists);
-        /*out put first step (AST analysis) results*/
-//        FileUtils.outputTfList(targetProgram.getTargetSources());
+        /* create faultFileAST --root */
+        for (String qname : relatedClass) {
+            TargetFile tf = targetProgram.getTarget(qname);
+            if (tf != null) {
+                CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
+                        targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
+                        targetConfig.getEncodings(), tf.getQualifyFileName());
+            /* get accessible variables */
+                MAccessVarVisitor mvv = new MAccessVarVisitor(root);
+                root.accept(mvv);
+                List<MyMethod> methodLineLists = mvv.getMyMethodAccessVars();
+                mvv = null;
+                tf.setMyMethodAccessVars(methodLineLists);
+            }
+        }
+        /* out put first step (AST analysis) results */
+        FileUtils.outputTfList(targetProgram.getTargetSources());
         /****************************Run tests with VarLogAgent*********************************/
 //        ExeCommand exeCommand = new ExeCommand(targetConfig);
 //        String command=exeCommand.getMLogAgCommand(tf.getQualifyFileName());

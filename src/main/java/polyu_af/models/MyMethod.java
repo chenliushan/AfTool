@@ -12,20 +12,26 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class MethodAccessVars {
+public class MyMethod {
 //    private Logger logger = LogManager.getLogger();
-
+    private String declaringClass=null;//this attribute is null in the TargetFile method list
     private String methodName;
     private List<String> paramTypes;
     private List<LineAccessVars> varsList;
 
-    public MethodAccessVars(String methodName) {
+    public MyMethod(String methodName) {
         this.methodName = methodName;
         varsList = new ArrayList<LineAccessVars>();
         paramTypes = new ArrayList<String>();
 
     }
 
+    public MyMethod(String declaringClass, String methodName) {
+        this.declaringClass = declaringClass;
+        this.methodName = methodName;
+        varsList = new ArrayList<LineAccessVars>();
+        paramTypes = new ArrayList<String>();
+    }
 
     public void addLine(LineAccessVars vars) {
         varsList.add(vars);
@@ -70,15 +76,20 @@ public class MethodAccessVars {
 
     }
 
+    public void setParamTypes(List<String> paramTypes) {
+        this.paramTypes = paramTypes;
+    }
 
     @Override
     public String toString() {
-        return "\n\nAccessVar4Method{" +
-                "methodName='" + methodName + '\'' +
+        return "\nMyMethod{" +
+                "declaringClass='" + declaringClass + '\'' +
+                ", methodName='" + methodName + '\'' +
                 ", paramTypes=" + paramTypes +
                 ", varsList=" + varsList +
                 '}';
     }
+
     public static class MavPara{
         public static final String METHOD_NAME="methodName";
         public static final String PARAM_TYPES="paramTypes";

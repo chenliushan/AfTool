@@ -1,5 +1,5 @@
 {"projectDir":"/Users/liushanchen/IdeaProjects/AfTest",
-"programEntry":"polyu_af.MyListMain",
-"rootPackage":["polyu_af"],
+"programEntry":"af_test.MyListMain",
+"rootPackage":["af_test"],
 "encodings":["UTF-8"]
 }

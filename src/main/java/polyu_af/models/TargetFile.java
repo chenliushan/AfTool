@@ -12,7 +12,7 @@ public class TargetFile {
     private String packageName = null;//specify the package and the class name
     private String fileName = null;//specify the package and the class name
     private List<FaultUnit> faults = null;
-    private List<MethodAccessVars> methodAccessVars=null;
+    private List<MyMethod> myMethodAccessVars =null;
 
 
     public TargetFile(String absoluteDir,String dirSource) {
@@ -95,12 +95,12 @@ public class TargetFile {
 
     }
 
-    public List<MethodAccessVars> getMethodAccessVars() {
-        return methodAccessVars;
+    public List<MyMethod> getMyMethodAccessVars() {
+        return myMethodAccessVars;
     }
 
-    public void setMethodAccessVars(List<MethodAccessVars> methodAccessVars) {
-        this.methodAccessVars = methodAccessVars;
+    public void setMyMethodAccessVars(List<MyMethod> myMethodAccessVars) {
+        this.myMethodAccessVars = myMethodAccessVars;
     }
 
     public String getAbsoluteDir() {
@@ -114,7 +114,7 @@ public class TargetFile {
                 ", packageName='" + packageName + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", faults=" + faults +
-                ", methodAccessVars=" + methodAccessVars +
+                ", myMethodAccessVars=" + myMethodAccessVars +
                 "}\n";
     }
     public static class TfPara{
@@ -122,6 +122,6 @@ public class TargetFile {
         public static final String PACKAGE_NAME="packageName";
         public static final String FILE_NAME="fileName";
         public static final String FAULTS="faults";
-        public static final String METHOD_ACCESS_VARS="methodAccessVars";
+        public static final String METHOD_ACCESS_VARS="myMethodAccessVars";
     }
 }

@@ -1,6 +1,7 @@
 package polyu_af.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import polyu_af.Constants;
 import polyu_af.TestCluster;
 import polyu_af.models.LineAccessVars;
-import polyu_af.models.MethodAccessVars;
+import polyu_af.models.MyMethod;
 import polyu_af.models.MyExp;
 import polyu_af.models.TargetFile;
 
@@ -40,7 +41,7 @@ public class FileUtils {
 //        Gson gson = new GsonBuilder()
 //                .registerTypeAdapter(obj.getClass(), new TfListTypeAdapter())
 //                .create();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String jsonObj = gson.toJson(obj);
         writeFile(jsonObj, path);
     }
@@ -57,19 +58,19 @@ public class FileUtils {
                 jsonWriter.name(TargetFile.TfPara.ABSOLUTE_DIR).value(tf.getAbsoluteDir());
                 jsonWriter.name(TargetFile.TfPara.PACKAGE_NAME).value(tf.getPackageName());
                 jsonWriter.name(TargetFile.TfPara.FILE_NAME).value(tf.getFileName());
-                List<MethodAccessVars> mavs = tf.getMethodAccessVars();
+                List<MyMethod> mavs = tf.getMyMethodAccessVars();
                 if (mavs == null) {
                     jsonWriter.name(TargetFile.TfPara.METHOD_ACCESS_VARS).nullValue();
                 } else {
                     jsonWriter.name(TargetFile.TfPara.METHOD_ACCESS_VARS).beginArray();
-                    for (MethodAccessVars mav : mavs) {
+                    for (MyMethod mav : mavs) {
                         jsonWriter.beginObject();
-                        jsonWriter.name(MethodAccessVars.MavPara.METHOD_NAME).value(mav.getMethodName());
+                        jsonWriter.name(MyMethod.MavPara.METHOD_NAME).value(mav.getMethodName());
                         List<String> paras = mav.getParams();
                         if (paras == null) {
-                            jsonWriter.name(MethodAccessVars.MavPara.PARAM_TYPES).nullValue();
+                            jsonWriter.name(MyMethod.MavPara.PARAM_TYPES).nullValue();
                         } else {
-                            jsonWriter.name(MethodAccessVars.MavPara.PARAM_TYPES).beginArray();
+                            jsonWriter.name(MyMethod.MavPara.PARAM_TYPES).beginArray();
                             for (String para : paras) {
                                 jsonWriter.value(para);
                             }
@@ -78,9 +79,9 @@ public class FileUtils {
                         }
                         List<LineAccessVars> las = mav.getVarsList();
                         if (las == null) {
-                            jsonWriter.name(MethodAccessVars.MavPara.METHOD_NAME).nullValue();
+                            jsonWriter.name(MyMethod.MavPara.METHOD_NAME).nullValue();
                         } else {
-                            jsonWriter.name(MethodAccessVars.MavPara.METHOD_NAME).beginArray();
+                            jsonWriter.name(MyMethod.MavPara.METHOD_NAME).beginArray();
                             for (LineAccessVars la : mav.getVarsList()) {
                                 jsonWriter.beginObject();
                                 jsonWriter.name(LineAccessVars.LavPara.LOCATION).value(la.getLocation());
@@ -140,9 +141,18 @@ public class FileUtils {
     public static List<TestCluster> json2TestClusterList() {
         String pathName = Constants.myJunitLogPath;
         Gson gson = new Gson();
-        List<TestCluster> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TestCluster>>() {
-        }.getType());
-        return obj;
+        BufferedReader input = getSourceBuffer(new File(pathName));
+        List<TestCluster> testClusters=new ArrayList<TestCluster>();
+        String text;
+        try {
+            while ((text = input.readLine()) != null){
+                TestCluster cluster = gson.fromJson(text, new TypeToken<TestCluster>() {}.getType());
+                testClusters.add(cluster);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return testClusters;
     }
 
 
@@ -157,7 +167,7 @@ public class FileUtils {
             if (file.isFile()) {
                 try {
                     BufferedReader input = new BufferedReader(new FileReader(file));
-                    StringBuffer buffer = new StringBuffer();
+                    StringBuilder buffer = new StringBuilder();
                     String text;
                     while ((text = input.readLine()) != null)
                         buffer.append(text + "\n");
@@ -168,6 +178,20 @@ public class FileUtils {
             }
         }
         return fileContent;
+    }
+
+    public static BufferedReader getSourceBuffer(File file) {
+        BufferedReader input = null;
+        if (file.exists()) {
+            if (file.isFile()) {
+                try {
+                    input = new BufferedReader(new FileReader(file));
+                } catch (IOException ioException) {
+                    logger.error("getSource: " + ioException.getStackTrace().toString());
+                }
+            }
+        }
+        return input;
     }
 
     public static ArrayList<File> getListFiles(String path) {
