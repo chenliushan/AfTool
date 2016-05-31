@@ -82,6 +82,8 @@ public class TargetFile {
         String pn = sourceDir.substring(0, dIndex);
         if (fn.endsWith(".java")) {
             this.fileName = fn.substring(0, fn.length() - 5);
+        }else if (fn.endsWith(".class")){
+            this.fileName = fn.substring(0, fn.length() - 6);
         }
         setPackageName(pn);
     }

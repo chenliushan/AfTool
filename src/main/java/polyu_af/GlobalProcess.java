@@ -8,6 +8,7 @@ import polyu_af.models.*;
 import polyu_af.process.ExeTargetRuntime;
 import polyu_af.process.GetTargetConfig;
 import polyu_af.utils.AstUtils;
+import polyu_af.utils.FileUtils;
 import polyu_af.visitors.MAccessVarVisitor;
 
 import java.util.List;
@@ -40,32 +41,36 @@ public class GlobalProcess {
             return;
         }
 
-        List<FaultUnit> faultUnitList = null;
+        /****************************Run all test with MLogAgent*********************************/
+        AbsExeCommand exeMLogAg = new ExeMLogAgCommand(targetConfig);
+        String mLogAgCommand=exeMLogAg.testClass(targetProgram.getTargetTestsClasses());
+        ExeTargetRuntime.process(mLogAgCommand);
+        /****************************Analyse of MJR log finding fail tests*********************************/
 
-        //create faultFileAST --root
-        TargetFile tf = targetProgram.getCurrentTarget();
-        CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
-                targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
-                targetConfig.getEncodings(), targetProgram.getCurrentTarget().getQualifyFileName());
+        /****************************Analysis of M log finding related class*********************************/
 
-        //get accessible variables
+        /****************************Analysis of the AST of the related class*********************************/
+        /*create faultFileAST --root*/
+//        TargetFile tf = targetProgram.getCurrentTarget();
+//        CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
+//                targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
+//                targetConfig.getEncodings(), targetProgram.getCurrentTarget().getQualifyFileName());
+        /****************************Finding the accessible variables*********************************/
+        /*get accessible variables*/
+//        MAccessVarVisitor mvv = new MAccessVarVisitor(root);
+//        root.accept(mvv);
+//        List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
+//        mvv = null;
+//        tf.setMethodAccessVars(methodLineLists);
+        /*out put first step (AST analysis) results*/
+//        FileUtils.outputTfList(targetProgram.getTargetSources());
+        /****************************Run tests with VarLogAgent*********************************/
+//        ExeCommand exeCommand = new ExeCommand(targetConfig);
+//        String command=exeCommand.getMLogAgCommand(tf.getQualifyFileName());
+//        ExeTargetRuntime.process(command);
+        /****************************Analysis of the Var log*********************************/
 
-        MAccessVarVisitor mvv = new MAccessVarVisitor(root);
-        root.accept(mvv);
-        List<MethodAccessVars> methodLineLists = mvv.getMethodAccessVars();
-        mvv = null;
-//        logger.info("List<MethodAccessVars> : \n" + methodLineLists.toString());
-//        logger.info("List<MethodAccessVars> -size:" + methodLineLists.size());
-        tf.setMethodAccessVars(methodLineLists);
-
-        polyu_af.utils.FileUtils.outputTfList(targetProgram.getTargetFiles());
-
-        ExeCommand exeCommand = new ExeCommand(targetConfig);
-        String command=exeCommand.getMLogAgCommand(tf.getQualifyFileName());
-//        String command = exeCommand.getVarLogAgCommand(tf.getQualifyFileName());
-
-
-        ExeTargetRuntime.process(command);
+        /****************************Finding fault location and status*********************************/
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -79,26 +84,26 @@ public class GlobalProcess {
 //
 //        FileUtils.printMap(AstUtils.astForm);
 //        logger.info("${logger}"+${logger});
-
-        if (tf != null) {
-            faultUnitList = tf.getFaults();
-            if (faultUnitList != null) {
-                for (FaultUnit fu : faultUnitList) {
-                    //find fault node in root
-//                    ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
-                    //resolve the input exp in the fault node
-//                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
-//                    resolveExp.resolveExp();
-                    //testing modify the expression
-//                    if (!fu.getExpression().equals("exp")) {
-//                       getTargetConfig.saveNewFaultClass(
-//                               AstUtils.parseExpRecordModifications(
-//                                       root, fu.getExpression(), faultFileSource_));
-//
-//                    }
-                }
-            }
-        }
+//        List<FaultUnit> faultUnitList = null;
+//        if (tf != null) {
+//            faultUnitList = tf.getFaults();
+//            if (faultUnitList != null) {
+//                for (FaultUnit fu : faultUnitList) {
+//                    //find fault node in root
+////                    ASTNode faultNode = AstUtils.findNodeInRoot(root, fu);
+//                    //resolve the input exp in the fault node
+////                    ResolveExp resolveExp = new ResolveExp(faultNode, fu, root);
+////                    resolveExp.resolveExp();
+//                    //testing modify the expression
+////                    if (!fu.getExpression().equals("exp")) {
+////                       getTargetConfig.saveNewFaultClass(
+////                               AstUtils.parseExpRecordModifications(
+////                                       root, fu.getExpression(), faultFileSource_));
+////
+////                    }
+//                }
+//            }
+//        }
         Runtime runtime = Runtime.getRuntime();
         logger.info("freeMemory:" + runtime.freeMemory() + "; totalMemory:" + runtime.totalMemory());
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();

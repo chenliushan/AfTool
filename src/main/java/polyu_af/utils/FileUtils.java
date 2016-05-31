@@ -1,13 +1,14 @@
 package polyu_af.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import polyu_af.Constants;
+import polyu_af.TestCluster;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MethodAccessVars;
 import polyu_af.models.MyExp;
@@ -30,20 +31,18 @@ import java.util.List;
  */
 public class FileUtils {
     private static Logger logger = LogManager.getLogger(FileUtils.class.getName());
-    private static final String relativePath = "tmp/firstStepOut.json";
 
     public static void outputTfList(List<TargetFile> obj) {
-        outputTfList(obj, relativePath);
+        outputTfList(obj, Constants.firstStepOutputPath);
     }
 
-    public static void outputTfList(List<TargetFile> obj, String path) {
+    public static void outputTfList(Object obj, String path) {
 //        Gson gson = new GsonBuilder()
 //                .registerTypeAdapter(obj.getClass(), new TfListTypeAdapter())
 //                .create();
-        Gson gson=new Gson();
+        Gson gson = new Gson();
         String jsonObj = gson.toJson(obj);
-//        System.out.println("jsonObj:" + jsonObj);
-        writeFile(jsonObj,path);
+        writeFile(jsonObj, path);
     }
 
     private static class TfListTypeAdapter extends TypeAdapter<List<TargetFile>> {
@@ -85,10 +84,10 @@ public class FileUtils {
                             for (LineAccessVars la : mav.getVarsList()) {
                                 jsonWriter.beginObject();
                                 jsonWriter.name(LineAccessVars.LavPara.LOCATION).value(la.getLocation());
-                                List<MyExp> mes=la.getVarsList();
-                                if(mes==null){
+                                List<MyExp> mes = la.getVarsList();
+                                if (mes == null) {
                                     jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).nullValue();
-                                }else{
+                                } else {
                                     jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).beginArray();
                                     for (MyExp me : la.getVarsList()) {
                                         jsonWriter.beginObject();
@@ -130,15 +129,22 @@ public class FileUtils {
         }
     }
 
-    public static List<TargetFile> json2Obj() {
-        return json2Obj(relativePath);
-    }
-
-    public static List<TargetFile> json2Obj(String pathName) {
+    public static List<TargetFile> json2TfList() {
+        String pathName = Constants.firstStepOutputPath;
         Gson gson = new Gson();
-        List<TargetFile>obj = gson.fromJson(getSource(pathName), new TypeToken<List<TargetFile>>(){}.getType());
+        List<TargetFile> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TargetFile>>() {
+        }.getType());
         return obj;
     }
+
+    public static List<TestCluster> json2TestClusterList() {
+        String pathName = Constants.myJunitLogPath;
+        Gson gson = new Gson();
+        List<TestCluster> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TestCluster>>() {
+        }.getType());
+        return obj;
+    }
+
 
     public static String getSource(String pathName) {
         File file = new File(pathName);

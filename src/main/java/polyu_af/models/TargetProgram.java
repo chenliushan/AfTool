@@ -11,16 +11,27 @@ import java.util.List;
  */
 public class TargetProgram {
 
-    private TargetConfig tc=null;
-    private List<TargetFile> targetFiles = null;
+    private TargetConfig tc = null;
+    private List<TargetFile> targetSources = null;
+    private List<TargetFile> targetTestsClasses = null;
     private int currentT = 0;
 
     public TargetProgram(TargetConfig tc) {
         this.tc = tc;
+        obtainSourceFiles();
+        obtainTestFiles();
     }
 
-    public void obtainProgramFiles()  {
-        String sourcePath=tc.getSourcePath();
+    public void obtainSourceFiles() {
+        String sourcePath = tc.getSourcePath();
+        this.targetSources = obtainTargetFiles(sourcePath);
+    }
+    public void obtainTestFiles() {
+        String sourcePath = tc.getTestClassPath();
+        this.targetTestsClasses = obtainTargetFiles(sourcePath);
+    }
+
+    private List<TargetFile> obtainTargetFiles(String sourcePath) {
         ArrayList<File> files = FileUtils.getListFiles(sourcePath);
         List<TargetFile> targetFiles = new ArrayList<TargetFile>();
 
@@ -36,38 +47,35 @@ public class TargetProgram {
             }
             targetFiles.add(new TargetFile(ap, s));
         }
-//        if(targetFiles==null) {
-//            throw new NotFoundException(sourcePath);
-//        }
-        this.targetFiles = targetFiles;
+        return targetFiles;
     }
 
-    public TargetFile getCurrentTarget()  {
-        if(targetFiles==null)
-            obtainProgramFiles();
-        return targetFiles.get(currentT);
+    public TargetFile getCurrentTarget() {
+        return targetSources.get(currentT);
     }
 
     public TargetFile nextTarget() {
         currentT++;
-        if(currentT<targetFiles.size()){
+        if (currentT < targetSources.size()) {
             return getCurrentTarget();
-        }else{
+        } else {
             return null;
         }
     }
+
     public void moveIndex2Next() {
         currentT++;
-        if(currentT>=targetFiles.size()){
-            currentT=targetFiles.size()-1;
+        if (currentT >= targetSources.size()) {
+            currentT = targetSources.size() - 1;
         }
     }
 
-    public List<TargetFile> getTargetFiles() {
-        if (targetFiles == null) {
-            obtainProgramFiles();
-        }
-        return targetFiles;
+    public List<TargetFile> getTargetSources() {
+        return targetSources;
+    }
+
+    public List<TargetFile> getTargetTestsClasses() {
+        return targetTestsClasses;
     }
 
     /**
@@ -100,78 +108,13 @@ public class TargetProgram {
         this.tc = tc;
     }
 
-//    public String getProjectDir() {
-//        return projectDir;
-//    }
-//
-//
-//    public String[] getClasspathEntries() {
-//        return classpathEntries;
-//    }
-//
-//    public void setClasspathEntries(String[] classpathEntries) {
-//        this.classpathEntries = classpathEntries;
-//    }
-//
-//    public String[] getEncodings() {
-//        return encodings;
-//    }
-//
-//
-//    public List<TargetClass> getTargetClassList() {
-//        return targetClassList;
-//    }
-//
-//
-//    public String getOutputPath() {
-//        return tc.getOutputPath();
-//    }
-//
-//    public void setOutputPath(String outputPath) {
-//        this.outputPath = outputPath;
-//    }
-//
-//    public String getSourcePath() {
-//        return sourcePath;
-//    }
-//
-//    public void setSourcePath(String sourcePath) {
-//        this.sourcePath = sourcePath;
-//    }
-//
-//    public String getSource(String sourceName) {
-//        if (sourcePath != null && sourceName != null) {
-//            String path = sourcePath;
-//            return FileUtils.getSource(FileUtils.joinDir(path, sourceName));
-//        }
-//        return null;
-//
-//    }
-//
-//    public String getProgramEntry() {
-//        return programEntry;
-//    }
-//
-//    public String[] getRunningArg() {
-//        return runningArg;
-//    }
-//
-//
-//    public String getTestClassPath() {
-//        return testClassPath;
-//    }
-//
-//    public void setTestClassPath(String testClassPath) {
-//        this.testClassPath = testClassPath;
-//    }
-
 
     @Override
     public String toString() {
         return "TargetProgram{" +
                 "currentT=" + currentT +
                 ", tc=" + tc +
-                ", targetFiles=" + targetFiles +
+                ", targetSources=" + targetSources +
                 '}';
     }
 }
