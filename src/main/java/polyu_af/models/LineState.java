@@ -36,7 +36,7 @@ public class LineState {
 
     @Override
     public String toString() {
-        return "LineState{" +
+        return "\n\nLineState{" +
                 "expValueList=" + expValueList +
                 ", lineNum=" + lineNum +
                 '}';

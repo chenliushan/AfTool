@@ -34,7 +34,7 @@ public class ExpValue {
 
     @Override
     public String toString() {
-        return "ExpValue{" +
+        return "\nExpValue{" +
                 "exp=" + exp +
                 ", valueString='" + valueString + '\'' +
                 ", value=" + value +

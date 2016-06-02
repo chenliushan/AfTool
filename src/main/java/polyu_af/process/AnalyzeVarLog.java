@@ -72,7 +72,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
         if (expAndVal.length != 2) {
             throw new IllegalFormat(line);
         }
-        return expAndVal[1];
+        return expAndVal[0];
     }
 
     private int analyzeLineEnd(String line) {
@@ -87,7 +87,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
         expValue = new ExpValue(searchForMyExp(expAndVal[0], mQName, location));
         if (expAndVal.length != 2) {
             expValue.setValueString("");
-        }else{
+        } else {
             expValue.setValueString(expAndVal[1]);
         }
         return expValue;
@@ -117,19 +117,20 @@ public class AnalyzeVarLog extends AnalyzeLog {
             List<MyExp> meList = null;
             for (LineAccessVars lav : lavList) {
                 if (lav.getLocation() == location) {
-                    meList=lav.getVarsList();
+                    meList = lav.getVarsList();
                     break;
                 }
             }
-            if(meList!=null){
-                for(MyExp myExp:meList){
-                    if(myExp.getExpVar().equals(expName)){
-                        me=myExp;
+            if (meList != null) {
+                for (MyExp myExp : meList) {
+                    if (myExp.getExpVar().equals(expName)) {
+                        me = myExp;
                         break;
                     }
                 }
             }
         }
+
         return me;
     }
 }
