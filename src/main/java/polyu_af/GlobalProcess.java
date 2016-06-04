@@ -63,34 +63,37 @@ public class GlobalProcess {
             relatedClass = analyzeMLog.getRelatedClass();
             logger.info("mLogAnalyResults:" + relatedClass);
         }
-        /****************************Analysis of the AST of the related class*********************************/
-        /* analyze related classes */
-        for (String qname : relatedClass) {
-            /* create faultFile's AST */
-            TargetFile tf = targetProgram.getTarget(qname);
-            if (tf != null) {
-                CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
-                        targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
-                        targetConfig.getEncodings(), tf.getQualifyFileName());
-            /* get accessible variables */
-                MAccessVarVisitor mvv = new MAccessVarVisitor(root);
-                root.accept(mvv);
-                List<MyMethod> methodLineLists = mvv.getMyMethodAccessVars();
-                mvv = null;
-                tf.setMyMethodAccessVars(methodLineLists);
-            }
-        }
-        /* out put first step (AST analysis) results */
-        FileUtils.outputTfList(targetProgram.getTargetSources());
-        /****************************Run tests with VarLogAgent*********************************/
-        AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
-        ExeTargetRuntime.process(exeVarLogAg.testFailClass(allFailures));
-        exeVarLogAg=null;
-        /****************************Analysis of the Var log*********************************/
-        AnalyzeVarLog varLog=new AnalyzeVarLog(targetProgram.getTargetSources());
-        List<LineState> lsList= varLog.analyze();
-        logger.info("List<LineState>:"+lsList);
+//        /****************************Analysis of the AST of the related class*********************************/
+//        /* analyze related classes */
+//        for (String qname : relatedClass) {
+//            /* create faultFile's AST */
+//            TargetFile tf = targetProgram.getTarget(qname);
+//            if (tf != null) {
+//                CompilationUnit root = AstUtils.createResolvedAST(tf.getSource(),
+//                        targetConfig.getClasspathEntries(), new String[]{targetConfig.getSourcePath()},
+//                        targetConfig.getEncodings(), tf.getQualifyFileName());
+//            /* get accessible variables */
+//                MAccessVarVisitor mvv = new MAccessVarVisitor(root);
+//                root.accept(mvv);
+//                List<MyMethod> methodLineLists = mvv.getMyMethodAccessVars();
+//                mvv = null;
+//                tf.setMyMethodAccessVars(methodLineLists);
+//            }
+//        }
+//        /* out put first step (AST analysis) results */
+//        FileUtils.outputTfList(targetProgram.getTargetSources());
+//        /****************************Run tests with VarLogAgent*********************************/
+//        AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
+//        ExeTargetRuntime.process(exeVarLogAg.testFailClass(allFailures));
+//        exeVarLogAg=null;
+//        /****************************Analysis of the Var log*********************************/
+//        AnalyzeVarLog varLog=new AnalyzeVarLog(targetProgram.getTargetSources());
+//        List<LineState> lsList= varLog.analyze();
+//        logger.info("List<LineState>:"+lsList);
         /****************************Finding fault location and status*********************************/
+
+
+
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));

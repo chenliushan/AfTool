@@ -56,7 +56,6 @@ public class MyMethod {
         }
 
         sb.append(")");
-        System.out.println("MyMethod.getLongName:"+sb.toString());
         return sb.toString();
     }
 

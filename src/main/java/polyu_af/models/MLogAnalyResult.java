@@ -6,6 +6,10 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/31.
  */
+
+/**
+ * A failure test (a method) and a list of related method
+ */
 public class MLogAnalyResult {
     MyMethod testFailure=null;
     List<MyMethod> relatedMethods=null;

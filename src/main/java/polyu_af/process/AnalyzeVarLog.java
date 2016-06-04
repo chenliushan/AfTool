@@ -20,6 +20,10 @@ public class AnalyzeVarLog extends AnalyzeLog {
         this.targetFiles = tfs;
     }
 
+    /**
+     * Match the MyExp and logged String value
+     * @return
+     */
     public List<LineState> analyze() {
         String line;
         String methodQName = null;

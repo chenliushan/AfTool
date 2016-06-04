@@ -32,14 +32,12 @@ public class AnalyzeMLog extends AnalyzeLog {
         }
     }
 
-    public List<MLogAnalyResult> getResultList() {
-        return resultList;
-    }
-
-    public List<String> getRelatedClass() {
-        return relatedClass;
-    }
-
+    /**
+     * Analyze one failure test unit
+     * - find the failure test's related method
+     * @param qualifyName the test unit's qualify name to be analyze
+     * @return analyzed result
+     */
     private List<MLogAnalyResult> analyze(String qualifyName) {
         String line;
         List<MLogAnalyResult> resultList = new ArrayList<MLogAnalyResult>();
@@ -68,6 +66,14 @@ public class AnalyzeMLog extends AnalyzeLog {
         return resultList;
     }
 
+    public List<MLogAnalyResult> getResultList() {
+        return resultList;
+    }
+
+    public List<String> getRelatedClass() {
+        return relatedClass;
+    }
+
     private MyMethod line2Method(String line) throws IllegalFormat {
         List<String> paras = null;
         if (line.startsWith(MyJunitConstants.TestStart)) {
@@ -86,7 +92,7 @@ public class AnalyzeMLog extends AnalyzeLog {
         String[] classAndMethod = line.split("#");
         if (classAndMethod.length != 2) throw new IllegalFormat(line);
         MyMethod myMethod = new MyMethod(classAndMethod[0], classAndMethod[1]);
-        if(!relatedClass.contains(classAndMethod[0])){
+        if (!relatedClass.contains(classAndMethod[0])) {
             relatedClass.add(classAndMethod[0]);
         }
         myMethod.setParamTypes(paras);
