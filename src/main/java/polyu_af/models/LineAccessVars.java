@@ -13,28 +13,22 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class LineAccessVars {
-
-
-    public static boolean addInvokingMethod=false;
+    public static boolean addInvokingMethod = false;
     private int location;
     private List<MyExpString> varsList;
 
 
     public LineAccessVars(int location) {
         this.location = location;
-        varsList = new ArrayList<MyExpString>();
+        this.varsList = new ArrayList<MyExpString>();
     }
-    public LineAccessVars(int location,boolean addInvokingMethod) {
-        this.location = location;
-        this.addInvokingMethod=addInvokingMethod;
-        varsList = new ArrayList<MyExpString>();
-    }
+
 
     public void addVar(MyExpAst var) {
         this.varsList.add(var.getME());
-        if(addInvokingMethod){
-            List<MyExpString> myInvokingMethod=var.getInvokingMethod();
-            if(myInvokingMethod!=null){
+        if (addInvokingMethod) {
+            List<MyExpString> myInvokingMethod = var.getInvokingMethod();
+            if (myInvokingMethod != null) {
                 this.varsList.addAll(myInvokingMethod);
             }
         }
@@ -43,7 +37,7 @@ public class LineAccessVars {
 
     public void addVar(List<MyExpAst> vars) {
         for (MyExpAst mea : vars) {
-           addVar(mea);
+            addVar(mea);
         }
     }
 
@@ -83,6 +77,7 @@ public class LineAccessVars {
                     break;
                 case ASTNode.INFIX_EXPRESSION:
                     InfixExpression ife = (InfixExpression) astNode;
+
                     if (checkExpInType(ife.getLeftOperand()) && checkExpInType(ife.getRightOperand())) {
                         addVar(me);
                     }
@@ -102,7 +97,6 @@ public class LineAccessVars {
 
 
     private boolean checkExpInString(String e) {
-
         for (MyExpString me : varsList) {
             if (me.getExpVar().equals(e)) {
                 return true;
@@ -126,9 +120,9 @@ public class LineAccessVars {
         //if there is exp in same type and value?
         if (e.resolveTypeBinding() != null) {
             for (MyExpString me : varsList) {
-                if (me.getType() != null) {
-                    if ((me.getType().equals(e.resolveTypeBinding().getBinaryName()) ||
-                            me.getType().equals(e.resolveTypeBinding().getBinaryName()))
+                if (me.getType() != null && e.resolveTypeBinding() != null) {
+                    if ((me.getType().equals(e.resolveTypeBinding().getBinaryName())
+                            || me.getType().equals(e.resolveTypeBinding().getQualifiedName()))
                             && me.getExpVar().equals(e.toString())) {
 //                        if (me.getType().getBinaryName().equals(e.resolveTypeBinding().getBinaryName())
 //                                && me.getExpVar().equals(e.toString())) {

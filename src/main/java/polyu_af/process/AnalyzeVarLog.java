@@ -1,6 +1,6 @@
 package polyu_af.process;
 
-import polyu_af.Constants;
+import polyu_af.utils.Constants;
 import polyu_af.exception.IllegalFormat;
 import polyu_af.models.*;
 import process.VarLogConstants;

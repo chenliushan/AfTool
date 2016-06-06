@@ -8,7 +8,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.Constants;
 import polyu_af.TestCluster;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MyExpString;

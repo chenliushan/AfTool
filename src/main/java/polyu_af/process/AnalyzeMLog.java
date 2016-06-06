@@ -1,6 +1,6 @@
 package polyu_af.process;
 
-import polyu_af.Constants;
+import polyu_af.utils.Constants;
 import polyu_af.MyJunitConstants;
 import polyu_af.TestUnit;
 import polyu_af.exception.IllegalFormat;

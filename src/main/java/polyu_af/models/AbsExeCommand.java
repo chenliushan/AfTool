@@ -129,13 +129,23 @@ public abstract class AbsExeCommand {
         command.append(tfNames);
         return command.toString();
     }
-    public String testFailClass(List<TestUnit> allFailures) {
+
+    public String runTestUnits(List<TestUnit> allFailures) {
         addMJTestCp();
         StringBuilder tfNames = new StringBuilder();
         for (TestUnit tt : allFailures) {
             tfNames.append(" ");
             tfNames.append(tt.getQualifyName());
         }
+        command.append(tfNames);
+        return command.toString();
+    }
+
+    public String runTestUnit(TestUnit testUnit) {
+        addMJTestCp();
+        StringBuilder tfNames = new StringBuilder();
+        tfNames.append(" ");
+        tfNames.append(testUnit.getQualifyName());
         command.append(tfNames);
         return command.toString();
     }

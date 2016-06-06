@@ -1,4 +1,4 @@
-package polyu_af;
+package polyu_af.utils;
 
 /**
  * Created by liushanchen on 16/5/31.
