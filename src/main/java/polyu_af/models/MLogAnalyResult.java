@@ -1,5 +1,7 @@
 package polyu_af.models;
 
+import polyu_af.TestUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,19 +10,19 @@ import java.util.List;
  */
 
 /**
- * A failure test (a method) and a list of related method
+ * A testcase (a method) and a list of related method
  */
 public class MLogAnalyResult {
-    MyMethod testFailure=null;
+    TestUnit testCase =null;
     List<MyMethod> relatedMethods=null;
 
-    public MLogAnalyResult(MyMethod testFailure) {
-        this.testFailure = testFailure;
+    public MLogAnalyResult(TestUnit testCase) {
+        this.testCase = testCase;
         this.relatedMethods=new ArrayList<MyMethod>();
     }
 
-    public MyMethod getTestFailure() {
-        return testFailure;
+    public TestUnit getTestCase() {
+        return testCase;
     }
 
     public List<MyMethod> getRelatedMethods() {
@@ -37,7 +39,7 @@ public class MLogAnalyResult {
     @Override
     public String toString() {
         return "\nMLogAnalyResult{" +
-                "testFailure=" + testFailure +
+                "testCase=" + testCase +
                 "\n, relatedMethods=" + relatedMethods +
                 '}';
     }

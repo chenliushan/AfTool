@@ -5,10 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.AnalyzeMLog;
-import polyu_af.process.AnalyzeVarLog;
-import polyu_af.process.ExeTargetRuntime;
-import polyu_af.process.GetTargetConfig;
+import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.FileUtils;
 import polyu_af.visitors.MAccessVarVisitor;
@@ -45,7 +42,7 @@ public class GlobalProcess {
         AbsExeCommand exeMLogAg = new ExeMLogAgCommand(targetConfig);
         ExeTargetRuntime.process(exeMLogAg.testClass(targetProgram.getTargetTestsClasses()));
         exeMLogAg=null;
-        /****************************Analyse of MJR log finding fail tests*********************************/
+        /****************************Analyse of MJR log finding failure tests*********************************/
         List<TestCluster> testClusters = FileUtils.json2TestClusterList();
         List<TestUnit> allFailures = new ArrayList<TestUnit>();
         for (TestCluster cluster : testClusters) {
@@ -57,10 +54,11 @@ public class GlobalProcess {
         /****************************Analysis of MLog & finding related class*********************************/
         List<String> relatedClass = null;
         if (allFailures.size() > 0) {
-            AnalyzeMLog analyzeMLog = new AnalyzeMLog();
+//            AnalyzeMLogFailure analyzeMLogFailure = new AnalyzeMLogFailure();
+            AnalyzeMLogAllTest analyzeMLog = new AnalyzeMLogAllTest();
             analyzeMLog.analyze(allFailures);
             relatedClass = analyzeMLog.getRelatedClass();
-            logger.info("mLogAnalyResults:" + relatedClass);
+            logger.info("mLogAnalyResults:" + analyzeMLog.getResultList());
         }
         /****************************Analysis of the AST of the related class*********************************/
         /* analyze related classes */
@@ -93,7 +91,7 @@ public class GlobalProcess {
         /****************************Analysis of the Var log*********************************/
         AnalyzeVarLog varLog=new AnalyzeVarLog(targetProgram.getTargetSources());
         List<LineState> lsList= varLog.analyze();
-        logger.info("List<LineState>:"+lsList);
+//        logger.info("List<LineState>:"+lsList);
         /****************************Finding fault location and status*********************************/
 
 
