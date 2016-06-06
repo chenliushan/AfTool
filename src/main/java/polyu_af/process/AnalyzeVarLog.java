@@ -21,7 +21,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
     }
 
     /**
-     * Match the MyExp and logged String value
+     * Match the MyExpString and logged String value
      * @return
      */
     public List<LineState> analyze() {
@@ -98,14 +98,14 @@ public class AnalyzeVarLog extends AnalyzeLog {
     }
 
     /**
-     * find the MyExp from the this.targetFiles
+     * find the MyExpString from the this.targetFiles
      *
      * @param expName
      * @param mQName
      * @return
      */
-    private MyExp searchForMyExp(String expName, String mQName, int location) {
-        MyExp me = null;
+    private MyExpString searchForMyExp(String expName, String mQName, int location) {
+        MyExpString me = null;
         List<LineAccessVars> lavList = null;
         for (TargetFile tf : targetFiles) {
             if (mQName.contains(tf.getQualifyFileName())) {
@@ -118,7 +118,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
             }
         }
         if (lavList != null) {
-            List<MyExp> meList = null;
+            List<MyExpString> meList = null;
             for (LineAccessVars lav : lavList) {
                 if (lav.getLocation() == location) {
                     meList = lav.getVarsList();
@@ -126,9 +126,9 @@ public class AnalyzeVarLog extends AnalyzeLog {
                 }
             }
             if (meList != null) {
-                for (MyExp myExp : meList) {
-                    if (myExp.getExpVar().equals(expName)) {
-                        me = myExp;
+                for (MyExpString myExpString : meList) {
+                    if (myExpString.getExpVar().equals(expName)) {
+                        me = myExpString;
                         break;
                     }
                 }

@@ -3,10 +3,13 @@ package polyu_af.models;
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by liushanchen on 16/5/16.
  */
-public class MyExpAst {
+public class MyExpAst implements MyExp {
     private ASTNode astNode = null;
 
     public MyExpAst(ASTNode astNode) throws NotAcceptExpNodeTypeException {
@@ -28,17 +31,18 @@ public class MyExpAst {
                 throw new NotAcceptExpNodeTypeException(getAstNodeType(astNode));
         }
         this.astNode = astNode;
+        getInvokingMethod();
     }
 
     public ASTNode getAstNode() {
         return astNode;
     }
 
-    public String getAstNodeString() {
+    public String getNodeString() {
         return astNode.toString();
     }
 
-    public String getAstNodeVar() {
+    public String getExpVar() {
         int nType = astNode.getNodeType();
         switch (nType) {
             case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
@@ -64,6 +68,50 @@ public class MyExpAst {
         }
     }
 
+    public List<MyExpString> getInvokingMethod() {
+        ITypeBinding type = getTypeBinding();
+        if (type == null) return null;
+        if (type.isPrimitive()) {
+            return null;
+        } else {
+            List<MyExpString> invokingMyExpList = new ArrayList<MyExpString>();
+            IMethodBinding[] methodBindings = type.getDeclaredMethods();
+            if (methodBindings == null) return null;
+            for (int i = 0; i < methodBindings.length; i++) {
+                String returnType = methodBindings[i].getReturnType().getName();
+                String invokingName = methodBindings[i].getName();
+                if (methodBindings[i].getParameterTypes().length == 0
+                        && !returnType.equals("void") && isValidInvoking(invokingName)) {
+                    StringBuilder sb = new StringBuilder(getExpVar());
+                    sb.append(".");
+                    sb.append(invokingName);
+                    sb.append("()");
+                    MyExpString invokingMyExp = new MyExpString(returnType, sb.toString());
+                    invokingMyExpList.add(invokingMyExp);
+                }
+            }
+            return invokingMyExpList;
+        }
+    }
+
+    private boolean isValidInvoking(String invokingName) {
+        switch (invokingName) {
+            case "size":
+                return true;
+            case "isEmpty":
+                return true;
+            case "toString":
+                return true;
+            case "length":
+                return true;
+
+        }
+        if (invokingName.startsWith("get")) {
+            return true;
+        }
+        return false;
+    }
+
     public String getAstNodeType() {
         return ASTNode.nodeClassForType(astNode.getNodeType()).getSimpleName();
     }
@@ -76,7 +124,7 @@ public class MyExpAst {
         this.astNode = astNode;
     }
 
-    public ITypeBinding getType() {
+    public ITypeBinding getTypeBinding() {
         int nType = astNode.getNodeType();
         switch (nType) {
             case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
@@ -103,9 +151,10 @@ public class MyExpAst {
     }
 
 
-    public String getTypeName() {
-        ITypeBinding type = getType();
-        if(type==null){
+    public String getType() {
+
+        ITypeBinding type = getTypeBinding();
+        if (type == null) {
             return null;
         }
         if (type.isPrimitive()) {
@@ -114,8 +163,9 @@ public class MyExpAst {
             return type.getBinaryName();
         }
     }
+
     public static String getTypeName(ITypeBinding type) {
-        if(type==null){
+        if (type == null) {
             return null;
         }
         if (type.isPrimitive()) {
@@ -124,8 +174,9 @@ public class MyExpAst {
             return type.getBinaryName();
         }
     }
-    public MyExp getME(){
-        return new MyExp(getTypeName(getType()),getAstNodeVar());
+
+    public MyExpString getME() {
+        return new MyExpString(getTypeName(getTypeBinding()), getExpVar());
     }
 
 
@@ -133,7 +184,7 @@ public class MyExpAst {
     public String toString() {
         return "Exp{" +
                 "nodeType: " + getAstNodeType() +
-                "; |type: " + getTypeName() +
+                "; |type: " + getType() +
                 "}\n";
     }
 }

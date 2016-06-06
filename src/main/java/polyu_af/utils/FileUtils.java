@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import polyu_af.Constants;
 import polyu_af.TestCluster;
 import polyu_af.models.LineAccessVars;
+import polyu_af.models.MyExpString;
 import polyu_af.models.MyMethod;
-import polyu_af.models.MyExp;
 import polyu_af.models.TargetFile;
 
 import java.io.BufferedReader;
@@ -85,15 +85,15 @@ public class FileUtils {
                             for (LineAccessVars la : mav.getVarsList()) {
                                 jsonWriter.beginObject();
                                 jsonWriter.name(LineAccessVars.LavPara.LOCATION).value(la.getLocation());
-                                List<MyExp> mes = la.getVarsList();
+                                List<MyExpString> mes = la.getVarsList();
                                 if (mes == null) {
                                     jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).nullValue();
                                 } else {
                                     jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).beginArray();
-                                    for (MyExp me : la.getVarsList()) {
+                                    for (MyExpString me : la.getVarsList()) {
                                         jsonWriter.beginObject();
-                                        jsonWriter.name(MyExp.MePara.EXP_VAR).value(me.getExpVar());
-                                        jsonWriter.name(MyExp.MePara.TYPE).value(me.getType());
+                                        jsonWriter.name(MyExpString.MePara.EXP_VAR).value(me.getExpVar());
+                                        jsonWriter.name(MyExpString.MePara.TYPE).value(me.getType());
                                         jsonWriter.endObject();
                                     }
                                     jsonWriter.endArray();

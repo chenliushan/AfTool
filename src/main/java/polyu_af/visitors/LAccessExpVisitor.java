@@ -2,6 +2,7 @@ package polyu_af.visitors;
 
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
+import polyu_af.models.LineAccessAstVars;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MyExpAst;
 
@@ -10,10 +11,13 @@ import java.util.List;
 import java.util.Stack;
 
 /**
+ * 这个方法获取所有子表达式
+ * 在遍历完一个TypeDeclaration之后,将获取到的所有子表达式加入父类定义的accessVars4LineList中
+ * 每一行LineAccessVars在添加子表达式的时,自动判断子表达式在当前行是否有效,如果无效则不添加该表达式。
  * Created by liushanchen on 16/5/12.
  */
 public class LAccessExpVisitor extends LAccessVarVisitor {
-    private Stack<List<MyExpAst>> currentAccessExp = new Stack<List<MyExpAst>>();
+    private Stack<List<MyExpAst>> currentAccessExp = new Stack<List<MyExpAst>>();//后来并没有使用,因为子表达式的作用域可能在它第一次出现之前就有效了
     private List<MyExpAst> allExp = new ArrayList<MyExpAst>();
 
 
@@ -127,6 +131,9 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
 
     private void addExpInLineAccessVars() {
         for(LineAccessVars lav:accessVars4LineList){
+            lav.addExpInLine(allExp);
+        }
+        for(LineAccessAstVars lav:accessAstVars4LineList){
             lav.addExpInLine(allExp);
         }
     }

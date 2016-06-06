@@ -12,7 +12,7 @@
         <!--<File name="File_M" fileName="logs/targetLog_M.log">-->
             <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
         <!--</File>-->
-        <File name="File_M" fileName="logs/targetLog_M.log" >
+        <File name="File_M" fileName="logs/targetLog_M.log" Append="false">
             <PatternLayout pattern="%msg%n"/>
         </File>
         <File name="File_Var" fileName="logs/targetLog_Var.log" Append="false">

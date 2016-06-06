@@ -2,9 +2,6 @@ package polyu_af.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.models.ExeCommand;
-import polyu_af.models.TargetConfig;
-import polyu_af.models.TargetFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +36,7 @@ public class ExeTargetRuntime {
             e.printStackTrace();
         }
     }
+
     private static void getProcessOutput(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);

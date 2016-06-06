@@ -12,46 +12,31 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class LineAccessVars {
+public class LineAccessAstVars {
 
 
-    public static boolean addInvokingMethod=false;
     private int location;
-    private List<MyExpString> varsList;
+    private List<MyExpAst> varsList;
 
 
-    public LineAccessVars(int location) {
+    public LineAccessAstVars(int location) {
         this.location = location;
-        varsList = new ArrayList<MyExpString>();
-    }
-    public LineAccessVars(int location,boolean addInvokingMethod) {
-        this.location = location;
-        this.addInvokingMethod=addInvokingMethod;
-        varsList = new ArrayList<MyExpString>();
+        varsList = new ArrayList<MyExpAst>();
     }
 
     public void addVar(MyExpAst var) {
-        this.varsList.add(var.getME());
-        if(addInvokingMethod){
-            List<MyExpString> myInvokingMethod=var.getInvokingMethod();
-            if(myInvokingMethod!=null){
-                this.varsList.addAll(myInvokingMethod);
-            }
-        }
+        this.varsList.add(var);
     }
 
-
     public void addVar(List<MyExpAst> vars) {
-        for (MyExpAst mea : vars) {
-           addVar(mea);
-        }
+        varsList.addAll(vars);
     }
 
     public int getLocation() {
         return location;
     }
 
-    public List<MyExpString> getVarsList() {
+    public List<MyExpAst> getVarsList() {
         return varsList;
     }
 
@@ -103,7 +88,7 @@ public class LineAccessVars {
 
     private boolean checkExpInString(String e) {
 
-        for (MyExpString me : varsList) {
+        for (MyExpAst me : varsList) {
             if (me.getExpVar().equals(e)) {
                 return true;
             }
@@ -125,7 +110,7 @@ public class LineAccessVars {
         }
         //if there is exp in same type and value?
         if (e.resolveTypeBinding() != null) {
-            for (MyExpString me : varsList) {
+            for (MyExpAst me : varsList) {
                 if (me.getType() != null) {
                     if ((me.getType().equals(e.resolveTypeBinding().getBinaryName()) ||
                             me.getType().equals(e.resolveTypeBinding().getBinaryName()))

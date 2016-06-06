@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
+import polyu_af.models.LineAccessAstVars;
 import polyu_af.models.LineAccessVars;
 import polyu_af.models.MyExpAst;
 
@@ -51,6 +52,7 @@ public class LAccessVarVisitor extends ASTVisitor {
     }
 
     protected List<LineAccessVars> accessVars4LineList = new ArrayList<LineAccessVars>();
+    protected List<LineAccessAstVars> accessAstVars4LineList = new ArrayList<LineAccessAstVars>();
     /**
      * each stack element stores the accessible fields in the current scope.
      */
@@ -65,6 +67,9 @@ public class LAccessVarVisitor extends ASTVisitor {
     private Stack<TypeDeclaration> typeDecl = new Stack<TypeDeclaration>();
     public List<LineAccessVars> getAccessibleVars() {
         return accessVars4LineList;
+    }
+    public List<LineAccessAstVars> getAccessAstVars4LineList() {
+        return accessAstVars4LineList;
     }
 
 
@@ -245,20 +250,25 @@ public class LAccessVarVisitor extends ASTVisitor {
 
     protected void outPutAccessibleVars(int position) {
         LineAccessVars vars = new LineAccessVars(root.getLineNumber(position));
+        LineAccessAstVars astVars = new LineAccessAstVars(root.getLineNumber(position));
 
         if (!currentAccessible.isEmpty()) {
             vars.addVar(currentAccessible.peek());
+            astVars.addVar(currentAccessible.peek());
         }
         if (!isStaticBlock) {
             if (!currentField.isEmpty()) {
                 vars.addVar(currentField.peek());
+                astVars.addVar(currentField.peek());
             }
         }
         if (!currentStaticField.isEmpty()) {
             vars.addVar(currentStaticField.peek());
+            astVars.addVar(currentStaticField.peek());
         }
         if (!accessVars4LineList.contains(vars)) {
             accessVars4LineList.add(vars);
+            accessAstVars4LineList.add(astVars);
         }
     }
 
