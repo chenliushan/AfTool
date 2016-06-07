@@ -107,6 +107,9 @@ public abstract class AbsExeCommand {
     }
 
     private void addMJTestCp() {
+        if(command.toString().endsWith(" polyu_af.MyJunitCore ")){
+            return;
+        }
         command.append(":");
         command.append(tc.getTestClassPath());//append the test source classpath
         command.append(":lib/junit-4.11.jar:lib/MyJunit.jar:lib/hamcrest-core-1.3.jar:");
@@ -121,33 +124,31 @@ public abstract class AbsExeCommand {
 
     public String testClass(List<TargetFile> targetTests) {
         addMJTestCp();
-        StringBuilder tfNames = new StringBuilder();
+        StringBuilder tfNames = new StringBuilder(command);
         for (TargetFile tt : targetTests) {
             tfNames.append(" ");
             tfNames.append(tt.getQualifyFileName());
         }
-        command.append(tfNames);
-        return command.toString();
+        return tfNames.toString();
     }
 
     public String runTestUnits(List<TestUnit> allFailures) {
         addMJTestCp();
-        StringBuilder tfNames = new StringBuilder();
+        StringBuilder tfNames = new StringBuilder(command);
         for (TestUnit tt : allFailures) {
             tfNames.append(" ");
             tfNames.append(tt.getQualifyName());
         }
-        command.append(tfNames);
-        return command.toString();
+        return tfNames.toString();
     }
+
 
     public String runTestUnit(TestUnit testUnit) {
         addMJTestCp();
-        StringBuilder tfNames = new StringBuilder();
+        StringBuilder tfNames = new StringBuilder(command);
         tfNames.append(" ");
         tfNames.append(testUnit.getQualifyName());
-        command.append(tfNames);
-        return command.toString();
+        return tfNames.toString();
     }
 
     public String testMethod(String tgQualifyFileName, String methodName) {

@@ -100,7 +100,7 @@ public class GlobalProcess {
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
             List<LineState> lsList = varLog.analyze();
             logger.info("\nList<LineState>:" + lsList);
-            break;
+//            break;
         }
 
         exeVarLogAg = null;
