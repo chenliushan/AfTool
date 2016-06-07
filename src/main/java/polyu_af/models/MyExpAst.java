@@ -82,7 +82,9 @@ public class MyExpAst implements MyExp {
                 String invokingName = methodBindings[i].getName();
                 if (methodBindings[i].getParameterTypes().length == 0
                         && !returnType.equals("void") && isValidInvoking(invokingName)) {
-                    StringBuilder sb = new StringBuilder(getExpVar());
+                    StringBuilder sb = new StringBuilder("(");
+                    sb.append(getExpVar());
+                    sb.append(")");
                     sb.append(".");
                     sb.append(invokingName);
                     sb.append("()");

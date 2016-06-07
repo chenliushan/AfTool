@@ -66,7 +66,7 @@ public class GlobalProcess {
 //            logger.info("mLogAnalyResults:" + analyzeMLog.getResultList());
         /****************************Analysis of the AST of the related class*********************************/
         /* analyze related classes */
-        LineAccessVars.addInvokingMethod = false;
+        LineAccessVars.addInvokingMethod = true;
         for (String qname : relatedClass) {
 
             /* create faultFile's AST */
@@ -92,16 +92,20 @@ public class GlobalProcess {
         AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
 //        ExeTargetRuntime.process(exeVarLogAg.runTestUnits(allFailures));
         /****************************Analysis of the Var log*********************************/
-        AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
+//        AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
 //        List<LineState> lsList = varLog.analyze();
 //        logger.info("List<LineState>:"+lsList);
         /**************************** ###Run all test units and analyze Log*********************************/
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
+            AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
             List<LineState> lsList = varLog.analyze();
-            logger.info("\nList<LineState>:" + lsList);
-//            break;
+            logger.info("\nList<LineState>:" + lsList.size());
         }
+//            MLogAnalyResult mLogResult=allTestUnitsResults.get(7);
+//            ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
+//            List<LineState> lsList = varLog.analyze();
+//            logger.info("\nList<LineState>:" + lsList);
 
         exeVarLogAg = null;
         /**************************** ###Finding fault location and status*********************************/
