@@ -1,8 +1,8 @@
 package polyu_af.process;
 
-import polyu_af.utils.Constants;
 import polyu_af.exception.IllegalFormat;
 import polyu_af.models.*;
+import polyu_af.utils.Constants;
 import process.VarLogConstants;
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class AnalyzeVarLog extends AnalyzeLog {
     List<TargetFile> targetFiles;
+    MyMethod currentMethod;
 
     public AnalyzeVarLog(List<TargetFile> tfs) {
         super(Constants.VarLogPath);
@@ -22,6 +23,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
 
     /**
      * Match the MyExpString and logged String value
+     *
      * @return
      */
     public List<LineState> analyze() {
@@ -30,6 +32,8 @@ public class AnalyzeVarLog extends AnalyzeLog {
         List<LineState> lineStateList = new ArrayList<LineState>();
         LineState lineState = null;
         try {
+            /*遍历log的每一行,如果有lineStart则new一个LineState,如果有lineEnd则将lineState设为null;
+            若果lineState不为null则将log转换为MyExpString并插入lineState。*/
             while ((line = myLog.readLine()) != null) {
                 if (line.startsWith(VarLogConstants.lineStart)) {
                     line = line.substring(VarLogConstants.lineStart.length());
@@ -38,6 +42,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
                 } else if (lineState != null && line.startsWith(VarLogConstants.lineEnd)) {
                     if (analyzeLineEnd(line) == lineState.getLineNum()) {
                         lineStateList.add(lineState);
+                        currentMethod.addLineState(lineState);
                     } else {
                         System.err.println("something wrong!!");
                     }
@@ -107,16 +112,24 @@ public class AnalyzeVarLog extends AnalyzeLog {
     private MyExpString searchForMyExp(String expName, String mQName, int location) {
         MyExpString me = null;
         List<LineAccessVars> lavList = null;
-        for (TargetFile tf : targetFiles) {
-            if (mQName.contains(tf.getQualifyFileName())) {
-                for (MyMethod mm : tf.getMyMethodAccessVars()) {
-                    if (mQName.contains(mm.getLongName())) {
-                        lavList = mm.getVarsList();
-                        break;
+        if (currentMethod != null && mQName.contains(currentMethod.getLongName())) {
+            lavList = currentMethod.getVarsList();
+        } else {
+            /*搜索targetFiles找到targetFile,然后找到targetMethod*/
+            for (TargetFile tf : targetFiles) {
+                if (mQName.contains(tf.getQualifyFileName() + "#")) {
+                    for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                        if (mQName.contains(mm.getLongName())) {
+                            currentMethod = mm;
+                            lavList = mm.getVarsList();
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        /*然后找到targetLine*/
         if (lavList != null) {
             List<MyExpString> meList = null;
             for (LineAccessVars lav : lavList) {
@@ -125,6 +138,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
                     break;
                 }
             }
+            /*然后找到targetExpString*/
             if (meList != null) {
                 for (MyExpString myExpString : meList) {
                     if (myExpString.getExpVar().equals(expName)) {

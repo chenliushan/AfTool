@@ -78,7 +78,7 @@ public class MyExpAst implements MyExp {
             IMethodBinding[] methodBindings = type.getDeclaredMethods();
             if (methodBindings == null) return null;
             for (int i = 0; i < methodBindings.length; i++) {
-                String returnType = methodBindings[i].getReturnType().getName();
+                String returnType = getTypeName(methodBindings[i].getReturnType());
                 String invokingName = methodBindings[i].getName();
                 if (methodBindings[i].getParameterTypes().length == 0
                         && !returnType.equals("void") && isValidInvoking(invokingName)) {

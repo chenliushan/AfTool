@@ -101,6 +101,8 @@ public class GlobalProcess {
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
             List<LineState> lsList = varLog.analyze();
             logger.info("\nList<LineState>:" + lsList.size());
+            printTargetFiles(targetProgram.getTargetSources());
+            break;
         }
 //            MLogAnalyResult mLogResult=allTestUnitsResults.get(7);
 //            ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
@@ -151,6 +153,16 @@ public class GlobalProcess {
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         logger.info("totalTime:" + totalTime);
+
+    }
+    private static void printTargetFiles(List<TargetFile> targetFiles){
+        for(TargetFile tf:targetFiles){
+            for(MyMethod mm:tf.getMyMethodAccessVars()){
+                for(LineState ls: mm.getLineStateList()){
+                    logger.info("\ntargetSources:" + ls.toString());
+                }
+            }
+        }
 
     }
 }

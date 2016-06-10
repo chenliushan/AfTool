@@ -18,11 +18,13 @@ public class MyMethod {
     private String methodName;
     private List<String> paramTypes;
     private List<LineAccessVars> varsList;
+    private List<LineState> lineStateList;
 
     public MyMethod(String methodName) {
         this.methodName = methodName;
-        varsList = new ArrayList<LineAccessVars>();
-        paramTypes = new ArrayList<String>();
+        varsList = new ArrayList<LineAccessVars>(0);
+        paramTypes = new ArrayList<String>(0);
+        lineStateList = new ArrayList<LineState>(0);
 
     }
 
@@ -92,6 +94,14 @@ public class MyMethod {
 
     public void setParamTypes(List<String> paramTypes) {
         this.paramTypes = paramTypes;
+    }
+
+    public List<LineState> getLineStateList() {
+        return lineStateList;
+    }
+
+    public void addLineState(LineState lineState) {
+        this.lineStateList.add(lineState);
     }
 
     @Override
