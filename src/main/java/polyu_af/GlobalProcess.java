@@ -100,10 +100,11 @@ public class GlobalProcess {
             AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
             List<LineState> lsList = varLog.analyze();
-            logger.info("\nList<LineState>:" + lsList.size());
-            printTargetFiles(targetProgram.getTargetSources());
+            logger.info("List<LineState>:" + lsList.size());
             break;
         }
+        printTargetFiles(targetProgram.getTargetSources());
+
 //            MLogAnalyResult mLogResult=allTestUnitsResults.get(7);
 //            ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
 //            List<LineState> lsList = varLog.analyze();
@@ -159,7 +160,10 @@ public class GlobalProcess {
         for(TargetFile tf:targetFiles){
             for(MyMethod mm:tf.getMyMethodAccessVars()){
                 for(LineState ls: mm.getLineStateList()){
-                    logger.info("\ntargetSources:" + ls.toString());
+                    if(ls!=null){
+                        logger.info("targetSources:" + ls.toString()+"\n");
+                        mm.setVarsList(null);
+                    }
                 }
             }
         }

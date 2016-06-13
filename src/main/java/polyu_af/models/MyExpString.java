@@ -7,6 +7,9 @@ public class MyExpString implements MyExp {
     private String type = null;
     private String expVar = null;
 
+    public MyExpString() {
+    }
+
     public MyExpString(String type, String expVar) {
         this.type = type;
         this.expVar = expVar;
@@ -25,6 +28,13 @@ public class MyExpString implements MyExp {
         return type;
     }
 
+    public void setExpVar(String expVar) {
+        this.expVar = expVar;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @Override
     public String toString() {

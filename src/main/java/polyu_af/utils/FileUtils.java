@@ -5,14 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polyu_af.TestCluster;
-import polyu_af.models.LineAccessVars;
-import polyu_af.models.MyExpString;
-import polyu_af.models.MyMethod;
-import polyu_af.models.TargetFile;
+import polyu_af.models.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,83 +35,52 @@ public class FileUtils {
     }
 
     public static void outputTfList(Object obj, String path) {
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(obj.getClass(), new TfListTypeAdapter())
-//                .create();
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MyExp.class, new MyExpTypeAdapter())
+                .create();
+//        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String jsonObj = gson.toJson(obj);
         writeFile(jsonObj, path);
     }
 
-    private static class TfListTypeAdapter extends TypeAdapter<List<TargetFile>> {
-
+    private static class MyExpTypeAdapter extends TypeAdapter<MyExp> {
 
         @Override
-        public void write(JsonWriter jsonWriter, List<TargetFile> targetFiles) throws IOException {
-
-            jsonWriter.beginArray();
-            for (TargetFile tf : targetFiles) {
+        public void write(JsonWriter jsonWriter, MyExp myExpAst) throws IOException {
                 jsonWriter.beginObject();
-                jsonWriter.name(TargetFile.TfPara.ABSOLUTE_DIR).value(tf.getAbsoluteDir());
-                jsonWriter.name(TargetFile.TfPara.PACKAGE_NAME).value(tf.getPackageName());
-                jsonWriter.name(TargetFile.TfPara.FILE_NAME).value(tf.getFileName());
-                List<MyMethod> mavs = tf.getMyMethodAccessVars();
-                if (mavs == null) {
-                    jsonWriter.name(TargetFile.TfPara.METHOD_ACCESS_VARS).nullValue();
-                } else {
-                    jsonWriter.name(TargetFile.TfPara.METHOD_ACCESS_VARS).beginArray();
-                    for (MyMethod mav : mavs) {
-                        jsonWriter.beginObject();
-                        jsonWriter.name(MyMethod.MavPara.METHOD_NAME).value(mav.getMethodName());
-                        List<String> paras = mav.getParams();
-                        if (paras == null) {
-                            jsonWriter.name(MyMethod.MavPara.PARAM_TYPES).nullValue();
-                        } else {
-                            jsonWriter.name(MyMethod.MavPara.PARAM_TYPES).beginArray();
-                            for (String para : paras) {
-                                jsonWriter.value(para);
-                            }
-                            jsonWriter.endArray();
-
-                        }
-                        List<LineAccessVars> las = mav.getVarsList();
-                        if (las == null) {
-                            jsonWriter.name(MyMethod.MavPara.METHOD_NAME).nullValue();
-                        } else {
-                            jsonWriter.name(MyMethod.MavPara.METHOD_NAME).beginArray();
-                            for (LineAccessVars la : mav.getVarsList()) {
-                                jsonWriter.beginObject();
-                                jsonWriter.name(LineAccessVars.LavPara.LOCATION).value(la.getLocation());
-                                List<MyExpString> mes = la.getVarsList();
-                                if (mes == null) {
-                                    jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).nullValue();
-                                } else {
-                                    jsonWriter.name(LineAccessVars.LavPara.VARS_LIST).beginArray();
-                                    for (MyExpString me : la.getVarsList()) {
-                                        jsonWriter.beginObject();
-                                        jsonWriter.name(MyExpString.MePara.EXP_VAR).value(me.getExpVar());
-                                        jsonWriter.name(MyExpString.MePara.TYPE).value(me.getType());
-                                        jsonWriter.endObject();
-                                    }
-                                    jsonWriter.endArray();
-                                }
-                                jsonWriter.endObject();
-                            }
-                            jsonWriter.endArray();
-                        }
-                        jsonWriter.endObject();
-                    }
-                    jsonWriter.endArray();
-                }
+                jsonWriter.name(MyExp.MyExpAstPara.TYPE).value(myExpAst.getType());
+                jsonWriter.name(MyExp.MyExpAstPara.EXPVAR).value(myExpAst.getExpVar());
                 jsonWriter.endObject();
-            }
-            jsonWriter.endArray();
         }
 
         @Override
-        public List<TargetFile> read(JsonReader jsonReader) throws IOException {
+        public MyExp read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+             MyExp myExp = new MyExpString();
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                switch (jsonReader.nextName()) {
+                    case MyExp.MyExpAstPara.TYPE:
+                        myExp.setType(jsonReader.nextString());
+                        break;
+                    case MyExp.MyExpAstPara.EXPVAR:
+                        myExp.setExpVar(jsonReader.nextString());
+                        break;
 
-            return null;
+                }
+            }
+            jsonReader.endObject();
+
+            return myExp;
+//            String xy = jsonReader.nextString();
+//            String[] parts = xy.split(",");
+//            String type = parts[0];
+//            String expvar = parts[1];
+//            return new MyExpString(type, expvar);
+
         }
     }
 
@@ -131,7 +98,12 @@ public class FileUtils {
 
     public static List<TargetFile> json2TfList() {
         String pathName = Constants.firstStepOutputPath;
-        Gson gson = new Gson();
+//        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MyExpAst.class, new MyExpTypeAdapter())
+                .registerTypeAdapter(MyExp.class, new MyExpTypeAdapter())
+                .registerTypeAdapter(MyExpString.class, new MyExpTypeAdapter())
+                .create();
         List<TargetFile> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TargetFile>>() {
         }.getType());
         return obj;

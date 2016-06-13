@@ -104,6 +104,10 @@ public class MyMethod {
         this.lineStateList.add(lineState);
     }
 
+    public void setVarsList(List<LineAccessVars> varsList) {
+        this.varsList = varsList;
+    }
+
     @Override
     public String toString() {
         return "\nMyMethod{" +

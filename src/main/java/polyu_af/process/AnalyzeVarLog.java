@@ -93,7 +93,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
         ExpValue expValue = null;
         String[] expAndVal = line.split(":");
 
-        expValue = new ExpValue(searchForMyExp(expAndVal[0], mQName, location));
+        expValue = new ExpValue((MyExpAst) searchForMyExp(expAndVal[0], mQName, location));
         if (expAndVal.length != 2) {
             expValue.setValueString("");
         } else {
@@ -109,8 +109,8 @@ public class AnalyzeVarLog extends AnalyzeLog {
      * @param mQName
      * @return
      */
-    private MyExpString searchForMyExp(String expName, String mQName, int location) {
-        MyExpString me = null;
+    private MyExp searchForMyExp(String expName, String mQName, int location) {
+        MyExp me = null;
         List<LineAccessVars> lavList = null;
         if (currentMethod != null && mQName.contains(currentMethod.getLongName())) {
             lavList = currentMethod.getVarsList();
@@ -131,7 +131,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
 
         /*然后找到targetLine*/
         if (lavList != null) {
-            List<MyExpString> meList = null;
+            List<MyExp> meList = null;
             for (LineAccessVars lav : lavList) {
                 if (lav.getLocation() == location) {
                     meList = lav.getVarsList();
@@ -140,9 +140,9 @@ public class AnalyzeVarLog extends AnalyzeLog {
             }
             /*然后找到targetExpString*/
             if (meList != null) {
-                for (MyExpString myExpString : meList) {
-                    if (myExpString.getExpVar().equals(expName)) {
-                        me = myExpString;
+                for (MyExp myExp : meList) {
+                    if (myExp.getExpVar().equals(expName)) {
+                        me = myExp;
                         break;
                     }
                 }

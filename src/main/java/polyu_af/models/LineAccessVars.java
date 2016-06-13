@@ -15,19 +15,20 @@ import java.util.List;
 public class LineAccessVars {
     public static boolean addInvokingMethod = false;
     private int location;
-    private List<MyExpString> varsList;
+//    private List<MyExpString> varsList;
+    private List<MyExp> varsList;
 
 
     public LineAccessVars(int location) {
         this.location = location;
-        this.varsList = new ArrayList<MyExpString>();
+        this.varsList = new ArrayList<MyExp>();
     }
 
 
     public void addVar(MyExpAst var) {
-        this.varsList.add(var.getME());
+        this.varsList.add(var);
         if (addInvokingMethod) {
-            List<MyExpString> myInvokingMethod = var.getInvokingMethod();
+            List<MyExpInv> myInvokingMethod = new MyExpInvokingMethod().getInvokingMethod(var);
             if (myInvokingMethod != null) {
                 this.varsList.addAll(myInvokingMethod);
             }
@@ -45,7 +46,7 @@ public class LineAccessVars {
         return location;
     }
 
-    public List<MyExpString> getVarsList() {
+    public List<MyExp> getVarsList() {
         return varsList;
     }
 
@@ -97,7 +98,7 @@ public class LineAccessVars {
 
 
     private boolean checkExpInString(String e) {
-        for (MyExpString me : varsList) {
+        for (MyExp me : varsList) {
             if (me.getExpVar().equals(e)) {
                 return true;
             }
@@ -119,7 +120,7 @@ public class LineAccessVars {
         }
         //if there is exp in same type and value?
         if (e.resolveTypeBinding() != null) {
-            for (MyExpString me : varsList) {
+            for (MyExp me : varsList) {
                 if (me.getType() != null && e.resolveTypeBinding() != null) {
                     if ((me.getType().equals(e.resolveTypeBinding().getBinaryName())
                             || me.getType().equals(e.resolveTypeBinding().getQualifiedName()))

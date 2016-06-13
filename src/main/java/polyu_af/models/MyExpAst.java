@@ -10,7 +10,8 @@ import java.util.List;
  * Created by liushanchen on 16/5/16.
  */
 public class MyExpAst implements MyExp {
-    private ASTNode astNode = null;
+
+    private transient ASTNode astNode = null;
 
     public MyExpAst(ASTNode astNode) throws NotAcceptExpNodeTypeException {
         int nType = astNode.getNodeType();
@@ -31,7 +32,6 @@ public class MyExpAst implements MyExp {
                 throw new NotAcceptExpNodeTypeException(getAstNodeType(astNode));
         }
         this.astNode = astNode;
-        getInvokingMethod();
     }
 
     public ASTNode getAstNode() {
@@ -68,62 +68,12 @@ public class MyExpAst implements MyExp {
         }
     }
 
-    public List<MyExpString> getInvokingMethod() {
-        ITypeBinding type = getTypeBinding();
-        if (type == null) return null;
-        if (type.isPrimitive()) {
-            return null;
-        } else {
-            List<MyExpString> invokingMyExpList = new ArrayList<MyExpString>();
-            IMethodBinding[] methodBindings = type.getDeclaredMethods();
-            if (methodBindings == null) return null;
-            for (int i = 0; i < methodBindings.length; i++) {
-                String returnType = getTypeName(methodBindings[i].getReturnType());
-                String invokingName = methodBindings[i].getName();
-                if (methodBindings[i].getParameterTypes().length == 0
-                        && !returnType.equals("void") && isValidInvoking(invokingName)) {
-                    StringBuilder sb = new StringBuilder("(");
-                    sb.append(getExpVar());
-                    sb.append(")");
-                    sb.append(".");
-                    sb.append(invokingName);
-                    sb.append("()");
-                    MyExpString invokingMyExp = new MyExpString(returnType, sb.toString());
-                    invokingMyExpList.add(invokingMyExp);
-                }
-            }
-            return invokingMyExpList;
-        }
-    }
-
-    private boolean isValidInvoking(String invokingName) {
-        switch (invokingName) {
-            case "size":
-                return true;
-            case "isEmpty":
-                return true;
-            case "toString":
-                return true;
-            case "length":
-                return true;
-
-        }
-        if (invokingName.startsWith("get")) {
-            return true;
-        }
-        return false;
-    }
-
     public String getAstNodeType() {
         return ASTNode.nodeClassForType(astNode.getNodeType()).getSimpleName();
     }
 
     public static String getAstNodeType(ASTNode node) {
         return ASTNode.nodeClassForType(node.getNodeType()).getSimpleName();
-    }
-
-    public void setAstNode(ASTNode astNode) {
-        this.astNode = astNode;
     }
 
     public ITypeBinding getTypeBinding() {
@@ -166,6 +116,16 @@ public class MyExpAst implements MyExp {
         }
     }
 
+    @Override
+    public void setType(String type) {
+
+    }
+
+    @Override
+    public void setExpVar(String expVar) {
+
+    }
+
     public static String getTypeName(ITypeBinding type) {
         if (type == null) {
             return null;
@@ -177,16 +137,18 @@ public class MyExpAst implements MyExp {
         }
     }
 
-    public MyExpString getME() {
-        return new MyExpString(getTypeName(getTypeBinding()), getExpVar());
-    }
+//    public MyExpString getME() {
+//        return new MyExpString(getTypeName(getTypeBinding()), getExpVar());
+//    }
 
 
     @Override
     public String toString() {
         return "Exp{" +
                 "nodeType: " + getAstNodeType() +
-                "; |type: " + getType() +
+                "; type: " + getType() +
+                "; var: " + getExpVar() +
                 "}\n";
     }
+
 }
