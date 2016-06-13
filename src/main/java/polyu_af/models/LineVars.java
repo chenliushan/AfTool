@@ -12,18 +12,25 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class LineAccessVars {
+public class LineVars {
     public static boolean addInvokingMethod = false;
     private int location;
-//    private List<MyExpString> varsList;
     private List<MyExp> varsList;
+    private transient List<Snapshot> snapshots;
 
 
-    public LineAccessVars(int location) {
+    public LineVars(int location) {
         this.location = location;
         this.varsList = new ArrayList<MyExp>();
     }
 
+    public List<Snapshot> getSnapshots() {
+        return snapshots;
+    }
+
+    public void setSnapshots(List<Snapshot> snapshots) {
+        this.snapshots = snapshots;
+    }
 
     public void addVar(MyExpAst var) {
         this.varsList.add(var);
@@ -52,9 +59,10 @@ public class LineAccessVars {
 
     @Override
     public String toString() {
-        return "\n\nLineAccessVars{" +
+        return "LineVars{\n" +
                 "location=" + location +
-                ", \n--vars:" + varsList +
+                ", varsList=" + varsList +
+                ", snapshots=" + snapshots +
                 '}';
     }
 

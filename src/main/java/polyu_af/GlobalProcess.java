@@ -66,7 +66,7 @@ public class GlobalProcess {
 //            logger.info("mLogAnalyResults:" + analyzeMLog.getResultList());
         /****************************Analysis of the AST of the related class*********************************/
         /* analyze related classes */
-        LineAccessVars.addInvokingMethod = true;
+        LineVars.addInvokingMethod = true;
         for (String qname : relatedClass) {
 
             /* create faultFile's AST */
@@ -81,21 +81,17 @@ public class GlobalProcess {
                  /* 所有line access ExpString 以method分组*/
                 List<MyMethod> methodLineLists = mvv.getMyMethodAccessVars();
                 /* 所有line access astExp*/
-                List<LineAccessAstVars> lineAccessAstVarsList = mvv.getAccessAstVars4LineList();
+                List<LineVars> lineAccessAstVarsList = mvv.getAccessibleVars();
                 mvv = null;
                 tf.setMyMethodAccessVars(methodLineLists);
             }
         }
         /* out put first step (AST analysis) results */
         FileUtils.outputTfList(targetProgram.getTargetSources());
-        /**************************** ###Run tests with VarLogAgent*********************************/
+        /**************************** Generate BuildSnapshot*********************************/
+        generateSnapShot(targetProgram.getTargetSources());
+        /**************************** ###Run all test units with VarLogAgent and analyze Log*********************************/
         AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
-//        ExeTargetRuntime.process(exeVarLogAg.runTestUnits(allFailures));
-        /****************************Analysis of the Var log*********************************/
-//        AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
-//        List<LineState> lsList = varLog.analyze();
-//        logger.info("List<LineState>:"+lsList);
-        /**************************** ###Run all test units and analyze Log*********************************/
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
             AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
@@ -104,15 +100,8 @@ public class GlobalProcess {
             break;
         }
         printTargetFiles(targetProgram.getTargetSources());
-
-//            MLogAnalyResult mLogResult=allTestUnitsResults.get(7);
-//            ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
-//            List<LineState> lsList = varLog.analyze();
-//            logger.info("\nList<LineState>:" + lsList);
-
         exeVarLogAg = null;
         /**************************** ###Finding fault location and status*********************************/
-
 
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
@@ -156,15 +145,36 @@ public class GlobalProcess {
         logger.info("totalTime:" + totalTime);
 
     }
-    private static void printTargetFiles(List<TargetFile> targetFiles){
-        for(TargetFile tf:targetFiles){
-            for(MyMethod mm:tf.getMyMethodAccessVars()){
-                for(LineState ls: mm.getLineStateList()){
-                    if(ls!=null){
-                        logger.info("targetSources:" + ls.toString()+"\n");
-                        mm.setVarsList(null);
-                    }
+
+    private static void generateSnapShot(List<TargetFile> tfList) {
+        BuildSnapshot bss = new BuildSnapshot();
+        for (TargetFile tf : tfList) {
+            for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                for (LineVars lv : mm.getVarsList()) {
+                    List<Snapshot> ssl=bss.buildSnapShot(lv.getVarsList());
+                    logger.info("bss.buildSnapShot(lv.getVarsList()):" +ssl + "\n");
+
+                    lv.setSnapshots(ssl);
                 }
+
+            }
+        }
+
+    }
+
+    private static void printTargetFiles(List<TargetFile> targetFiles) {
+        for (TargetFile tf : targetFiles) {
+            for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                if (mm != null) {
+                    logger.info("targetSources:" + mm.toString() + "\n");
+                    mm.setVarsList(null);
+                }
+//                for (LineState ls : mm.getLineStateList()) {
+//                    if (ls != null) {
+//                        logger.info("targetSources:" + ls.toString() + "\n");
+//                        mm.setVarsList(null);
+//                    }
+//                }
             }
         }
 

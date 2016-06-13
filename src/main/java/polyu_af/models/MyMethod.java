@@ -3,8 +3,6 @@ package polyu_af.models;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +15,12 @@ public class MyMethod {
     private String declaringClass=null;//this attribute is null in the TargetFile method list
     private String methodName;
     private List<String> paramTypes;
-    private List<LineAccessVars> varsList;
+    private List<LineVars> varsList;
     private List<LineState> lineStateList;
 
     public MyMethod(String methodName) {
         this.methodName = methodName;
-        varsList = new ArrayList<LineAccessVars>(0);
+        varsList = new ArrayList<LineVars>(0);
         paramTypes = new ArrayList<String>(0);
         lineStateList = new ArrayList<LineState>(0);
 
@@ -31,15 +29,15 @@ public class MyMethod {
     public MyMethod(String declaringClass, String methodName) {
         this.declaringClass = declaringClass;
         this.methodName = methodName;
-        varsList = new ArrayList<LineAccessVars>();
+        varsList = new ArrayList<LineVars>();
         paramTypes = new ArrayList<String>();
     }
 
-    public void addLine(LineAccessVars vars) {
+    public void addLine(LineVars vars) {
         varsList.add(vars);
     }
 
-    public void addLine(List<LineAccessVars> vars) {
+    public void addLine(List<LineVars> vars) {
         varsList.addAll(vars);
     }
 
@@ -61,7 +59,7 @@ public class MyMethod {
         return sb.toString();
     }
 
-    public List<LineAccessVars> getVarsList() {
+    public List<LineVars> getVarsList() {
         return varsList;
     }
 
@@ -104,7 +102,7 @@ public class MyMethod {
         this.lineStateList.add(lineState);
     }
 
-    public void setVarsList(List<LineAccessVars> varsList) {
+    public void setVarsList(List<LineVars> varsList) {
         this.varsList = varsList;
     }
 

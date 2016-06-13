@@ -2,8 +2,8 @@ package polyu_af.visitors;
 
 import org.eclipse.jdt.core.dom.*;
 import polyu_af.exception.NotAcceptExpNodeTypeException;
-import polyu_af.models.LineAccessAstVars;
-import polyu_af.models.LineAccessVars;
+//import polyu_af.models.LineAccessAstVars;
+import polyu_af.models.LineVars;
 import polyu_af.models.MyExpAst;
 
 import java.util.ArrayList;
@@ -130,10 +130,7 @@ public class LAccessExpVisitor extends LAccessVarVisitor {
     }
 
     private void addExpInLineAccessVars() {
-        for(LineAccessVars lav:accessVars4LineList){
-            lav.addExpInLine(allExp);
-        }
-        for(LineAccessAstVars lav:accessAstVars4LineList){
+        for(LineVars lav:accessVars4LineList){
             lav.addExpInLine(allExp);
         }
     }

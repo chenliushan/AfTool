@@ -3,7 +3,7 @@ package polyu_af.visitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import polyu_af.models.LineAccessVars;
+import polyu_af.models.LineVars;
 import polyu_af.models.MyMethod;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 public class MAccessVarVisitor extends LAccessExpVisitor {
     private List<MyMethod> myMethodAccessVars = new ArrayList<MyMethod>();
     private MyMethod accessVar4Method;
-    private List<LineAccessVars> accesVarsListM;
+    private List<LineVars> accesVarsListM;
 
 
     public MAccessVarVisitor(CompilationUnit root) {
@@ -37,7 +37,7 @@ public class MAccessVarVisitor extends LAccessExpVisitor {
 
 
         }
-        accesVarsListM = new ArrayList<LineAccessVars>();
+        accesVarsListM = new ArrayList<LineVars>();
         return super.visit(node);
     }
 

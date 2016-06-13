@@ -111,7 +111,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
      */
     private MyExp searchForMyExp(String expName, String mQName, int location) {
         MyExp me = null;
-        List<LineAccessVars> lavList = null;
+        List<LineVars> lavList = null;
         if (currentMethod != null && mQName.contains(currentMethod.getLongName())) {
             lavList = currentMethod.getVarsList();
         } else {
@@ -132,7 +132,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
         /*然后找到targetLine*/
         if (lavList != null) {
             List<MyExp> meList = null;
-            for (LineAccessVars lav : lavList) {
+            for (LineVars lav : lavList) {
                 if (lav.getLocation() == location) {
                     meList = lav.getVarsList();
                     break;
