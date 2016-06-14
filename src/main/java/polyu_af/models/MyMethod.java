@@ -11,18 +11,15 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class MyMethod {
-//    private Logger logger = LogManager.getLogger();
     private String declaringClass=null;//this attribute is null in the TargetFile method list
     private String methodName;
     private List<String> paramTypes;
     private List<LineVars> varsList;
-    private List<LineState> lineStateList;
 
     public MyMethod(String methodName) {
         this.methodName = methodName;
         varsList = new ArrayList<LineVars>(0);
         paramTypes = new ArrayList<String>(0);
-        lineStateList = new ArrayList<LineState>(0);
 
     }
 
@@ -59,7 +56,7 @@ public class MyMethod {
         return sb.toString();
     }
 
-    public List<LineVars> getVarsList() {
+    public List<LineVars> getLineVarsList() {
         return varsList;
     }
 
@@ -94,21 +91,13 @@ public class MyMethod {
         this.paramTypes = paramTypes;
     }
 
-    public List<LineState> getLineStateList() {
-        return lineStateList;
-    }
-
-    public void addLineState(LineState lineState) {
-        this.lineStateList.add(lineState);
-    }
-
     public void setVarsList(List<LineVars> varsList) {
         this.varsList = varsList;
     }
 
     @Override
     public String toString() {
-        return "\nMyMethod{" +
+        return "MyMethod{" +
                 "declaringClass='" + declaringClass + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", paramTypes=" + paramTypes +

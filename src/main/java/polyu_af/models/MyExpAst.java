@@ -144,7 +144,7 @@ public class MyExpAst implements MyExp {
 
     @Override
     public String toString() {
-        return "Exp{" +
+        return "ExpAst{" +
                 "nodeType: " + getAstNodeType() +
                 "; type: " + getType() +
                 "; var: " + getExpVar() +

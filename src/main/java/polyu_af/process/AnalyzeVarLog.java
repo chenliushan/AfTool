@@ -15,6 +15,8 @@ import java.util.List;
 public class AnalyzeVarLog extends AnalyzeLog {
     List<TargetFile> targetFiles;
     MyMethod currentMethod;
+    LineVars lv = null;
+
 
     public AnalyzeVarLog(List<TargetFile> tfs) {
         super(Constants.VarLogPath);
@@ -26,32 +28,32 @@ public class AnalyzeVarLog extends AnalyzeLog {
      *
      * @return
      */
-    public List<LineState> analyze() {
+    public List<LineVars> analyze() {
         String line;
         String methodQName = null;
-        List<LineState> lineStateList = new ArrayList<LineState>();
-        LineState lineState = null;
+        List<LineVars> LineVarList = new ArrayList<LineVars>();
+        LineVars lineVar = null;
         try {
-            /*遍历log的每一行,如果有lineStart则new一个LineState,如果有lineEnd则将lineState设为null;
-            若果lineState不为null则将log转换为MyExpString并插入lineState。*/
+            /*遍历log的每一行,如果有lineStart则new一个LineVar,如果有lineEnd则将lineVar设为null;
+            若果lineVar不为null则将log转换为MyExpString并插入lineVar。*/
             while ((line = myLog.readLine()) != null) {
                 if (line.startsWith(VarLogConstants.lineStart)) {
                     line = line.substring(VarLogConstants.lineStart.length());
-                    lineState = new LineState(lineStartLocation(line));
+                    lineVar = new LineVars(lineStartLocation(line));
                     methodQName = analyzeLineStart(line);
-                } else if (lineState != null && line.startsWith(VarLogConstants.lineEnd)) {
-                    if (analyzeLineEnd(line) == lineState.getLineNum()) {
-                        lineStateList.add(lineState);
-                        currentMethod.addLineState(lineState);
+                } else if (lineVar != null && line.startsWith(VarLogConstants.lineEnd)) {
+                    if (analyzeLineEnd(line) == lineVar.getLocation()) {
+                        LineVarList.add(lineVar);
+                        currentMethod.addLine(lineVar);
                     } else {
                         System.err.println("something wrong!!");
                     }
-                    lineState = null;
+                    lineVar = null;
                     methodQName = null;
-                } else if (lineState != null && methodQName != null) {
-                    ExpValue ev = line2ExpVal(line, methodQName, lineState.getLineNum());
+                } else if (lineVar != null && methodQName != null) {
+                    ExpValue ev = line2ExpVal(line, methodQName, lineVar.getLocation());
                     if (ev != null) {
-                        lineState.addExpValueList(ev);
+                        lineVar.addExpValueList(ev);
                     }
                 }
             }
@@ -60,7 +62,46 @@ public class AnalyzeVarLog extends AnalyzeLog {
         } catch (IllegalFormat illegalFormat) {
             illegalFormat.printStackTrace();
         }
-        return lineStateList;
+        return LineVarList;
+    }
+
+    /**
+     * Match the MyExpString and logged String value
+     *
+     * @return
+     */
+    public void logAnalyze() {
+        String line;
+        int location = -1;
+        String methodQName = null;
+        try {
+            /*遍历log的每一行,如果有lineStart则new一个LineVar,如果有lineEnd则将lineVar设为null;
+            若果lineVar不为null则将log转换为MyExpString并插入lineVar。*/
+            while ((line = myLog.readLine()) != null) {
+                if (line.startsWith(VarLogConstants.lineStart)) {
+                    line = line.substring(VarLogConstants.lineStart.length());
+                    location = lineStartLocation(line);
+                    methodQName = analyzeLineStart(line);
+                } else if (location > 0 && line.startsWith(VarLogConstants.lineEnd)) {
+                    if (analyzeLineEnd(line) == location) {
+                        location = -1;
+                    } else {
+                        System.err.println("something wrong!!");
+                    }
+                    methodQName = null;
+                } else if (location > 0 && methodQName != null) {
+                    ExpValue ev = line2ExpVal(line, methodQName, location);
+                    if (ev != null && lv != null) {
+                        lv.addExpValueList(ev);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalFormat illegalFormat) {
+            illegalFormat.printStackTrace();
+        }
+
     }
 
     private int lineStartLocation(String line) throws IllegalFormat {
@@ -92,8 +133,8 @@ public class AnalyzeVarLog extends AnalyzeLog {
     private ExpValue line2ExpVal(String line, String mQName, int location) throws IllegalFormat {
         ExpValue expValue = null;
         String[] expAndVal = line.split(":");
-
-        expValue = new ExpValue((MyExpAst) searchForMyExp(expAndVal[0], mQName, location));
+        searchForMyExp(mQName, location);
+        expValue = new ExpValue((MyExpAst) SearchForMyExp(expAndVal[0], lv.getVarsList()));
         if (expAndVal.length != 2) {
             expValue.setValueString("");
         } else {
@@ -103,17 +144,16 @@ public class AnalyzeVarLog extends AnalyzeLog {
     }
 
     /**
-     * find the MyExpString from the this.targetFiles
+     * find the LineVars from the this.targetFiles
+     * 找到targetLine
      *
-     * @param expName
      * @param mQName
      * @return
      */
-    private MyExp searchForMyExp(String expName, String mQName, int location) {
-        MyExp me = null;
+    private void searchForMyExp(String mQName, int location) {
         List<LineVars> lavList = null;
         if (currentMethod != null && mQName.contains(currentMethod.getLongName())) {
-            lavList = currentMethod.getVarsList();
+            lavList = currentMethod.getLineVarsList();
         } else {
             /*搜索targetFiles找到targetFile,然后找到targetMethod*/
             for (TargetFile tf : targetFiles) {
@@ -121,34 +161,41 @@ public class AnalyzeVarLog extends AnalyzeLog {
                     for (MyMethod mm : tf.getMyMethodAccessVars()) {
                         if (mQName.contains(mm.getLongName())) {
                             currentMethod = mm;
-                            lavList = mm.getVarsList();
+                            lavList = mm.getLineVarsList();
                             break;
                         }
                     }
                 }
             }
         }
-
         /*然后找到targetLine*/
         if (lavList != null) {
-            List<MyExp> meList = null;
             for (LineVars lav : lavList) {
                 if (lav.getLocation() == location) {
-                    meList = lav.getVarsList();
+                    lv = lav;
                     break;
                 }
             }
-            /*然后找到targetExpString*/
-            if (meList != null) {
-                for (MyExp myExp : meList) {
-                    if (myExp.getExpVar().equals(expName)) {
-                        me = myExp;
-                        break;
-                    }
+        }
+    }
+
+    /**
+     * 找到targetExpString
+     *
+     * @param expName
+     * @param meList
+     * @return
+     */
+    private MyExp SearchForMyExp(String expName, List<MyExp> meList) {
+        MyExp me = null;
+        if (meList != null) {
+            for (MyExp myExp : meList) {
+                if (myExp.getExpVar().equals(expName)) {
+                    me = myExp;
+                    break;
                 }
             }
         }
-
         return me;
     }
 }

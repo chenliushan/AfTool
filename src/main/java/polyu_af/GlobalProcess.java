@@ -5,10 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.process.AnalyzeMLogAllTest;
-import polyu_af.process.AnalyzeVarLog;
-import polyu_af.process.ExeTargetRuntime;
-import polyu_af.process.GetTargetConfig;
+import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.FileUtils;
 import polyu_af.visitors.MAccessVarVisitor;
@@ -88,19 +85,22 @@ public class GlobalProcess {
         }
         /* out put first step (AST analysis) results */
         FileUtils.outputTfList(targetProgram.getTargetSources());
-        /**************************** Generate BuildSnapshot*********************************/
-        generateSnapShot(targetProgram.getTargetSources());
+        /**************************** BuildPredicate*********************************/
+        buildPredicate(targetProgram.getTargetSources());
         /**************************** ###Run all test units with VarLogAgent and analyze Log*********************************/
         AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
             AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
-            List<LineState> lsList = varLog.analyze();
-            logger.info("List<LineState>:" + lsList.size());
+            varLog.logAnalyze();
             break;
         }
-        printTargetFiles(targetProgram.getTargetSources());
         exeVarLogAg = null;
+        /**************************** BuildSnapshot*********************************/
+        buildSnapshot(targetProgram.getTargetSources());
+        printTargetFiles(targetProgram.getTargetSources());
+
+
         /**************************** ###Finding fault location and status*********************************/
 
         //build expression with accessible variables
@@ -146,35 +146,40 @@ public class GlobalProcess {
 
     }
 
-    private static void generateSnapShot(List<TargetFile> tfList) {
-        BuildSnapshot bss = new BuildSnapshot();
+    private static void buildPredicate(List<TargetFile> tfList) {
+        BuildPredicate bss = new BuildPredicate();
         for (TargetFile tf : tfList) {
             for (MyMethod mm : tf.getMyMethodAccessVars()) {
-                for (LineVars lv : mm.getVarsList()) {
-                    List<Snapshot> ssl=bss.buildSnapShot(lv.getVarsList());
-                    logger.info("bss.buildSnapShot(lv.getVarsList()):" +ssl + "\n");
-
-                    lv.setSnapshots(ssl);
+                for (LineVars lv : mm.getLineVarsList()) {
+                    List<Predicate> pl = bss.buildSnapShot(lv.getVarsList());
+                    lv.setPredicates(pl);
                 }
-
             }
         }
-
     }
+
+    private static void buildSnapshot(List<TargetFile> tfList) {
+        for (TargetFile tf : tfList) {
+            for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                if (mm.getLineVarsList() == null) {
+                    break;
+                }
+                for (LineVars lv : mm.getLineVarsList()) {
+                    EvaluateSnapshot ess = new EvaluateSnapshot(lv.getLocation(), lv.getExpValueList());
+                    List<Snapshot> ssl = ess.buildSnapshot(lv.getPredicates());
+                    logger.info("snapshot:" + ssl + "\n");
+                }
+            }
+        }
+    }
+
 
     private static void printTargetFiles(List<TargetFile> targetFiles) {
         for (TargetFile tf : targetFiles) {
             for (MyMethod mm : tf.getMyMethodAccessVars()) {
                 if (mm != null) {
                     logger.info("targetSources:" + mm.toString() + "\n");
-                    mm.setVarsList(null);
                 }
-//                for (LineState ls : mm.getLineStateList()) {
-//                    if (ls != null) {
-//                        logger.info("targetSources:" + ls.toString() + "\n");
-//                        mm.setVarsList(null);
-//                    }
-//                }
             }
         }
 

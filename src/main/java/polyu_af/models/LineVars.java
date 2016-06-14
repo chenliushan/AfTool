@@ -16,20 +16,30 @@ public class LineVars {
     public static boolean addInvokingMethod = false;
     private int location;
     private List<MyExp> varsList;
-    private transient List<Snapshot> snapshots;
+    private transient List<Predicate> predicates;
+    private transient List<ExpValue> expValueList;
 
 
     public LineVars(int location) {
         this.location = location;
         this.varsList = new ArrayList<MyExp>();
+        this.expValueList = new ArrayList<ExpValue>();
     }
 
-    public List<Snapshot> getSnapshots() {
-        return snapshots;
+    public List<ExpValue> getExpValueList() {
+        return expValueList;
     }
 
-    public void setSnapshots(List<Snapshot> snapshots) {
-        this.snapshots = snapshots;
+    public void addExpValueList(ExpValue expValue) {
+        expValueList.add(expValue);
+    }
+
+    public List<Predicate> getPredicates() {
+        return predicates;
+    }
+
+    public void setPredicates(List<Predicate> predicates) {
+        this.predicates = predicates;
     }
 
     public void addVar(MyExpAst var) {
@@ -55,15 +65,6 @@ public class LineVars {
 
     public List<MyExp> getVarsList() {
         return varsList;
-    }
-
-    @Override
-    public String toString() {
-        return "LineVars{\n" +
-                "location=" + location +
-                ", varsList=" + varsList +
-                ", snapshots=" + snapshots +
-                '}';
     }
 
     /**
@@ -145,6 +146,16 @@ public class LineVars {
             return checkExpInString(e.toString());
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "LineVars{" +
+                "expValueList=" + expValueList +
+                ", location=" + location +
+                ", varsList=" + varsList +
+                ", predicates=" + predicates +
+                '}';
     }
 
     public static class LavPara {

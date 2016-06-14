@@ -1,76 +1,53 @@
 package polyu_af.models;
 
-import org.eclipse.jdt.core.dom.InfixExpression;
-
 /**
  * Created by liushanchen on 16/6/13.
  */
 public class Snapshot {
-    private MyExp leftOperand;
-    private MyExp rightOperand;
-    private InfixExpression.Operator operator;
-    private static String divider = " ";
-    public static String nullContent = "null";
-
-    public Snapshot(MyExp rightOperand, InfixExpression.Operator operator, MyExp leftOperand) {
-        this.rightOperand = rightOperand;
-        this.operator = operator;
-        this.leftOperand = leftOperand;
-    }
-
-    public Snapshot(InfixExpression.Operator operator, MyExp rightOperand) {
-        this.operator = operator;
-        this.rightOperand = rightOperand;
-    }
-
-    public Snapshot(MyExp leftOperand) {
-        this.leftOperand = leftOperand;
-    }
+    int location;
+    Predicate predicate;
+    Boolean value;
 
     public Snapshot() {
+
     }
 
-    public MyExp getLeftOperand() {
-        return leftOperand;
+    public Snapshot(int location, Predicate predicate, Boolean value) {
+        this.location = location;
+        this.predicate = predicate;
+        this.value = value;
     }
 
-    public void setLeftOperand(MyExp leftOperand) {
-        this.leftOperand = leftOperand;
+    public int getLocation() {
+        return location;
     }
 
-    public InfixExpression.Operator getOperator() {
-        return operator;
+    public void setLocation(int location) {
+        this.location = location;
     }
 
-    public void setOperator(InfixExpression.Operator operator) {
-        this.operator = operator;
+    public Predicate getPredicate() {
+        return predicate;
     }
 
-    public MyExp getRightOperand() {
-        return rightOperand;
+    public void setPredicate(Predicate predicate) {
+        this.predicate = predicate;
     }
 
-    public void setRightOperand(MyExp rightOperand) {
-        this.rightOperand = rightOperand;
+    public Boolean getValue() {
+        return value;
     }
 
-    public String getSnapshot() {
-        if (operator != null && leftOperand != null && rightOperand != null) {
-            return leftOperand.getExpVar() + divider + operator.toString() + divider + rightOperand.getExpVar();
-        } else if (operator != null && rightOperand != null) {
-            return operator.toString() + divider + rightOperand.getExpVar();
-        } else if (leftOperand != null) {
-            return leftOperand.getExpVar();
-        }
-        return null;
+    public void setValue(Boolean value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return "Snapshot{" +
-                "leftOperand:" + leftOperand +
-                ", rightOperand:" + rightOperand +
-                ", operator:" + operator +
-                '}';
+        return "<" +
+                "l:" + location +
+                "p:=" + predicate +
+                "v:=" + value +
+                ">\n";
     }
 }
