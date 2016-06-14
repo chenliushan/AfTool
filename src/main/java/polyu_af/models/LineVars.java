@@ -12,26 +12,15 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/4.
  */
-public class LineVars {
+public class LineVars extends FixLine{
     public static boolean addInvokingMethod = false;
-    private int location;
     private List<MyExp> varsList;
     private transient List<Predicate> predicates;
-    private transient List<ExpValue> expValueList;
 
 
     public LineVars(int location) {
-        this.location = location;
+        super(location);
         this.varsList = new ArrayList<MyExp>();
-        this.expValueList = new ArrayList<ExpValue>();
-    }
-
-    public List<ExpValue> getExpValueList() {
-        return expValueList;
-    }
-
-    public void addExpValueList(ExpValue expValue) {
-        expValueList.add(expValue);
     }
 
     public List<Predicate> getPredicates() {
@@ -57,10 +46,6 @@ public class LineVars {
         for (MyExpAst mea : vars) {
             addVar(mea);
         }
-    }
-
-    public int getLocation() {
-        return location;
     }
 
     public List<MyExp> getVarsList() {
@@ -151,8 +136,7 @@ public class LineVars {
     @Override
     public String toString() {
         return "LineVars{" +
-                "expValueList=" + expValueList +
-                ", location=" + location +
+                "location=" + location +
                 ", varsList=" + varsList +
                 ", predicates=" + predicates +
                 '}';

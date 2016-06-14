@@ -90,15 +90,16 @@ public class GlobalProcess {
         /**************************** ###Run all test units with VarLogAgent and analyze Log*********************************/
         AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
-            AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
-            varLog.logAnalyze();
-            break;
+            AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
+            varLog.tcLogAnalyze();
+            TestCaseR tc = varLog.getTestCaseR();
+            buildSnapshot(tc,targetProgram.getTargetSources());
+//            break;
         }
         exeVarLogAg = null;
         /**************************** BuildSnapshot*********************************/
-        buildSnapshot(targetProgram.getTargetSources());
-        printTargetFiles(targetProgram.getTargetSources());
+//        printTargetFiles(targetProgram.getTargetSources());
 
 
         /**************************** ###Finding fault location and status*********************************/
@@ -158,21 +159,41 @@ public class GlobalProcess {
         }
     }
 
-    private static void buildSnapshot(List<TargetFile> tfList) {
-        for (TargetFile tf : tfList) {
-            for (MyMethod mm : tf.getMyMethodAccessVars()) {
-                if (mm.getLineVarsList() == null) {
-                    break;
-                }
-                for (LineVars lv : mm.getLineVarsList()) {
-                    EvaluateSnapshot ess = new EvaluateSnapshot(lv.getLocation(), lv.getExpValueList());
-                    List<Snapshot> ssl = ess.buildSnapshot(lv.getPredicates());
+    private static void buildSnapshot(TestCaseR testCaseR,List<TargetFile> tfList) {
+        logger.error("buildSnapshot!!!");
+        for (TcMethod tcMethod : testCaseR.getTcMethodList()) {
+            MyMethod mm=findTFMethod(tfList,tcMethod.getLongName());
+            if(mm!=null){
+                for (TcLine tcLine : tcMethod.getTcLineList()) {
+                    EvaluateSnapshot ess = new EvaluateSnapshot(tcLine.getLocation(), tcLine.getExpValueList());
+                    List<Snapshot> ssl = ess.buildSnapshot(findPredicate(mm,tcLine.getLocation()));
                     logger.info("snapshot:" + ssl + "\n");
                 }
             }
+
         }
     }
-
+    private static MyMethod findTFMethod(List<TargetFile> tfList,String methodLongName){
+        for (TargetFile tf : tfList) {
+            for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                if (mm.getLongName().equals(methodLongName)) {
+                    return mm;
+                }
+            }
+        }
+        logger.error("findTFMethod null");
+        return null;
+    }
+    private static List<Predicate> findPredicate(MyMethod mm, int location){
+        for (LineVars lv : mm.getLineVarsList()) {
+            if(lv.getLocation()==location){
+                lv.getPredicates();
+                return lv.getPredicates();
+            }
+        }
+        logger.error("findPredicate null");
+        return null;
+    }
 
     private static void printTargetFiles(List<TargetFile> targetFiles) {
         for (TargetFile tf : targetFiles) {

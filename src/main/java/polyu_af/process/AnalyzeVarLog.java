@@ -6,21 +6,23 @@ import polyu_af.utils.Constants;
 import process.VarLogConstants;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by liushanchen on 16/6/1.
  */
 public class AnalyzeVarLog extends AnalyzeLog {
-    List<TargetFile> targetFiles;
-    MyMethod currentMethod;
-    LineVars lv = null;
+    private List<TargetFile> targetFiles;
+    private MyMethod currentMethod;
+    private TcMethod tcMethod;
+    private TcLine tcLine = null;
+    private TestCaseR testCaseR;
 
 
     public AnalyzeVarLog(List<TargetFile> tfs) {
         super(Constants.VarLogPath);
         this.targetFiles = tfs;
+        this.testCaseR = new TestCaseR();
     }
 
     /**
@@ -28,71 +30,33 @@ public class AnalyzeVarLog extends AnalyzeLog {
      *
      * @return
      */
-    public List<LineVars> analyze() {
-        String line;
-        String methodQName = null;
-        List<LineVars> LineVarList = new ArrayList<LineVars>();
-        LineVars lineVar = null;
-        try {
-            /*遍历log的每一行,如果有lineStart则new一个LineVar,如果有lineEnd则将lineVar设为null;
-            若果lineVar不为null则将log转换为MyExpString并插入lineVar。*/
-            while ((line = myLog.readLine()) != null) {
-                if (line.startsWith(VarLogConstants.lineStart)) {
-                    line = line.substring(VarLogConstants.lineStart.length());
-                    lineVar = new LineVars(lineStartLocation(line));
-                    methodQName = analyzeLineStart(line);
-                } else if (lineVar != null && line.startsWith(VarLogConstants.lineEnd)) {
-                    if (analyzeLineEnd(line) == lineVar.getLocation()) {
-                        LineVarList.add(lineVar);
-                        currentMethod.addLine(lineVar);
-                    } else {
-                        System.err.println("something wrong!!");
-                    }
-                    lineVar = null;
-                    methodQName = null;
-                } else if (lineVar != null && methodQName != null) {
-                    ExpValue ev = line2ExpVal(line, methodQName, lineVar.getLocation());
-                    if (ev != null) {
-                        lineVar.addExpValueList(ev);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalFormat illegalFormat) {
-            illegalFormat.printStackTrace();
-        }
-        return LineVarList;
-    }
-
-    /**
-     * Match the MyExpString and logged String value
-     *
-     * @return
-     */
-    public void logAnalyze() {
+    public void tcLogAnalyze() {
         String line;
         int location = -1;
         String methodQName = null;
         try {
-            /*遍历log的每一行,如果有lineStart则new一个LineVar,如果有lineEnd则将lineVar设为null;
-            若果lineVar不为null则将log转换为MyExpString并插入lineVar。*/
+            /*遍历log的每一行,如果有lineStart则new一个tcLine,如果有lineEnd则将tcLine设为null;
+            若果tcLine不为null则将log转换为MyExpString并插入tcLine。*/
             while ((line = myLog.readLine()) != null) {
                 if (line.startsWith(VarLogConstants.lineStart)) {
                     line = line.substring(VarLogConstants.lineStart.length());
                     location = lineStartLocation(line);
                     methodQName = analyzeLineStart(line);
+                    tcLine = new TcLine(location);
+
                 } else if (location > 0 && line.startsWith(VarLogConstants.lineEnd)) {
                     if (analyzeLineEnd(line) == location) {
-                        location = -1;
+                        tcMethod.addTcLineList(tcLine);
                     } else {
                         System.err.println("something wrong!!");
                     }
+                    location = -1;
+                    tcLine = null;
                     methodQName = null;
                 } else if (location > 0 && methodQName != null) {
                     ExpValue ev = line2ExpVal(line, methodQName, location);
-                    if (ev != null && lv != null) {
-                        lv.addExpValueList(ev);
+                    if (ev != null && tcLine != null) {
+                        tcLine.addExpValueList(ev);
                     }
                 }
             }
@@ -102,6 +66,10 @@ public class AnalyzeVarLog extends AnalyzeLog {
             illegalFormat.printStackTrace();
         }
 
+    }
+
+    public TestCaseR getTestCaseR() {
+        return testCaseR;
     }
 
     private int lineStartLocation(String line) throws IllegalFormat {
@@ -133,24 +101,26 @@ public class AnalyzeVarLog extends AnalyzeLog {
     private ExpValue line2ExpVal(String line, String mQName, int location) throws IllegalFormat {
         ExpValue expValue = null;
         String[] expAndVal = line.split(":");
-        searchForMyExp(mQName, location);
-        expValue = new ExpValue((MyExpAst) SearchForMyExp(expAndVal[0], lv.getVarsList()));
-        if (expAndVal.length != 2) {
-            expValue.setValueString("");
-        } else {
-            expValue.setValueString(expAndVal[1]);
+        LineVars lineVars = searchForMyLineVars(mQName, location);
+        if (lineVars != null) {
+            expValue = new ExpValue((MyExpAst) SearchForMyExp(expAndVal[0], lineVars.getVarsList()));
+            if (expAndVal.length != 2) {
+                expValue.setValueString("");
+            } else {
+                expValue.setValueString(expAndVal[1]);
+            }
         }
         return expValue;
     }
 
     /**
      * find the LineVars from the this.targetFiles
-     * 找到targetLine
+     * 找到 targetLine
      *
      * @param mQName
      * @return
      */
-    private void searchForMyExp(String mQName, int location) {
+    private LineVars searchForMyLineVars(String mQName, int location) {
         List<LineVars> lavList = null;
         if (currentMethod != null && mQName.contains(currentMethod.getLongName())) {
             lavList = currentMethod.getLineVarsList();
@@ -161,6 +131,8 @@ public class AnalyzeVarLog extends AnalyzeLog {
                     for (MyMethod mm : tf.getMyMethodAccessVars()) {
                         if (mQName.contains(mm.getLongName())) {
                             currentMethod = mm;
+                            tcMethod = new TcMethod(mm.getMethodName(), mm.getParams());
+                            testCaseR.addTcMethodList(tcMethod);
                             lavList = mm.getLineVarsList();
                             break;
                         }
@@ -172,11 +144,11 @@ public class AnalyzeVarLog extends AnalyzeLog {
         if (lavList != null) {
             for (LineVars lav : lavList) {
                 if (lav.getLocation() == location) {
-                    lv = lav;
-                    break;
+                    return lav;
                 }
             }
         }
+        return null;
     }
 
     /**
