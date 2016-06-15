@@ -26,7 +26,6 @@ public class BuildSnapshot {
      * @return
      */
     public List<Snapshot> buildSnapshot(List<Predicate> predicates) {
-        logger.info("getLocation:" + tcLine.getLocation() + "predicates:"+predicates);
 
         if (predicates == null) return null;
         List<Snapshot> ssList = new ArrayList<Snapshot>();
@@ -69,10 +68,11 @@ public class BuildSnapshot {
 
             } else if (p.getRightOperand() != null) {
                 String rightVal = getExpValue(p.getRightOperand());
-                if (Predicate.Operator.NOT.toString().equals(p.getOperator())) {
+                if (p.getOperator() == null) {
+                    ssList.add(new Snapshot(tcLine.getLocation(), p, getBoolean(rightVal)));
+                } else if (Predicate.Operator.NOT.toString().equals(p.getOperator().toString())) {
                     ssList.add(new Snapshot(tcLine.getLocation(), p, !getBoolean(rightVal)));
                 } else {
-                    ssList.add(new Snapshot(tcLine.getLocation(), p, getBoolean(rightVal)));
                 }
             }
         }

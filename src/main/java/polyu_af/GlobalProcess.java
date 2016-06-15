@@ -83,27 +83,29 @@ public class GlobalProcess {
                 tf.setMyMethodAccessVars(methodLineLists);
             }
         }
-        /* out put first step (AST analysis) results */
+        /* out put (AST analysis) results as json file*/
         FileUtils.outputTfList(targetProgram.getTargetSources());
         /**************************** BuildPredicate*********************************/
         buildPredicate(targetProgram.getTargetSources());
-        /**************************** ###Run all test units with VarLogAgent and analyze Log*********************************/
+        /****************************Run all test units with VarLogAgent and analyze Log*********************************/
         AbsExeCommand exeVarLogAg = new ExeVarLogAgCommand(targetConfig);
+        List<TestCaseR> testCaseRList=new ArrayList<>();
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
             ExeTargetRuntime.process(exeVarLogAg.runTestUnit(mLogResult.getTestCase()));
             AnalyzeVarLog varLog = new AnalyzeVarLog(targetProgram.getTargetSources());
             varLog.tcLogAnalyze();
             TestCaseR tc = varLog.getTestCaseR();
+            /**************************** BuildSnapshot*********************************/
             buildSnapshot(tc,targetProgram.getTargetSources());
-            break;
+            testCaseRList.add(tc);
+
         }
         exeVarLogAg = null;
-        /**************************** BuildSnapshot*********************************/
-//        printTargetFiles(targetProgram.getTargetSources());
-
-
-        /**************************** ###Finding fault location and status*********************************/
-
+        /**************************** Finding fault location and status*********************************/
+        for(TestCaseR tcr:testCaseRList){
+            logger.info("tcr:"+tcr);
+        }
+        /**************************** *********************************/
         //build expression with accessible variables
 //        BuildIntegerExp buildIntegerExp= new BuildIntegerExp(accessibleVar.get(34));
 //        buildIntegerExp.buildingExps();
@@ -160,14 +162,14 @@ public class GlobalProcess {
     }
 
     private static void buildSnapshot(TestCaseR testCaseR,List<TargetFile> tfList) {
-        logger.error("buildSnapshot!!!");
         for (TcMethod tcMethod : testCaseR.getTcMethodList()) {
             MyMethod mm=findTFMethod(tfList,tcMethod.getLongName());
             if(mm!=null){
                 for (TcLine tcLine : tcMethod.getTcLineList()) {
                     BuildSnapshot ess = new BuildSnapshot(tcLine);
                     List<Snapshot> ssl = ess.buildSnapshot(findPredicate(mm,tcLine.getLocation()));
-                    logger.info("snapshot:" + ssl + "\n");
+                    tcLine.setSnapshotList(ssl);
+                    tcLine.setExpValueList(null);
                 }
             }
 

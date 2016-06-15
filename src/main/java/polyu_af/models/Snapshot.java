@@ -6,7 +6,7 @@ package polyu_af.models;
 public class Snapshot {
     int location;
     Predicate predicate;
-    Boolean value;
+    boolean value;
 
     public Snapshot() {
 
@@ -46,8 +46,8 @@ public class Snapshot {
     public String toString() {
         return "<" +
                 "l:" + location +
-                "p:" + predicate +
-                "v:" + value +
+                " p:" + predicate +
+                " v:" + value +
                 ">\n";
     }
 }

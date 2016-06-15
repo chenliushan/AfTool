@@ -24,4 +24,11 @@ public class TestCaseR {
     public void addTcMethodList(TcMethod tcMethod) {
         this.tcMethodList.add(tcMethod);
     }
+
+    @Override
+    public String toString() {
+        return "TestCaseR{" +
+                "tcMethodList=" + tcMethodList +
+                '}';
+    }
 }

@@ -85,7 +85,7 @@ public class Predicate {
 
     @Override
     public String toString() {
-        return getPredicate() + "\n";
+        return getPredicate() ;
     }
 
 
