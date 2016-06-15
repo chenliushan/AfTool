@@ -95,7 +95,7 @@ public class GlobalProcess {
             varLog.tcLogAnalyze();
             TestCaseR tc = varLog.getTestCaseR();
             buildSnapshot(tc,targetProgram.getTargetSources());
-//            break;
+            break;
         }
         exeVarLogAg = null;
         /**************************** BuildSnapshot*********************************/
@@ -152,7 +152,7 @@ public class GlobalProcess {
         for (TargetFile tf : tfList) {
             for (MyMethod mm : tf.getMyMethodAccessVars()) {
                 for (LineVars lv : mm.getLineVarsList()) {
-                    List<Predicate> pl = bss.buildSnapShot(lv.getVarsList());
+                    List<Predicate> pl = bss.buildPredicate(lv.getVarsList());
                     lv.setPredicates(pl);
                 }
             }
@@ -165,7 +165,7 @@ public class GlobalProcess {
             MyMethod mm=findTFMethod(tfList,tcMethod.getLongName());
             if(mm!=null){
                 for (TcLine tcLine : tcMethod.getTcLineList()) {
-                    EvaluateSnapshot ess = new EvaluateSnapshot(tcLine.getLocation(), tcLine.getExpValueList());
+                    BuildSnapshot ess = new BuildSnapshot(tcLine);
                     List<Snapshot> ssl = ess.buildSnapshot(findPredicate(mm,tcLine.getLocation()));
                     logger.info("snapshot:" + ssl + "\n");
                 }

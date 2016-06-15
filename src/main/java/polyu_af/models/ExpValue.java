@@ -4,15 +4,15 @@ package polyu_af.models;
  * Created by liushanchen on 16/6/1.
  */
 public class ExpValue {
-    MyExpAst exp;
+    MyExp exp;
     String valueString;
     Object value;
 
-    public ExpValue(MyExpAst exp) {
+    public ExpValue(MyExp exp) {
         this.exp = exp;
     }
 
-    public MyExpAst getExp() {
+    public MyExp getExp() {
         return exp;
     }
 

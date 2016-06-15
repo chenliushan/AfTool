@@ -46,8 +46,8 @@ public class Snapshot {
     public String toString() {
         return "<" +
                 "l:" + location +
-                "p:=" + predicate +
-                "v:=" + value +
+                "p:" + predicate +
+                "v:" + value +
                 ">\n";
     }
 }

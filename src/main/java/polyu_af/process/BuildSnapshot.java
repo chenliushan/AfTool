@@ -1,9 +1,8 @@
 package polyu_af.process;
 
-import polyu_af.models.ExpValue;
-import polyu_af.models.MyExp;
-import polyu_af.models.Predicate;
-import polyu_af.models.Snapshot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import polyu_af.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +11,14 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/13.
  */
-public class EvaluateSnapshot {
-    List<ExpValue> expValueList;//ExpValues of a line;
-    int location;//line number
+public class BuildSnapshot {
+    private static Logger logger = LogManager.getLogger(BuildSnapshot.class.getName());
 
-    public EvaluateSnapshot(int location, List<ExpValue> expValueList) {
-        this.expValueList = expValueList;
-        this.location = location;
+    private TcLine tcLine;
+    private ExpValue tmpEv;
+
+    public BuildSnapshot(TcLine tcLine) {
+        this.tcLine = tcLine;
     }
 
     /**
@@ -26,6 +26,8 @@ public class EvaluateSnapshot {
      * @return
      */
     public List<Snapshot> buildSnapshot(List<Predicate> predicates) {
+        logger.info("getLocation:" + tcLine.getLocation() + "predicates:"+predicates);
+
         if (predicates == null) return null;
         List<Snapshot> ssList = new ArrayList<Snapshot>();
         for (Predicate p : predicates) {
@@ -63,57 +65,78 @@ public class EvaluateSnapshot {
                     default:
                         continue;
                 }
-                ssList.add(new Snapshot(location, p, value));
+                ssList.add(new Snapshot(tcLine.getLocation(), p, value));
+
+            } else if (p.getRightOperand() != null) {
+                String rightVal = getExpValue(p.getRightOperand());
+                if (Predicate.Operator.NOT.toString().equals(p.getOperator())) {
+                    ssList.add(new Snapshot(tcLine.getLocation(), p, !getBoolean(rightVal)));
+                } else {
+                    ssList.add(new Snapshot(tcLine.getLocation(), p, getBoolean(rightVal)));
+                }
             }
         }
         return ssList;
     }
 
     private String getExpValue(MyExp me) {
-        for (ExpValue ev : expValueList) {
-//            if (ev.getExp().getType().equals(me.getType()) && ev.getExp().getExpVar().equals(me.getExpVar())) {
+        if (tmpEv != null && tmpEv.getExp().equals(me)) {
+            return tmpEv.getValueString();
+        }
+        for (ExpValue ev : tcLine.getExpValueList()) {
             if (ev.getExp().equals(me)) {
-                System.out.println("ev.getExp().equals(me)"+me);
+                tmpEv = ev;
                 return ev.getValueString();
             }
         }
-        System.out.println("cannot getExpValue"+me);
         return null;
     }
 
     private boolean equalsLeft_Right(String leftVal, String rightVal) {
-        return leftVal.equals(rightVal);
+        if (leftVal != null && rightVal != null) {
+            return leftVal.equals(rightVal);
+        } else if (leftVal == null && rightVal == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean greaterLeft_Right(String leftVal, String rightVal) {
-        boolean value = Integer.valueOf(leftVal) > Integer.valueOf(rightVal);
-        return value;
+        return getIntFormStringV(leftVal) > getIntFormStringV(rightVal);
     }
 
     private boolean greaterEqualsLeft_Right(String leftVal, String rightVal) {
-        boolean value = Integer.valueOf(leftVal) >= Integer.valueOf(rightVal);
-        return value;
+        return getIntFormStringV(leftVal) >= getIntFormStringV(rightVal);
     }
 
     private boolean lessLeft_Right(String leftVal, String rightVal) {
-        boolean value = Integer.valueOf(leftVal) < Integer.valueOf(rightVal);
-        return value;
+        return getIntFormStringV(leftVal) < getIntFormStringV(rightVal);
     }
 
     private boolean lessEqualsLeft_Right(String leftVal, String rightVal) {
-        boolean value = Integer.valueOf(leftVal) <= Integer.valueOf(rightVal);
-        return value;
+        return getIntFormStringV(leftVal) <= getIntFormStringV(rightVal);
     }
 
 
     private boolean conditionalOrLeft_Right(String leftVal, String rightVal) {
-        boolean value = Boolean.valueOf(leftVal) || Boolean.valueOf(rightVal);
-        return value;
+        return Boolean.valueOf(leftVal) || Boolean.valueOf(rightVal);
     }
 
     private boolean conditionalAndLeft_Right(String leftVal, String rightVal) {
-        boolean value = Boolean.valueOf(leftVal) && Boolean.valueOf(rightVal);
-        return value;
+        return Boolean.valueOf(leftVal) && Boolean.valueOf(rightVal);
+    }
+
+    private boolean getBoolean(String val) {
+        return Boolean.valueOf(val);
+    }
+
+    private double getIntFormStringV(String val) {
+        if (val != null && val.length() > 0) {
+            return Double.valueOf(val);
+        }
+        logger.info("var is not initialized" + tmpEv);
+        return -1;
     }
 
 }
