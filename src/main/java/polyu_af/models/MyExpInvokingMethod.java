@@ -11,10 +11,10 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/12.
  */
-public class MyExpInvokingMethod implements InvokingMethod {
+public class MyExpInvokingMethod {
 
 
-    public List<MyExpInv> getInvokingMethod(MyExpAst myExpAst) {
+    public static List<MyExpInv> getInvokingMethod(MyExpAst myExpAst) {
         ITypeBinding type = myExpAst.getTypeBinding();
         if (type == null) return null;
         if (type.isPrimitive()) {
@@ -52,7 +52,7 @@ public class MyExpInvokingMethod implements InvokingMethod {
         }
     }
 
-    public boolean isValidInvoking(String invokingName) {
+    public static boolean  isValidInvoking(String invokingName) {
         switch (invokingName) {
             case "size":
                 return true;
@@ -69,7 +69,7 @@ public class MyExpInvokingMethod implements InvokingMethod {
         }
         return false;
     }
-    private MyExpInv newIfExpNullInv(MyExpAst myExpAst) throws NotAcceptExpNodeTypeException {
+    private  static MyExpInv newIfExpNullInv(MyExpAst myExpAst) throws NotAcceptExpNodeTypeException {
         StringBuilder sb = new StringBuilder("(");
         sb.append(myExpAst.getExpVar()).append("==null)");
         MyExpInv ifExpNull = new MyExpInv(myExpAst.getAstNode(),PrimitiveType.BOOLEAN.toString(), sb.toString());

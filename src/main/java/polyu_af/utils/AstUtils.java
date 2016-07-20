@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
-import polyu_af.models.FaultUnit;
+//import polyu_af.models.FaultUnit;
 
 import java.util.Map;
 
@@ -145,20 +145,20 @@ public class AstUtils {
      * @param fu
      * @return
      */
-    public static ASTNode findNodeInRoot(ASTNode root, FaultUnit fu) {
-        if (root != null && fu != null && (fu.getStartPosition() > -1 || fu.getLine() > -1)) {
-            NodeFinder nodeFinder = null;
-            if (fu.getStartPosition() == -1) {
-                CompilationUnit cuRoot = (CompilationUnit) root;
-                int position = cuRoot.getPosition(fu.getLine(), fu.getColumn());
-                nodeFinder = new NodeFinder(root, position, fu.getLength());
-            } else {
-                nodeFinder = new NodeFinder(root, fu.getStartPosition(), fu.getLength());
-            }
-            return nodeFinder.getCoveredNode();
-        }
-        return null;
-    }
+//    public static ASTNode findNodeInRoot(ASTNode root, FaultUnit fu) {
+//        if (root != null && fu != null && (fu.getStartPosition() > -1 || fu.getLine() > -1)) {
+//            NodeFinder nodeFinder = null;
+//            if (fu.getStartPosition() == -1) {
+//                CompilationUnit cuRoot = (CompilationUnit) root;
+//                int position = cuRoot.getPosition(fu.getLine(), fu.getColumn());
+//                nodeFinder = new NodeFinder(root, position, fu.getLength());
+//            } else {
+//                nodeFinder = new NodeFinder(root, fu.getStartPosition(), fu.getLength());
+//            }
+//            return nodeFinder.getCoveredNode();
+//        }
+//        return null;
+//    }
 
 
     /**

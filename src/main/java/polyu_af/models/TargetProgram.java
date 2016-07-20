@@ -14,7 +14,6 @@ public class TargetProgram {
     private TargetConfig tc = null;
     private List<TargetFile> targetSources = null;
     private List<TargetFile> targetTestsClasses = null;
-    private int currentT = 0;
 
     public TargetProgram(TargetConfig tc) {
         this.tc = tc;
@@ -50,9 +49,7 @@ public class TargetProgram {
         return targetFiles;
     }
 
-    public TargetFile getCurrentTarget() {
-        return targetSources.get(currentT);
-    }
+
     public TargetFile getTarget(String qualifyName) {
         for(TargetFile tf:targetSources){
             if(tf.getQualifyFileName().equals(qualifyName)){
@@ -62,21 +59,6 @@ public class TargetProgram {
         return null;
     }
 
-    public TargetFile nextTarget() {
-        currentT++;
-        if (currentT < targetSources.size()) {
-            return getCurrentTarget();
-        } else {
-            return null;
-        }
-    }
-
-    public void moveIndex2Next() {
-        currentT++;
-        if (currentT >= targetSources.size()) {
-            currentT = targetSources.size() - 1;
-        }
-    }
 
     public List<TargetFile> getTargetSources() {
         return targetSources;
@@ -120,7 +102,6 @@ public class TargetProgram {
     @Override
     public String toString() {
         return "TargetProgram{" +
-                "currentT=" + currentT +
                 ", tc=" + tc +
                 ", targetSources=" + targetSources +
                 '}';

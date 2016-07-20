@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/1.
  */
-public class AnalyzeVarLog extends AnalyzeLog {
+public class VarLogAnalyzer extends LogAnalyzer {
     private List<TargetFile> targetFiles;
     private MyMethod currentMethod;
     private TcMethod tcMethod;
@@ -19,7 +19,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
     private TestCaseR testCaseR;
 
 
-    public AnalyzeVarLog(List<TargetFile> tfs) {
+    public VarLogAnalyzer(List<TargetFile> tfs) {
         super(Constants.VarLogPath);
         this.targetFiles = tfs;
         this.testCaseR = new TestCaseR();
@@ -128,7 +128,7 @@ public class AnalyzeVarLog extends AnalyzeLog {
             /*搜索targetFiles找到targetFile,然后找到targetMethod*/
             for (TargetFile tf : targetFiles) {
                 if (mQName.contains(tf.getQualifyFileName() + "#")) {
-                    for (MyMethod mm : tf.getMyMethodAccessVars()) {
+                    for (MyMethod mm : tf.getMyMethodWithAccessVars()) {
                         if (mQName.contains(mm.getLongName())) {
                             currentMethod = mm;
                             tcMethod = new TcMethod(mm.getMethodName(), mm.getParams());

@@ -14,11 +14,11 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/7.
  */
-public abstract class AnalyzeMLog extends AnalyzeLog {
+public abstract class MLogAnalyzer extends LogAnalyzer {
     List<MLogAnalyResult> resultList = null;
     List<String> relatedClass = null;
 
-    public AnalyzeMLog() {
+    public MLogAnalyzer() {
         super(Constants.MLogPath);
         resultList = new ArrayList<MLogAnalyResult>();
         relatedClass = new ArrayList<String>();

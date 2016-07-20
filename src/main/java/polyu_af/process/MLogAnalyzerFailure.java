@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/31.
  */
-public class AnalyzeMLogFailure extends AnalyzeMLog {
+public class MLogAnalyzerFailure extends MLogAnalyzer {
 
     public void analyze(List<TestUnit> failures) {
         for (TestUnit failure : failures) {

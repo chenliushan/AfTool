@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 /**
  * Created by liushanchen on 16/5/6.
  */
-public class ExeTargetRuntime {
+public class Runner {
     private static Logger logger = LogManager.getLogger();
 
     /**

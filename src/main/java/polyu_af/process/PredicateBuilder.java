@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/13.
  */
-public class BuildPredicate {
+public class PredicateBuilder {
     private List<Predicate> predicates;//临时的用来存储所有的predicate防止过多创建新对象。因为不同行可能有较多相同的Snapshot
-    private static Logger logger = LogManager.getLogger(BuildSnapshot.class.getName());
+    private static Logger logger = LogManager.getLogger(SnapshotBuilder.class.getName());
 
-    public BuildPredicate() {
+    public PredicateBuilder() {
         this.predicates = new ArrayList<Predicate>();
     }
 

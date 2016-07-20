@@ -11,8 +11,7 @@ public class TargetFile {
     private String absoluteDir=null;
     private String packageName = null;//specify the package and the class name
     private String fileName = null;//specify the package and the class name
-    private List<FaultUnit> faults = null;
-    private List<MyMethod> myMethodAccessVars =null;
+    private List<MyMethod> myMethodWithAccessVars =null;
 
 
     public TargetFile(String absoluteDir,String dirSource) {
@@ -26,13 +25,6 @@ public class TargetFile {
     }
 
 
-    public List<FaultUnit> getFaults() {
-        return faults;
-    }
-
-    public void setFaults(List<FaultUnit> faults) {
-        this.faults = faults;
-    }
 
     public String getFileName() {
         return fileName;
@@ -95,12 +87,12 @@ public class TargetFile {
 
     }
 
-    public List<MyMethod> getMyMethodAccessVars() {
-        return myMethodAccessVars;
+    public List<MyMethod> getMyMethodWithAccessVars() {
+        return myMethodWithAccessVars;
     }
 
-    public void setMyMethodAccessVars(List<MyMethod> myMethodAccessVars) {
-        this.myMethodAccessVars = myMethodAccessVars;
+    public void setMyMethodWithAccessVars(List<MyMethod> myMethodWithAccessVars) {
+        this.myMethodWithAccessVars = myMethodWithAccessVars;
     }
 
     public String getAbsoluteDir() {
@@ -113,8 +105,7 @@ public class TargetFile {
                 "absoluteDir='" + absoluteDir + '\'' +
                 ", packageName='" + packageName + '\'' +
                 ", fileName='" + fileName + '\'' +
-                ", faults=" + faults +
-                ", myMethodAccessVars=" + myMethodAccessVars +
+                ", myMethodWithAccessVars=" + myMethodWithAccessVars +
                 "}\n";
     }
     public static class TfPara{
@@ -122,6 +113,6 @@ public class TargetFile {
         public static final String PACKAGE_NAME="packageName";
         public static final String FILE_NAME="fileName";
         public static final String FAULTS="faults";
-        public static final String METHOD_ACCESS_VARS="myMethodAccessVars";
+        public static final String METHOD_ACCESS_VARS="myMethodWithAccessVars";
     }
 }

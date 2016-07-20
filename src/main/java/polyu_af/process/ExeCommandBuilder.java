@@ -1,21 +1,23 @@
-package polyu_af.models;
+package polyu_af.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polyu_af.TestUnit;
+import polyu_af.models.TargetConfig;
+import polyu_af.models.TargetFile;
 
 import java.util.List;
 
 /**
  * Created by liushanchen on 16/5/26.
  */
-public abstract class AbsExeCommand {
+public abstract class ExeCommandBuilder {
     private static Logger logger = LogManager.getLogger();
 
     private TargetConfig tc = null;
     protected StringBuilder command;
 
-    public AbsExeCommand(TargetConfig tc) {
+    public ExeCommandBuilder(TargetConfig tc) {
         this.tc = tc;
         this.command = new StringBuilder("java -cp .");
     }
@@ -116,13 +118,13 @@ public abstract class AbsExeCommand {
         command.append(" polyu_af.MyJunitCore ");
     }
 
-    public String testClass(String tgQualifyFileName) {
+    public String runTestClass(String tgQualifyFileName) {
         addMJTestCp();
         command.append(tgQualifyFileName + "Test");//append the [test class name] including the package name
         return command.toString();
     }
 
-    public String testClass(List<TargetFile> targetTests) {
+    public String runTestClass(List<TargetFile> targetTests) {
         addMJTestCp();
         StringBuilder tfNames = new StringBuilder(command);
         for (TargetFile tt : targetTests) {
@@ -151,7 +153,7 @@ public abstract class AbsExeCommand {
         return tfNames.toString();
     }
 
-    public String testMethod(String tgQualifyFileName, String methodName) {
+    public String runTestMethod(String tgQualifyFileName, String methodName) {
         addMJTestCp();
         command.append(tgQualifyFileName + "Test#" + methodName);//append the [test class name] including the package name
         return command.toString();

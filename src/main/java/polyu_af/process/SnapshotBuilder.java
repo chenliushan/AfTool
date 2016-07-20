@@ -11,13 +11,13 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/13.
  */
-public class BuildSnapshot {
-    private static Logger logger = LogManager.getLogger(BuildSnapshot.class.getName());
+public class SnapshotBuilder {
+    private static Logger logger = LogManager.getLogger(SnapshotBuilder.class.getName());
 
     private TcLine tcLine;
     private ExpValue tmpEv;
 
-    public BuildSnapshot(TcLine tcLine) {
+    public SnapshotBuilder(TcLine tcLine) {
         this.tcLine = tcLine;
     }
 

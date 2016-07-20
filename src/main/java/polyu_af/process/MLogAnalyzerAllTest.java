@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/5/31.
  */
-public class AnalyzeMLogAllTest extends AnalyzeMLog {
+public class MLogAnalyzerAllTest extends MLogAnalyzer {
 
     /**
      * Analyze one failure test unit

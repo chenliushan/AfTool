@@ -24,13 +24,13 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/3/17.
  */
-public class GetTargetConfig {
-    private static Logger logger = LogManager.getLogger(GetTargetConfig.class.getName());
+public class TargetConfigReader {
+    private static Logger logger = LogManager.getLogger(TargetConfigReader.class.getName());
 
     private TargetConfig tc = null;
     private String inputPath = null;//the configuration file's path
 
-    public GetTargetConfig(String inputPath) throws NotFoundException {
+    public TargetConfigReader(String inputPath) throws NotFoundException {
         this.inputPath = inputPath;
         getInput();
     }

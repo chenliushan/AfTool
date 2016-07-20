@@ -8,10 +8,10 @@ import java.io.File;
 /**
  * Created by liushanchen on 16/5/31.
  */
-public class AnalyzeLog {
+public class LogAnalyzer {
     protected BufferedReader myLog;
 
-    public AnalyzeLog(String logPath) {
+    public LogAnalyzer(String logPath) {
         this.myLog = FileUtils.getSourceBuffer(new File(logPath));
     }
 }
