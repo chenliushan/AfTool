@@ -13,16 +13,16 @@ import java.util.List;
  * A testcase (a method) and a list of related method
  */
 public class MLogAnalyResult {
-    TestUnit testCase =null;
+    TestUnit testUnit =null;
     List<MyMethod> relatedMethods=null;
 
-    public MLogAnalyResult(TestUnit testCase) {
-        this.testCase = testCase;
+    public MLogAnalyResult(TestUnit testUnit) {
+        this.testUnit = testUnit;
         this.relatedMethods=new ArrayList<MyMethod>();
     }
 
-    public TestUnit getTestCase() {
-        return testCase;
+    public TestUnit getTestUnit() {
+        return testUnit;
     }
 
     public List<MyMethod> getRelatedMethods() {
@@ -39,7 +39,7 @@ public class MLogAnalyResult {
     @Override
     public String toString() {
         return "\nMLogAnalyResult{" +
-                "testCase=" + testCase +
+                "testUnit=" + testUnit +
                 "\n, relatedMethods=" + relatedMethods +
                 '}';
     }

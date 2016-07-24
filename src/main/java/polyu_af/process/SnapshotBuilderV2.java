@@ -2,7 +2,10 @@ package polyu_af.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import polyu_af.models.*;
+import polyu_af.models.ExpValue;
+import polyu_af.models.MyExp;
+import polyu_af.models.Predicate;
+import polyu_af.new_model.SnapshotV2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,29 +14,25 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/6/13.
  */
-public class SnapshotBuilder {
-    private static Logger logger = LogManager.getLogger(SnapshotBuilder.class.getName());
+public class SnapshotBuilderV2 {
+    private static Logger logger = LogManager.getLogger(SnapshotBuilderV2.class.getName());
 
-    private TcLine tcLine;
     private ExpValue tmpEv;
 
-    public SnapshotBuilder(TcLine tcLine) {
-        this.tcLine = tcLine;
-    }
 
     /**
      * @param predicates of a line
      * @return
      */
-    public List<Snapshot> buildSnapshot(List<Predicate> predicates) {
+    public List<SnapshotV2> buildSnapshot(List<Predicate> predicates, List<ExpValue> expValues) {
 
         if (predicates == null) return null;
-        List<Snapshot> ssList = new ArrayList<Snapshot>();
+        List<SnapshotV2> ssList = new ArrayList<SnapshotV2>();
         for (Predicate p : predicates) {
             if (p.getLeftOperand() != null && p.getRightOperand() != null) {
                 String operator = p.getOperator().toString();
-                String leftVal = getExpValue(p.getLeftOperand());
-                String rightVal = getExpValue(p.getRightOperand());
+                String leftVal = getExpValue(p.getLeftOperand(), expValues);
+                String rightVal = getExpValue(p.getRightOperand(), expValues);
                 if (leftVal == null || rightVal == null) continue;
                 boolean value = false;
                 switch (operator) {
@@ -64,14 +63,14 @@ public class SnapshotBuilder {
                     default:
                         continue;
                 }
-                ssList.add(new Snapshot(tcLine.getLocation(), p, value));
+                ssList.add(new SnapshotV2(p, value));
 
             } else if (p.getRightOperand() != null) {
-                String rightVal = getExpValue(p.getRightOperand());
+                String rightVal = getExpValue(p.getRightOperand(), expValues);
                 if (p.getOperator() == null) {
-                    ssList.add(new Snapshot(tcLine.getLocation(), p, getBoolean(rightVal)));
+                    ssList.add(new SnapshotV2(p, getBoolean(rightVal)));
                 } else if (Predicate.Operator.NOT.toString().equals(p.getOperator().toString())) {
-                    ssList.add(new Snapshot(tcLine.getLocation(), p, !getBoolean(rightVal)));
+                    ssList.add(new SnapshotV2(p, !getBoolean(rightVal)));
                 } else {
                 }
             }
@@ -79,14 +78,16 @@ public class SnapshotBuilder {
         return ssList;
     }
 
-    private String getExpValue(MyExp me) {
+    private String getExpValue(MyExp me, List<ExpValue> expValues) {
         if (me == null) return null;
-
         if (tmpEv != null && tmpEv.getExp().equals(me)) {
             return tmpEv.getValueString();
         }
-        for (ExpValue ev : tcLine.getExpValueList()) {
-            if (ev.getExp().equals(me)) {
+        for (ExpValue ev : expValues) {
+            if(ev.getExp() == null){
+                logger.info("cannot get ev.getExp() :" + ev );
+            }
+            if (ev.getExp() != null && ev.getExp().equals(me)) {
                 tmpEv = ev;
                 return ev.getValueString();
             }
@@ -137,7 +138,8 @@ public class SnapshotBuilder {
         if (val != null && val.length() > 0) {
             return Double.valueOf(val);
         }
-        logger.info("var is not initialized" + tmpEv);
+//        logger.info("var is not initialized" + tmpEv);
+//        logger.info("var is not initialized" + val);
         return -1;
     }
 

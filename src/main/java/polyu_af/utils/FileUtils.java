@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polyu_af.TestCluster;
 import polyu_af.models.*;
+import polyu_af.new_model.TargetFile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,13 +31,18 @@ import java.util.List;
 public class FileUtils {
     private static Logger logger = LogManager.getLogger(FileUtils.class.getName());
 
-    public static void outputTfList(List<TargetFile> obj) {
+    public static void outputTfList(List<TargetFileOld> obj) {
         outputTfList(obj, Constants.firstStepOutputPath);
     }
+    public static void output(Object obj) {
+        outputTfList(obj, Constants.firstStepOutputPath);
+    }
+
 
     public static void outputTfList(Object obj, String path) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(MyExp.class, new MyExpTypeAdapter())
+                .disableHtmlEscaping()
                 .create();
 //        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String jsonObj = gson.toJson(obj);
@@ -96,7 +102,7 @@ public class FileUtils {
         }
     }
 
-    public static List<TargetFile> json2TfList() {
+    public static List<TargetFileOld> json2TfList() {
         String pathName = Constants.firstStepOutputPath;
 //        Gson gson = new Gson();
         Gson gson = new GsonBuilder()
@@ -104,7 +110,7 @@ public class FileUtils {
                 .registerTypeAdapter(MyExp.class, new MyExpTypeAdapter())
                 .registerTypeAdapter(MyExpString.class, new MyExpTypeAdapter())
                 .create();
-        List<TargetFile> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TargetFile>>() {
+        List<TargetFileOld> obj = gson.fromJson(getSource(pathName), new TypeToken<List<TargetFileOld>>() {
         }.getType());
         return obj;
     }

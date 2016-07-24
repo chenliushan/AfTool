@@ -242,23 +242,28 @@ public class LAccessVarVisitor extends ASTVisitor {
         return super.visit(node);
     }
 
-
-    protected void outPutAccessibleVars(int position) {
-        LineVars vars = new LineVars(root.getLineNumber(position));
-
+    protected List<MyExpAst> collectVars(){
+        List<MyExpAst> vars = new ArrayList<>();
         if (!currentAccessible.isEmpty()) {
-            vars.addVar(currentAccessible.peek());
+            vars.addAll(currentAccessible.peek());
         }
         if (!isStaticBlock) {
             if (!currentField.isEmpty()) {
-                vars.addVar(currentField.peek());
+                vars.addAll(currentField.peek());
             }
         }
         if (!currentStaticField.isEmpty()) {
-            vars.addVar(currentStaticField.peek());
+            vars.addAll(currentStaticField.peek());
         }
-        if (!accessVars4LineList.contains(vars)) {
-            accessVars4LineList.add(vars);
+        return vars;
+    }
+
+    protected void outPutAccessibleVars(int position) {
+        LineVars line = new LineVars(root.getLineNumber(position));
+        List<MyExpAst> exps=collectVars();
+        line.addVar(exps);
+        if (!accessVars4LineList.contains(line)) {
+            accessVars4LineList.add(line);
         }
     }
 

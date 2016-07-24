@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polyu_af.TestUnit;
 import polyu_af.models.TargetConfig;
-import polyu_af.models.TargetFile;
+import polyu_af.models.TargetFileOld;
 
 import java.util.List;
 
@@ -124,10 +124,10 @@ public abstract class ExeCommandBuilder {
         return command.toString();
     }
 
-    public String runTestClass(List<TargetFile> targetTests) {
+    public String runTestClass(List<TargetFileOld> targetTests) {
         addMJTestCp();
         StringBuilder tfNames = new StringBuilder(command);
-        for (TargetFile tt : targetTests) {
+        for (TargetFileOld tt : targetTests) {
             tfNames.append(" ");
             tfNames.append(tt.getQualifyFileName());
         }

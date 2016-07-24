@@ -35,7 +35,7 @@ public class TcMethod extends FixMethod {
     @Override
     public String toString() {
         return "TcMethod{" +
-                "tcLineList=" + tcLineList +
+                "fixLines=" + tcLineList +
                 '}';
     }
 }

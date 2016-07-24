@@ -34,7 +34,7 @@ public class MLogAnalyzerAllTest extends MLogAnalyzer {
                         result = new MLogAnalyResult(line2TestUnit(line));
                     }
                 } else if (line.startsWith(MyJunitConstants.TestFinish)) {
-                    if (result != null && line.contains(result.getTestCase().getQualifyName())) {
+                    if (result != null && line.contains(result.getTestUnit().getQualifyName())) {
                         resultList.add(result);
                     }
                     result = null;

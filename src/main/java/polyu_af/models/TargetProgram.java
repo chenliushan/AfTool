@@ -1,5 +1,6 @@
 package polyu_af.models;
 
+import polyu_af.new_model.TargetFile;
 import polyu_af.utils.FileUtils;
 
 import java.io.File;
@@ -12,27 +13,34 @@ import java.util.List;
 public class TargetProgram {
 
     private TargetConfig tc = null;
-    private List<TargetFile> targetSources = null;
-    private List<TargetFile> targetTestsClasses = null;
+    private List<TargetFileOld> targetFileOlds = null;
+    private List<TargetFile> targetFiles = null;
+    private List<TargetFileOld> targetTestsClasses = null;
 
     public TargetProgram(TargetConfig tc) {
         this.tc = tc;
+        obtainFiles();
         obtainSourceFiles();
         obtainTestFiles();
     }
 
     public void obtainSourceFiles() {
         String sourcePath = tc.getSourcePath();
-        this.targetSources = obtainTargetFiles(sourcePath);
+        this.targetFileOlds = obtainOldTargetFiles(sourcePath);
     }
     public void obtainTestFiles() {
         String sourcePath = tc.getTestClassPath();
-        this.targetTestsClasses = obtainTargetFiles(sourcePath);
+        this.targetTestsClasses = obtainOldTargetFiles(sourcePath);
     }
 
-    private List<TargetFile> obtainTargetFiles(String sourcePath) {
+    public void obtainFiles() {
+        String sourcePath = tc.getSourcePath();
+        this.targetFiles = obtainTargetFiles(sourcePath);
+    }
+
+    private List<TargetFileOld> obtainOldTargetFiles(String sourcePath) {
         ArrayList<File> files = FileUtils.getListFiles(sourcePath);
-        List<TargetFile> targetFiles = new ArrayList<TargetFile>();
+        List<TargetFileOld> targetFileOlds = new ArrayList<TargetFileOld>();
 
         for (File f : files) {
             String ap = f.getAbsolutePath();
@@ -44,14 +52,40 @@ public class TargetProgram {
             } else if (ap.contains(sourcePath)) {
                 s = ap.substring(sourcePath.length() + ap.indexOf(sourcePath));
             }
-            targetFiles.add(new TargetFile(ap, s));
+            targetFileOlds.add(new TargetFileOld(ap, s));
         }
-        return targetFiles;
+        return targetFileOlds;
+    }
+    private List<TargetFile> obtainTargetFiles(String sourcePath) {
+        ArrayList<File> files = FileUtils.getListFiles(sourcePath);
+        List<TargetFile> targetFileOlds = new ArrayList<TargetFile>();
+
+        for (File f : files) {
+            String ap = f.getAbsolutePath();
+            String s = null;
+            if (ap.equals(sourcePath)) {
+                continue;
+            } else if (ap.startsWith(sourcePath)) {
+                s = ap.substring(sourcePath.length());
+            } else if (ap.contains(sourcePath)) {
+                s = ap.substring(sourcePath.length() + ap.indexOf(sourcePath));
+            }
+            targetFileOlds.add(new TargetFile(ap, s));
+        }
+        return targetFileOlds;
     }
 
 
-    public TargetFile getTarget(String qualifyName) {
-        for(TargetFile tf:targetSources){
+    public TargetFileOld getTarget(String qualifyName) {
+        for(TargetFileOld tf: targetFileOlds){
+            if(tf.getQualifyFileName().equals(qualifyName)){
+                return tf;
+            }
+        }
+        return null;
+    }
+    public TargetFile getTargetFile(String qualifyName) {
+        for(TargetFile tf: targetFiles){
             if(tf.getQualifyFileName().equals(qualifyName)){
                 return tf;
             }
@@ -59,13 +93,20 @@ public class TargetProgram {
         return null;
     }
 
-
-    public List<TargetFile> getTargetSources() {
-        return targetSources;
+    public void setTargetFileOlds(List<TargetFileOld> targetFileOlds) {
+        this.targetFileOlds = targetFileOlds;
     }
 
-    public List<TargetFile> getTargetTestsClasses() {
+    public List<TargetFileOld> getTargetFileOlds() {
+        return targetFileOlds;
+    }
+
+    public List<TargetFileOld> getTargetTestsClasses() {
         return targetTestsClasses;
+    }
+
+    public List<TargetFile> getTargetFiles() {
+        return targetFiles;
     }
 
     /**
@@ -103,7 +144,7 @@ public class TargetProgram {
     public String toString() {
         return "TargetProgram{" +
                 ", tc=" + tc +
-                ", targetSources=" + targetSources +
+                ", targetFileOlds=" + targetFileOlds +
                 '}';
     }
 }

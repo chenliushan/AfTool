@@ -12,16 +12,16 @@ import java.util.List;
  * Created by liushanchen on 16/6/1.
  */
 public class VarLogAnalyzer extends LogAnalyzer {
-    private List<TargetFile> targetFiles;
+    private List<TargetFileOld> targetFileOlds;
     private MyMethod currentMethod;
     private TcMethod tcMethod;
     private TcLine tcLine = null;
     private TestCaseR testCaseR;
 
 
-    public VarLogAnalyzer(List<TargetFile> tfs) {
+    public VarLogAnalyzer(List<TargetFileOld> tfs) {
         super(Constants.VarLogPath);
-        this.targetFiles = tfs;
+        this.targetFileOlds = tfs;
         this.testCaseR = new TestCaseR();
     }
 
@@ -114,7 +114,7 @@ public class VarLogAnalyzer extends LogAnalyzer {
     }
 
     /**
-     * find the LineVars from the this.targetFiles
+     * find the LineVars from the this.targetFileOlds
      * 找到 targetLine
      *
      * @param mQName
@@ -126,15 +126,18 @@ public class VarLogAnalyzer extends LogAnalyzer {
             lavList = currentMethod.getLineVarsList();
         } else {
             /*搜索targetFiles找到targetFile,然后找到targetMethod*/
-            for (TargetFile tf : targetFiles) {
+            for (TargetFileOld tf : targetFileOlds) {
                 if (mQName.contains(tf.getQualifyFileName() + "#")) {
-                    for (MyMethod mm : tf.getMyMethodWithAccessVars()) {
-                        if (mQName.contains(mm.getLongName())) {
-                            currentMethod = mm;
-                            tcMethod = new TcMethod(mm.getMethodName(), mm.getParams());
-                            testCaseR.addTcMethodList(tcMethod);
-                            lavList = mm.getLineVarsList();
-                            break;
+                    for (FixMethod mm : tf.getMyMethodWithAccessVars()) {
+                        if(mm instanceof MyMethod){
+                            MyMethod mm1=(MyMethod)mm;
+                            if (mQName.contains(mm.getLongName())) {
+                                currentMethod = mm1;
+                                tcMethod = new TcMethod(mm.getMethodName(), mm.getParams());
+                                testCaseR.addTcMethodList(tcMethod);
+                                lavList = mm1.getLineVarsList();
+                                break;
+                            }
                         }
                     }
                 }
@@ -167,6 +170,9 @@ public class VarLogAnalyzer extends LogAnalyzer {
                     break;
                 }
             }
+        }
+        if(me==null){
+            System.err.println("not find "+expName+" in table");
         }
         return me;
     }

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by liushanchen on 16/5/4.
  */
 public class MyMethod extends FixMethod {
-    private String declaringClass = null;//this attribute is null in the TargetFile method list
+    private String declaringClass = null;//this attribute is null in the TargetFileOld method list
 
     private List<LineVars> varsList;
 
