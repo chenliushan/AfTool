@@ -52,7 +52,7 @@ public class MLogAnalyzerAllTest extends MLogAnalyzer {
     private TestUnit isFailure(String line, List<TestUnit> failures) throws IllegalFormat {
         line = removeStarter(line);
         for (TestUnit tu : failures) {
-            if (line.equals(tu.getQualifyName())) {
+            if (line.contains(tu.getQualifyName())) {
                 return tu;
             }
         }

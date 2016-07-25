@@ -38,6 +38,7 @@ public abstract class MLogAnalyzer extends LogAnalyzer {
         String[] classAndMethod = line.split("#");
         if (classAndMethod.length != 2) throw new IllegalFormat(line);
         TestUnit testUnit = new TestUnit(classAndMethod[0], classAndMethod[1]);
+        testUnit.setPassing(true);
         addToRelatedClass(classAndMethod[0]);
         return testUnit;
     }

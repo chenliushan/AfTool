@@ -5,10 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
-import polyu_af.new_model.SnapshotV2;
-import polyu_af.new_model.TargetFile;
-import polyu_af.new_model.TargetLine;
-import polyu_af.new_model.TargetMethod;
+import polyu_af.new_model.*;
 import polyu_af.process.*;
 import polyu_af.utils.AstUtils;
 import polyu_af.utils.FileUtils;
@@ -59,6 +56,8 @@ public class V2Process {
             if (!cluster.isSuccessful()) {
                 allFailures.addAll(cluster.getFailureTestList());
             }
+            System.out.println("TestUnit"+cluster.getFailureTestList());
+
         }
         testClusters = null;
 
@@ -71,6 +70,11 @@ public class V2Process {
         mLogAnalyzerAllTest.analyze(allFailures);
         relatedClass = mLogAnalyzerAllTest.getRelatedClass();
         allTestUnitsResults = mLogAnalyzerAllTest.getResultList();
+        for(MLogAnalyResult mar:allTestUnitsResults){
+            System.out.println("mar"+mar);
+
+        }
+
         mLogAnalyzerAllTest = null;
 
         /**************************** Analyze related classes' AST *********************************/
@@ -89,18 +93,12 @@ public class V2Process {
 
                 AccessVar2TableVisitor accessVar2TableVisitor = new AccessVar2TableVisitor(root, tf, lineVarsTable);
                 root.accept(accessVar2TableVisitor);
-                List<TargetMethod> targetMethods = accessVar2TableVisitor.getTargetMethods();
-                Hashtable<TargetLine, List<MyExp>> lineExpTable = accessVar2TableVisitor.getLineExpTable();
-//                fileVarsTable.put(tf, lineExpTable);
-//                tf.setMethods(targetMethods);
-
-
+                /* 准备用于输出json的对象 */
                 MAccessVarVisitor mvv = new MAccessVarVisitor(root);
                 root.accept(mvv);
-                /* 所有 access astExp of line 以 method 分组*/
+                /* 所有 access astExp of line 以 method 分组 */
                 List<MyMethod> methodLineLists = mvv.getMyMethodAccessVars();
                 /* 所有 access astExp of line */
-//                List<LineVars> lineAccessAstVarsList = mvv.getAccessibleVars();
                 mvv = null;
                 tfOld.setMyMethodWithAccessVars(methodLineLists);
             }
@@ -115,38 +113,50 @@ public class V2Process {
 
         //根据targetFile中的line access variables 构造 line predicate,同样存储在TargetFile的MyMethod的LineVars中。
         Hashtable<TargetLine, List<Predicate>> linePredicateTable = buildPredicate(lineVarsTable);
-        System.out.println("getLineExpTable:" + linePredicateTable);
+//        System.out.println("getLineExpTable:" + linePredicateTable);
 
         /**************************** Run all test units with VarLogAgent and analyze Log *********************************/
 
         //monitor access variables的值,并构建snapshot,都存储在TESTCaseR的TcMethod的TcLine中
         ExeCommandBuilder exeVarLogAg = new ExeVarLogAgCommandBuilder(targetConfig);
-        Hashtable<TargetLine, List<ExpValue>> lineVarsValTable = new Hashtable<>();
+//        Hashtable<TargetLine, List<ExpValue>> lineVarsValTable = new Hashtable<>();
+        Hashtable<TestUnit, List<SnapshotV3>> testSnapshotTable = new Hashtable<>();
+        SnapshotBuilderV3 ssb = new SnapshotBuilderV3();
 
         for (MLogAnalyResult mLogResult : allTestUnitsResults) {
-            Runner.process(exeVarLogAg.runTestUnit(mLogResult.getTestUnit()));
+            Hashtable<TargetLine, List<ExpValue>> lineVarsValTable = new Hashtable<>();
+            TestUnit testUnit = mLogResult.getTestUnit();
+            Runner.process(exeVarLogAg.runTestUnit(testUnit));
             VarLogAnalyzerV2 varLog = new VarLogAnalyzerV2(lineVarsTable, lineVarsValTable);
             varLog.tcLogAnalyze();
             lineVarsValTable = varLog.getLineVarsValTable();
+//            System.out.println("lineVarsValTable:" + lineVarsValTable);
+            /**************************** Build SnapshotV3 *********************************/
+            try {
+//                System.out.println("lineSnapshotTable:" + testSnapshotTable);
+                List<SnapshotV3> snapshotV3List = buildSnapshotV3(ssb, linePredicateTable, lineVarsValTable);
+                testSnapshotTable.put(testUnit, snapshotV3List);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
         }
         exeVarLogAg = null;
-        /**************************** Build Snapshot *********************************/
-        try {
-            System.out.println("linePredicateTable:" + linePredicateTable);
-            System.out.println("lineVarsValTable:" + lineVarsValTable);
+//        System.out.println("testSnapshotTable:" + testSnapshotTable);
 
-            Hashtable<TargetLine, List<SnapshotV2>> lineSnapshotTable = buildSnapshot(linePredicateTable, lineVarsValTable);
-            System.out.println("lineSnapshotTable:" + lineSnapshotTable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        /**************************** Finding fault location and status (count the appearance of snapshot) *********************************/
-
-//        for (TestCaseR tcr : testCaseRList) {
-//            logger.info("tcr:" + tcr);
+        /**************************** Build SnapshotV2 *********************************/
+//        try {
+//            Hashtable<TargetLine, List<SnapshotV2>> lineSnapshotTable = buildSnapshot(linePredicateTable, lineVarsValTable);
+//            System.out.println("lineSnapshotTable:" + lineSnapshotTable);
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
+        /**************************** Finding fault location and status (evaluating the appearance of snapshot) *********************************/
+        SnapshotEvaluator sse=new SnapshotEvaluator();
+        Hashtable<SnapshotV3, SnapshotScore> sssTable=sse.evaluate(testSnapshotTable);
+        System.out.println("sssTable:" + sssTable);
+
 
     }
 
@@ -162,25 +172,30 @@ public class V2Process {
 
     private static Hashtable<TargetLine, List<SnapshotV2>> buildSnapshot(Hashtable<TargetLine, List<Predicate>> linePredicateTable
             , Hashtable<TargetLine, List<ExpValue>> lineVarsValTable) throws Exception {
-
         Hashtable<TargetLine, List<SnapshotV2>> lineSnapshotTable = new Hashtable<>();
-//        if (linePredicateTable.keySet().size() != lineVarsValTable.keySet().size()) {
-            System.out.println("linePredicateTable.key size="+linePredicateTable.keySet().size());
-//            System.out.println("linePredicateTable="+linePredicateTable.keySet());
-            System.out.println("lineVarsValTable.key size="+lineVarsValTable.keySet().size());
-//            System.out.println("lineVarsValTable.key="+lineVarsValTable.keySet());
-//            throw new Exception("filePredicateTable & lineVarsValTable key set not match");
-//        }
-
         /**
          * lineVarsValTable 的size小
          */
+        SnapshotBuilderV2 ess = new SnapshotBuilderV2();
         for (TargetLine tl : lineVarsValTable.keySet()) {
-            SnapshotBuilderV2 ess = new SnapshotBuilderV2();
             List<SnapshotV2> ssl = ess.buildSnapshot(linePredicateTable.get(tl), lineVarsValTable.get(tl));
             lineSnapshotTable.put(tl, ssl);
         }
         return lineSnapshotTable;
+    }
+
+    private static List<SnapshotV3> buildSnapshotV3(SnapshotBuilderV3 ssb, Hashtable<TargetLine, List<Predicate>> linePredicateTable
+            , Hashtable<TargetLine, List<ExpValue>> lineVarsValTable) throws Exception {
+        List<SnapshotV3> lineSnapshots = new ArrayList<>();
+        System.out.println("linePredicateTable.key size=" + linePredicateTable.keySet().size());
+        System.out.println("lineVarsValTable.key size=" + lineVarsValTable.keySet().size());
+        /**
+         * lineVarsValTable 的size小
+         */
+        for (TargetLine tl : lineVarsValTable.keySet()) {
+            lineSnapshots.addAll(ssb.buildSnapshot(tl, linePredicateTable.get(tl), lineVarsValTable.get(tl)));
+        }
+        return lineSnapshots;
     }
 
 }
