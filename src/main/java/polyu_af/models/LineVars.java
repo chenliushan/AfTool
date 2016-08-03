@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import polyu_af.process.MyExpInvokigBuilder;
 import polyu_af.utils.AstUtils;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class LineVars extends FixLine{
     public void addVar(MyExpAst var) {
         this.varsList.add(var);
         if (addInvokingMethod) {
-            List<MyExpInv> myInvokingMethod = new MyExpInvokingMethod().getInvokingMethod(var);
+            List<MyExpInv> myInvokingMethod = new MyExpInvokigBuilder().getInvokingMethod(var);
             if (myInvokingMethod != null) {
                 this.varsList.addAll(myInvokingMethod);
             }

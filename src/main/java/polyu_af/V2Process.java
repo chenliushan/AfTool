@@ -12,10 +12,8 @@ import polyu_af.utils.FileUtils;
 import polyu_af.visitors.AccessVar2TableVisitor;
 import polyu_af.visitors.MAccessVarVisitor;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by liushanchen on 16/7/24.
@@ -56,7 +54,7 @@ public class V2Process {
             if (!cluster.isSuccessful()) {
                 allFailures.addAll(cluster.getFailureTestList());
             }
-            System.out.println("TestUnit"+cluster.getFailureTestList());
+            System.out.println("TestUnit" + cluster.getFailureTestList());
 
         }
         testClusters = null;
@@ -70,8 +68,8 @@ public class V2Process {
         mLogAnalyzerAllTest.analyze(allFailures);
         relatedClass = mLogAnalyzerAllTest.getRelatedClass();
         allTestUnitsResults = mLogAnalyzerAllTest.getResultList();
-        for(MLogAnalyResult mar:allTestUnitsResults){
-            System.out.println("mar"+mar);
+        for (MLogAnalyResult mar : allTestUnitsResults) {
+            System.out.println("mar" + mar);
 
         }
 
@@ -108,6 +106,8 @@ public class V2Process {
         /* out put (AST analysis) results of target source code as json file*/
         FileUtils.output(targetProgram.getTargetFileOlds());
         targetProgram.setTargetFileOlds(null);
+        addInvokingMethod(lineVarsTable);
+
 
         /**************************** Build Predicate *********************************/
 
@@ -119,7 +119,6 @@ public class V2Process {
 
         //monitor access variables的值,并构建snapshot,都存储在TESTCaseR的TcMethod的TcLine中
         ExeCommandBuilder exeVarLogAg = new ExeVarLogAgCommandBuilder(targetConfig);
-//        Hashtable<TargetLine, List<ExpValue>> lineVarsValTable = new Hashtable<>();
         Hashtable<TestUnit, List<SnapshotV3>> testSnapshotTable = new Hashtable<>();
         SnapshotBuilderV3 ssb = new SnapshotBuilderV3();
 
@@ -140,27 +139,48 @@ public class V2Process {
                 e.printStackTrace();
             }
 
-
         }
         exeVarLogAg = null;
-//        System.out.println("testSnapshotTable:" + testSnapshotTable);
-
-        /**************************** Build SnapshotV2 *********************************/
-//        try {
-//            Hashtable<TargetLine, List<SnapshotV2>> lineSnapshotTable = buildSnapshot(linePredicateTable, lineVarsValTable);
-//            System.out.println("lineSnapshotTable:" + lineSnapshotTable);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         /**************************** Finding fault location and status (evaluating the appearance of snapshot) *********************************/
-        SnapshotEvaluator sse=new SnapshotEvaluator();
-        Hashtable<SnapshotV3, SnapshotScore> sssTable=sse.evaluate(testSnapshotTable);
-        System.out.println("sssTable:" + sssTable);
+        SnapshotEvaluator sse = new SnapshotEvaluator();
+        Hashtable<SnapshotV3, SnapshotScore> sssTable = sse.evaluate(testSnapshotTable);
+        LinkedHashMap<SnapshotV3, SnapshotScore> sortedSss;
+        sortedSss = sortByValue(sssTable);
+        System.out.println("sortedSss:" + sortedSss);
+        sssTable = null;
+
+        /**************************** Generate Fix Action *********************************/
+        double highestScore = Integer.MIN_VALUE;
+        StrategyBuilder4AstNode sba = new StrategyBuilder4AstNode();
+        List<FixAction> fixActionList=new ArrayList<>();
+        for (Map.Entry<SnapshotV3, SnapshotScore> e : sortedSss.entrySet()) {
+            if (highestScore == Integer.MIN_VALUE) {
+                highestScore = e.getValue().getScore();
+            }
+            if (e.getValue().getScore() == highestScore) {
+                SnapshotV3 ss = e.getKey();
+                MyExp left = ss.getPredicate().getLeftOperand();
+                MyExp right = ss.getPredicate().getRightOperand();
+//                if (left instanceof MyExpAst) {
+//                    MyExpAst leftAst = (MyExpAst) left;
+//                    sba.building(leftAst.getAstNode());
+//                }
+                if (right instanceof MyExpAst) {
+                    MyExpAst rightAst = (MyExpAst) right;
+                    FixAction fa=new FixAction(ss);
+                    fa.setFixs(sba.building(rightAst.getAstNode()));
+                    fixActionList.add(fa);
+                }
+
+            }
+        }
+        System.out.println("fa:"+fixActionList);
 
 
     }
 
-    private static Hashtable<TargetLine, List<Predicate>> buildPredicate(Hashtable<TargetLine, List<MyExp>> lineVarsTable) {
+    private static Hashtable<TargetLine, List<Predicate>> buildPredicate(
+            Hashtable<TargetLine, List<MyExp>> lineVarsTable) {
         PredicateBuilder bss = new PredicateBuilder();
         Hashtable<TargetLine, List<Predicate>> linePredicate = new Hashtable<>();
         for (Map.Entry<TargetLine, List<MyExp>> lineVarsE : lineVarsTable.entrySet()) {
@@ -196,6 +216,37 @@ public class V2Process {
             lineSnapshots.addAll(ssb.buildSnapshot(tl, linePredicateTable.get(tl), lineVarsValTable.get(tl)));
         }
         return lineSnapshots;
+    }
+
+    public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> sortByValue(Hashtable<K, V> map) {
+        LinkedHashMap<K, V> result = new LinkedHashMap<K, V>();
+        Stream<Map.Entry<K, V>> st = map.entrySet().stream();
+
+        st.sorted(Map.Entry.comparingByValue())
+                .forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+        return result;
+    }
+
+    public static void addInvokingMethod(
+            Hashtable<TargetLine, List<MyExp>> myExpTable) {
+        for (Map.Entry<TargetLine, List<MyExp>> entry : myExpTable.entrySet()) {
+            entry.setValue(addInvokingMethod(entry.getValue()));
+        }
+    }
+
+    public static List<MyExp> addInvokingMethod(List<MyExp> myExps) {
+        List<MyExp> newExps = new ArrayList<>();
+        for (MyExp myExp : myExps) {
+            if (myExp instanceof MyExpAst) {
+                List<MyExpInv> myInvokingMethod = new MyExpInvokigBuilder().getInvokingMethod((MyExpAst) myExp);
+                if (myInvokingMethod != null) {
+
+                    newExps.addAll(myInvokingMethod);
+                }
+            }
+            newExps.add(myExp);
+        }
+        return newExps;
     }
 
 }

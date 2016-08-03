@@ -18,7 +18,7 @@
         <File name="File_Var" fileName="logs/targetLog_Var.log" Append="false">
             <PatternLayout pattern="%msg%n"/>
         </File>
-        <File name="File_MJR" fileName="logs/targetLog_MJR.log"  >
+        <File name="File_MJR" fileName="logs/targetLog_MJR.log"  Append="false">
             <PatternLayout pattern="%msg%n"/>
         </File>
 

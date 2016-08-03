@@ -6,7 +6,6 @@ import polyu_af.models.FixLine;
  * Created by liushanchen on 16/7/24.
  */
 public class TargetLine extends FixLine {
-
     private transient TargetMethod targetMethod;
     public TargetLine(int location) {
         super(location);

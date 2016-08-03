@@ -17,8 +17,7 @@ import java.util.Map;
 public class SnapshotEvaluator {
     private static Logger logger = LogManager.getLogger(SnapshotEvaluator.class.getName());
 
-    final int passingScore = -1;
-    final int failingScore = 10;
+
 
     public SnapshotEvaluator() {
 
@@ -28,22 +27,15 @@ public class SnapshotEvaluator {
     public  Hashtable<SnapshotV3, SnapshotScore> evaluate(Hashtable<TestUnit, List<SnapshotV3>> lineSnapshotTable) {
         Hashtable<SnapshotV3, SnapshotScore> snapshotScoreTable = new Hashtable<>();
         for (Map.Entry<TestUnit, List<SnapshotV3>> testUnitSnapshotE : lineSnapshotTable.entrySet()) {
-            int score;
             SnapshotScore sss;
             List<SnapshotV3> ssV3List=testUnitSnapshotE.getValue();
-            if (testUnitSnapshotE.getKey().isPassing()) {
-                System.out.println("P :"+testUnitSnapshotE.getKey());
-                score=passingScore;
-            }else{
-                System.out.println("F :"+testUnitSnapshotE.getKey());
-                score=failingScore;
-            }
             for(SnapshotV3 ssV3:ssV3List){
                 if(snapshotScoreTable.keySet().contains(ssV3)){
                     sss=snapshotScoreTable.get(ssV3);
-                    sss.setScore(sss.getScore()+score);
+                    sss.addOneTime(testUnitSnapshotE.getKey().isPassing());
                 }else{
-                    sss=new SnapshotScore(score);
+                    sss=new SnapshotScore();
+                    sss.addOneTime(testUnitSnapshotE.getKey().isPassing());
                     snapshotScoreTable.put(ssV3,sss);
                 }
             }
