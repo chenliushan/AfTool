@@ -13,7 +13,9 @@ import java.util.*;
  * Created by liushanchen on 16/7/27.
  */
 public class FixActionBuilderV2 {
-    final static int NUM = 1;
+    final static int ONE = 1;
+    final static int ZERO = 0;
+    final static int MONE = -1;
     final static String join = "-";
     Map<String, Set<String>> fixActions;
 
@@ -119,6 +121,13 @@ public class FixActionBuilderV2 {
                 .append(Predicate.Operator.PLUS).toString());
         fixs.add(new StringBuilder(varString).append(Predicate.Operator.MINUS)
                 .append(Predicate.Operator.MINUS).toString());
+        fixs.add(new StringBuilder(varString).append(Assignment.Operator.ASSIGN)
+                .append(ONE).toString());
+        fixs.add(new StringBuilder(varString).append(Assignment.Operator.ASSIGN)
+                .append(ZERO).toString());
+        fixs.add(new StringBuilder(varString).append(Assignment.Operator.ASSIGN)
+                .append(MONE).toString());
+
     }
 
     private void fixAction4Num(Set<String> fixs, String leftVarS, String rightVarS) {
@@ -127,9 +136,9 @@ public class FixActionBuilderV2 {
         fixs.add(new StringBuilder(leftVarS).append(Assignment.Operator.MINUS_ASSIGN)
                 .append(rightVarS).toString());
         fixs.add(new StringBuilder(leftVarS).append(Assignment.Operator.ASSIGN)
-                .append(rightVarS).append(Predicate.Operator.PLUS).append(NUM).toString());
+                .append(rightVarS).append(Predicate.Operator.PLUS).append(ONE).toString());
         fixs.add(new StringBuilder(leftVarS).append(Assignment.Operator.ASSIGN)
-                .append(rightVarS).append(Predicate.Operator.MINUS).append(NUM).toString());
+                .append(rightVarS).append(Predicate.Operator.MINUS).append(ONE).toString());
         fixs.add(new StringBuilder(leftVarS).append(Assignment.Operator.ASSIGN)
                 .append(rightVarS).toString());
     }
