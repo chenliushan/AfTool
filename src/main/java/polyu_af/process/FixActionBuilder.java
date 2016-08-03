@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by liushanchen on 16/7/27.
  */
-public class StrategyBuilder {
+public class FixActionBuilder {
 
     private void building(Expression suspect) {
         if (suspect instanceof InfixExpression) {

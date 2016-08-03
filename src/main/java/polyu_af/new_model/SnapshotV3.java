@@ -50,7 +50,7 @@ public class SnapshotV3 {
                 " l:" + location.getLocation() +
                 " p:" + predicate.toString() +
                 " v:" + value +
-                ">";
+                ">\n";
     }
 
     @Override

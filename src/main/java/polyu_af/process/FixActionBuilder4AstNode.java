@@ -5,16 +5,18 @@ import polyu_af.models.Predicate;
 import polyu_af.utils.CommonUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by liushanchen on 16/7/27.
  */
-public class StrategyBuilder4AstNode {
+public class FixActionBuilder4AstNode {
     final static int NUM=1;
 
-    public List<String> building(ASTNode suspect) {
-        List<String> fixs = new ArrayList<>();
+    public Set<String> building(ASTNode suspect) {
+        Set<String> fixs = new HashSet<>();
 
         if (suspect instanceof InfixExpression) {
             InfixExpression infixSuspect = (InfixExpression) suspect;
@@ -65,11 +67,11 @@ public class StrategyBuilder4AstNode {
 
 
     /**
-     * 不确定Expression这样toString能不能得到var
+     * 不确定Expression如何得到var
      *
      * @param suspect
      */
-    private void building(List<String> fixs, InfixExpression suspect) {
+    private void building(Set<String> fixs, InfixExpression suspect) {
         ITypeBinding suspectType = suspect.resolveTypeBinding();
         analyzeITypeBinding(fixs, suspectType, suspect.toString());
         ITypeBinding suspectLeftType = suspect.getLeftOperand().resolveTypeBinding();
@@ -79,7 +81,7 @@ public class StrategyBuilder4AstNode {
 
     }
 
-    private void building(List<String> fixs, PrefixExpression suspect) {
+    private void building(Set<String> fixs, PrefixExpression suspect) {
         ITypeBinding suspectType = suspect.resolveTypeBinding();
         analyzeITypeBinding(fixs, suspectType, suspect.toString());
         ITypeBinding suspectOperandType = suspect.getOperand().resolveTypeBinding();
@@ -87,7 +89,7 @@ public class StrategyBuilder4AstNode {
 
     }
 
-    private void analyzeITypeBinding(List<String> fixs, ITypeBinding type, String varString) {
+    private void analyzeITypeBinding(Set<String> fixs, ITypeBinding type, String varString) {
         String name = type.getQualifiedName();
         if (type.isPrimitive()) {
             if (name.equals(PrimitiveType.BOOLEAN.toString())) {
@@ -104,19 +106,19 @@ public class StrategyBuilder4AstNode {
         }
     }
 
-    private void fixAction4Boolean(List<String> fixs, String varString) {
+    private void fixAction4Boolean(Set<String> fixs, String varString) {
         String action = Predicate.Operator.NOT + varString;
         fixs.add(action);
     }
 
-    private void fixAction4Num(List<String> fixs, String varString) {
+    private void fixAction4Num(Set<String> fixs, String varString) {
         String action1 = varString + Predicate.Operator.PLUS + NUM;
         fixs.add(action1);
         String action2 = varString + Predicate.Operator.MINUS + NUM;
         fixs.add(action2);
     }
 
-    private void fixAction4Ref(List<String> fixs, String varString, List<IMethodBinding> imbs) {
+    private void fixAction4Ref(Set<String> fixs, String varString, List<IMethodBinding> imbs) {
         for (IMethodBinding imb : imbs) {
             String action = CommonUtils.appendInvoking(varString, imb.getName());
             fixs.add(action);

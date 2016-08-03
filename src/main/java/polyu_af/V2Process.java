@@ -3,6 +3,7 @@ package polyu_af;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import polyu_af.exception.NotFoundException;
 import polyu_af.models.*;
 import polyu_af.new_model.*;
@@ -135,6 +136,8 @@ public class V2Process {
 //                System.out.println("lineSnapshotTable:" + testSnapshotTable);
                 List<SnapshotV3> snapshotV3List = buildSnapshotV3(ssb, linePredicateTable, lineVarsValTable);
                 testSnapshotTable.put(testUnit, snapshotV3List);
+                System.out.println("testSnapshotTable:" + testSnapshotTable);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,6 +146,7 @@ public class V2Process {
         exeVarLogAg = null;
         /**************************** Finding fault location and status (evaluating the appearance of snapshot) *********************************/
         SnapshotEvaluator sse = new SnapshotEvaluator();
+
         Hashtable<SnapshotV3, SnapshotScore> sssTable = sse.evaluate(testSnapshotTable);
         LinkedHashMap<SnapshotV3, SnapshotScore> sortedSss;
         sortedSss = sortByValue(sssTable);
@@ -150,9 +154,17 @@ public class V2Process {
         sssTable = null;
 
         /**************************** Generate Fix Action *********************************/
+//        Set<FixAction> fixActionList = generateFixAction(sortedSss);
+//        System.out.println("fa:" + fixActionList);
+        Map<SnapshotV3, Set<String>> faTable= generateFixActionV2(sortedSss);
+        System.out.println("faTable:" + faTable);
+
+    }
+
+    private static Set<FixAction> generateFixAction(Map<SnapshotV3, SnapshotScore> sortedSss) {
         double highestScore = Integer.MIN_VALUE;
-        StrategyBuilder4AstNode sba = new StrategyBuilder4AstNode();
-        List<FixAction> fixActionList=new ArrayList<>();
+        FixActionBuilder4AstNode sba = new FixActionBuilder4AstNode();
+        Set<FixAction> fixActionList = new HashSet<>();
         for (Map.Entry<SnapshotV3, SnapshotScore> e : sortedSss.entrySet()) {
             if (highestScore == Integer.MIN_VALUE) {
                 highestScore = e.getValue().getScore();
@@ -167,17 +179,46 @@ public class V2Process {
 //                }
                 if (right instanceof MyExpAst) {
                     MyExpAst rightAst = (MyExpAst) right;
-                    FixAction fa=new FixAction(ss);
+                    FixAction fa = new FixAction(ss);
                     fa.setFixs(sba.building(rightAst.getAstNode()));
                     fixActionList.add(fa);
                 }
 
             }
         }
-        System.out.println("fa:"+fixActionList);
-
-
+        return fixActionList;
     }
+
+    private static Map<SnapshotV3, Set<String>> generateFixActionV2(Map<SnapshotV3, SnapshotScore> sortedSss) {
+        double highestScore = Integer.MIN_VALUE;
+        FixActionBuilderV2 fab = new FixActionBuilderV2();
+
+        Map<SnapshotV3, Set<String>> fixActions = new Hashtable<>();
+        for (Map.Entry<SnapshotV3, SnapshotScore> e : sortedSss.entrySet()) {
+            if (highestScore == Integer.MIN_VALUE) {
+                highestScore = e.getValue().getScore();
+            }
+            if (e.getValue().getScore() == highestScore) {
+                SnapshotV3 ss = e.getKey();
+                MyExp left = ss.getPredicate().getLeftOperand();
+                MyExp right = ss.getPredicate().getRightOperand();
+                String leftVar = null, rightVar = null;
+                ITypeBinding type = null;
+                if (left instanceof MyExpAst) {
+                    MyExpAst leftAst = (MyExpAst) left;
+                    leftVar = leftAst.getExpVar();
+                }
+                if (right instanceof MyExpAst) {
+                    MyExpAst rightAst = (MyExpAst) right;
+                    rightVar = rightAst.getExpVar();
+                    type = rightAst.getTypeBinding();
+                }
+                fixActions.put(ss, fab.build(type, leftVar, rightVar));
+            }
+        }
+        return fixActions;
+    }
+
 
     private static Hashtable<TargetLine, List<Predicate>> buildPredicate(
             Hashtable<TargetLine, List<MyExp>> lineVarsTable) {

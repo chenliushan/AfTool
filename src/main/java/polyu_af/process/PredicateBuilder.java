@@ -6,9 +6,7 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import polyu_af.models.MyExp;
 import polyu_af.models.Predicate;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by liushanchen on 16/6/13.
@@ -18,7 +16,7 @@ public class PredicateBuilder {
     private static Logger logger = LogManager.getLogger(SnapshotBuilder.class.getName());
 
     public PredicateBuilder() {
-        this.predicates = new ArrayList<Predicate>();
+        this.predicates = new ArrayList<>();
     }
 
     /**
@@ -112,9 +110,7 @@ public class PredicateBuilder {
         } else {
             sslist.add(ss);
             predicates.add(ss);
-
         }
-
     }
 
 
